@@ -141,7 +141,7 @@ def main() -> int:
 
     if not HAVE_CARLA:
         print("The carla Python package is not installed.\n"
-              "  pip install carla==0.9.15   # must match the server build exactly",
+              "  pip install carla==0.9.16   # must match the server build exactly",
               file=sys.stderr)
         return 2
 

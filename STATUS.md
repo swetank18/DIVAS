@@ -1,56 +1,67 @@
 # Where this stands — handoff, 1 Sep 2026
 
-*Updated later the same day: the CARLA bridge is finished and tested; §2 and §3
-have moved on. The two things that still need you are unchanged — the NVIDIA
-driver and the deck.*
+*Updated later the same day: the CARLA bridge is finished and tested (§2, §3),
+and the NVIDIA driver is fixed — `nvidia-smi` sees the RTX 3050. The CARLA
+version changed to 0.9.16 for a Python 3.12 reason worth reading in §0b. The
+deck (§0c) is the one thing still waiting entirely on you.*
 
 Read this first when you come back. It is written to be resumable without
 re-reading the conversation.
 
 ---
 
-## 0. Do these three things first
+## 0. What still needs you
 
-### a) Fix the NVIDIA driver — this blocks everything CARLA
+### a) ~~Fix the NVIDIA driver~~ — DONE
 
-You have an **RTX 3050 6 GB Laptop GPU** (PCI `01:00.0`). `nvidia-smi` fails
-today, and the reason is *not* missing hardware: driver 580.126.09 is
-installed, but its kernel module only exists for kernel `6.17.0-22-generic`
-and you are booted into `7.0.0-30-generic`.
+The diagnosis held exactly: the module existed only for `6.17.0-22-generic`
+while you were booted into `7.0.0-30-generic`. Installing
+`linux-modules-nvidia-580-open-7.0.0-30-generic` pulled the driver forward to
+**580.173.02** and `nvidia-smi` now reports the **RTX 3050 Laptop, 6144 MiB,
+CUDA 13.0**. Secure Boot was not the blocker — the modules are
+Canonical-signed, and `dmesg` shows the module loading cleanly under lockdown.
 
-```bash
-sudo apt install -y linux-modules-nvidia-580-open-7.0.0-30-generic
-sudo modprobe nvidia
-nvidia-smi          # should now list the RTX 3050
-```
+One loose end: `dmesg` carries an API mismatch for `gnome-shell`, which still
+has the *old* 580.126.09 libraries mapped from before the upgrade. It is
+harmless to CUDA and to a `-RenderOffScreen` CARLA, both of which are new
+processes linking the new libraries — but **log out and back in, or reboot,
+before trying to render a CARLA window in this session.**
 
-Secure Boot is enabled but is not the blocker — those modules are
-Canonical-signed. If the above fails, reboot and pick **6.17.0-22-generic**
-from the GRUB advanced menu; it already has a working signed module.
+### b) Finish the CARLA download — running now, and the version changed
 
-### b) Finish the CARLA download — running now
+**Use 0.9.16, not 0.9.15.** 0.9.15 downloaded fine and is unusable here:
+`PythonAPI/carla/dist/` ships clients for Python **2.7 and 3.7 only**, and PyPI
+has no `carla==0.9.15` for anything newer. This machine is Python 3.12, so
+0.9.15 means standing up a second interpreter — and then the whole DIVAS stack
+has to run under it too, because `divas` and `carla` must be importable in one
+process.
 
-The earlier partial file was gone (only `download.log` survived), so this is a
-fresh 8.4 GB pull rather than a resume. It is running in the background; check
-it with `tail -1 ~/carla/download.log`, and if it dies, `wget -c` genuinely does
-resume now that the file exists:
+0.9.16 is the **last Unreal Engine 4 release**, so the 6 GB VRAM reasoning is
+unchanged and your card is still exactly at the floor (0.10/1.0 moved to UE5
+and want 8 GB+). It also ships
+`carla-0.9.16-cp312-cp312-manylinux_2_31_x86_64.whl`, which installs on system
+Python with no venv gymnastics — already verified against PyPI.
+
+The download is running in the background; `tail -1 ~/carla/download.log`, and
+`wget -c` resumes if it dies:
 
 ```bash
 cd ~/carla
-wget -c -O CARLA_0.9.15.tar.gz \
-  "https://carla-releases.s3.us-east-005.backblazeb2.com/Linux/CARLA_0.9.15.tar.gz"
+wget -c -O CARLA_0.9.16.tar.gz \
+  "https://carla-releases.s3.us-east-005.backblazeb2.com/Linux/CARLA_0.9.16.tar.gz"
 ```
 
 Then:
 
 ```bash
-tar -xzf CARLA_0.9.15.tar.gz            # ~20 GB extracted; you had 55 GB free
+tar -xzf CARLA_0.9.16.tar.gz            # ~20 GB extracted; 98 GB free
+pip install carla==0.9.16               # client must match the server build
 ./CarlaUE4.sh -quality-level=Low -RenderOffScreen   # smoke test
-pip install carla==0.9.15               # client must match the server build
+python3 scripts/run_carla.py --check    # then the bridge self-test
 ```
 
-**Use 0.9.15, not 0.10/1.0.** 0.9.15 is Unreal Engine 4 with a 6 GB VRAM
-minimum — exactly your card. 0.10+ moved to UE5 and wants 8 GB+.
+`~/carla/CARLA_0.9.15.tar.gz` is still on disk, 8.4 GB and complete. Nothing
+here can use it — delete it once 0.9.16 is extracted and working.
 
 ### c) Fix the two submission blockers in the deck
 

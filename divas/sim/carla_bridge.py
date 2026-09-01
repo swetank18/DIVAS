@@ -11,9 +11,14 @@ refuse to start or to render at a couple of frames per second, which makes a
 such a machine; nothing in it needs one to be *reviewed* or unit tested, which
 is why the CARLA calls are kept apart from the logic below.
 
-**Version.** Written against the CARLA 0.9.15 Python API. The client package is
-version-locked to the server: install the ``carla`` wheel that ships with the
-simulator build you run, not whatever pip resolves to.
+**Version.** Written against the CARLA 0.9.16 Python API -- the last Unreal
+Engine 4 release, so it keeps the 6 GB VRAM floor that 0.10/1.0 raise to 8 GB+,
+*and* it is the first with a cp312 wheel. 0.9.15 ships clients for Python 2.7
+and 3.7 only, which on a Python 3.12 system means either a second interpreter
+for the client or no client at all.
+
+The client package is version-locked to the server: install the ``carla`` wheel
+matching the simulator build you run, not whatever pip resolves to.
 
 Layout of this file, deliberately:
 
