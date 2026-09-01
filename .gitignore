@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+ablation_final.txt
+eval_results.json
+demo_*.png
+*.gif
+# datasets and checkpoints stay out of the repo
+data/
+datasets/
+*.pth
+*.onnx
+*.engine
+# ROS 2 build products
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# The SIH deck carries the team roster: full names, registration numbers,
+# email addresses and mobile numbers for six people. This repository is
+# public, so it is deliberately not tracked here. Share it directly, or make
+# the repository private first.
+deck/
+ablation_margin.txt
