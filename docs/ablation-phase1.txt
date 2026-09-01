@@ -1,0 +1,311 @@
+288 runs: 6 scenarios x 6 stacks x 8 seeds, 12 workers
+
+  [  1/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=7.0
+  [  2/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=6.9
+  [  3/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=6.6
+  [  4/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=6.5
+  [  5/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=7.0
+  [  6/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=6.6
+  [  7/288] HIT unmarked_road          baseline_conventional            prog=  69.9m v=7.1
+  [  8/288] OK  unmarked_road          baseline_conventional            prog= 110.3m v=7.2
+  [  9/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.6
+  [ 10/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=8.0
+  [ 11/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.6
+  [ 12/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.7
+  [ 13/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.8
+  [ 14/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.7
+  [ 15/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.7
+  [ 16/288] OK  unmarked_road          no_prediction                    prog= 110.3m v=7.9
+  [ 17/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.6
+  [ 18/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=8.0
+  [ 19/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.6
+  [ 20/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.7
+  [ 21/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.8
+  [ 22/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.7
+  [ 23/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.7
+  [ 24/288] OK  unmarked_road          cv_pred_fixed_margin             prog= 110.3m v=7.9
+  [ 25/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.6
+  [ 26/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=8.0
+  [ 27/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.6
+  [ 28/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.7
+  [ 29/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.8
+  [ 30/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.7
+  [ 31/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.7
+  [ 32/288] OK  unmarked_road          interaction_pred_fixed_margin    prog= 110.3m v=7.9
+  [ 33/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.6
+  [ 34/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=8.0
+  [ 35/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.6
+  [ 36/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.7
+  [ 37/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.8
+  [ 38/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.7
+  [ 39/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.7
+  [ 40/288] OK  unmarked_road          fixed_wide_margin                prog= 110.3m v=7.9
+  [ 41/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.6
+  [ 42/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=8.0
+  [ 43/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.6
+  [ 44/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.7
+  [ 45/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.8
+  [ 46/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.7
+  [ 47/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.7
+  [ 48/288] OK  unmarked_road          full_dynamic_margin              prog= 110.3m v=7.9
+  [ 49/288] HIT pothole_slalom         baseline_conventional            prog= 104.0m v=5.8
+  [ 50/288] HIT pothole_slalom         baseline_conventional            prog=  19.0m v=6.2
+  [ 51/288] T/O pothole_slalom         baseline_conventional            prog=  67.0m v=3.4
+  [ 52/288] HIT pothole_slalom         baseline_conventional            prog= 100.0m v=5.9
+  [ 53/288] HIT pothole_slalom         baseline_conventional            prog= 100.0m v=6.8
+  [ 54/288] OK  pothole_slalom         baseline_conventional            prog= 110.0m v=6.5
+  [ 55/288] OK  pothole_slalom         baseline_conventional            prog= 110.0m v=6.1
+  [ 56/288] OK  pothole_slalom         baseline_conventional            prog= 110.0m v=6.4
+  [ 57/288] HIT pothole_slalom         no_prediction                    prog=  92.0m v=7.9
+  [ 58/288] OK  pothole_slalom         no_prediction                    prog= 110.0m v=7.2
+  [ 59/288] T/O pothole_slalom         no_prediction                    prog=  64.0m v=3.9
+  [ 60/288] HIT pothole_slalom         no_prediction                    prog=  67.0m v=7.6
+  [ 61/288] OK  pothole_slalom         no_prediction                    prog= 110.0m v=7.9
+  [ 62/288] OK  pothole_slalom         no_prediction                    prog= 110.0m v=5.8
+  [ 63/288] OK  pothole_slalom         no_prediction                    prog= 110.0m v=6.5
+  [ 64/288] OK  pothole_slalom         no_prediction                    prog= 110.0m v=7.1
+  [ 65/288] HIT pothole_slalom         cv_pred_fixed_margin             prog=  92.0m v=7.9
+  [ 66/288] OK  pothole_slalom         cv_pred_fixed_margin             prog= 110.0m v=7.2
+  [ 67/288] T/O pothole_slalom         cv_pred_fixed_margin             prog=  64.0m v=3.9
+  [ 68/288] HIT pothole_slalom         cv_pred_fixed_margin             prog=  67.0m v=7.6
+  [ 69/288] OK  pothole_slalom         cv_pred_fixed_margin             prog= 110.0m v=7.9
+  [ 70/288] OK  pothole_slalom         cv_pred_fixed_margin             prog= 110.0m v=5.8
+  [ 71/288] OK  pothole_slalom         cv_pred_fixed_margin             prog= 110.0m v=6.5
+  [ 72/288] OK  pothole_slalom         cv_pred_fixed_margin             prog= 110.0m v=7.1
+  [ 73/288] HIT pothole_slalom         interaction_pred_fixed_margin    prog=  92.0m v=7.9
+  [ 74/288] OK  pothole_slalom         interaction_pred_fixed_margin    prog= 110.0m v=7.2
+  [ 75/288] T/O pothole_slalom         interaction_pred_fixed_margin    prog=  64.0m v=3.9
+  [ 76/288] HIT pothole_slalom         interaction_pred_fixed_margin    prog=  67.0m v=7.6
+  [ 77/288] OK  pothole_slalom         interaction_pred_fixed_margin    prog= 110.0m v=7.9
+  [ 78/288] OK  pothole_slalom         interaction_pred_fixed_margin    prog= 110.0m v=5.8
+  [ 79/288] OK  pothole_slalom         interaction_pred_fixed_margin    prog= 110.0m v=6.5
+  [ 80/288] OK  pothole_slalom         interaction_pred_fixed_margin    prog= 110.0m v=7.1
+  [ 81/288] HIT pothole_slalom         fixed_wide_margin                prog=  92.0m v=7.9
+  [ 82/288] OK  pothole_slalom         fixed_wide_margin                prog= 110.0m v=7.2
+  [ 83/288] T/O pothole_slalom         fixed_wide_margin                prog=  64.0m v=3.9
+  [ 84/288] HIT pothole_slalom         fixed_wide_margin                prog=  67.0m v=7.6
+  [ 85/288] OK  pothole_slalom         fixed_wide_margin                prog= 110.0m v=7.9
+  [ 86/288] OK  pothole_slalom         fixed_wide_margin                prog= 110.0m v=5.8
+  [ 87/288] OK  pothole_slalom         fixed_wide_margin                prog= 110.0m v=6.5
+  [ 88/288] OK  pothole_slalom         fixed_wide_margin                prog= 110.0m v=7.1
+  [ 89/288] HIT pothole_slalom         full_dynamic_margin              prog=  92.0m v=7.9
+  [ 90/288] OK  pothole_slalom         full_dynamic_margin              prog= 110.0m v=7.2
+  [ 91/288] T/O pothole_slalom         full_dynamic_margin              prog=  64.0m v=3.9
+  [ 92/288] HIT pothole_slalom         full_dynamic_margin              prog=  67.0m v=7.6
+  [ 93/288] OK  pothole_slalom         full_dynamic_margin              prog= 110.0m v=7.9
+  [ 94/288] OK  pothole_slalom         full_dynamic_margin              prog= 110.0m v=5.8
+  [ 95/288] OK  pothole_slalom         full_dynamic_margin              prog= 110.0m v=6.5
+  [ 96/288] OK  pothole_slalom         full_dynamic_margin              prog= 110.0m v=7.1
+  [ 97/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [ 98/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [ 99/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [100/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [101/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [102/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [103/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [104/288] OK  two_wheeler_cutin      baseline_conventional            prog= 110.0m v=8.2
+  [105/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [106/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [107/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [108/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [109/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [110/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [111/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [112/288] OK  two_wheeler_cutin      no_prediction                    prog= 110.0m v=8.6
+  [113/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [114/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [115/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [116/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [117/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [118/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [119/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [120/288] OK  two_wheeler_cutin      cv_pred_fixed_margin             prog= 110.0m v=8.6
+  [121/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [122/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [123/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [124/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [125/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [126/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [127/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [128/288] OK  two_wheeler_cutin      interaction_pred_fixed_margin    prog= 110.0m v=8.6
+  [129/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [130/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [131/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [132/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [133/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [134/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [135/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [136/288] OK  two_wheeler_cutin      fixed_wide_margin                prog= 110.0m v=8.6
+  [137/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [138/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [139/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [140/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [141/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [142/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [143/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [144/288] OK  two_wheeler_cutin      full_dynamic_margin              prog= 110.0m v=8.6
+  [145/288] HIT pedestrian_crossing    baseline_conventional            prog=  33.0m v=4.8
+  [146/288] HIT pedestrian_crossing    baseline_conventional            prog=  29.0m v=6.0
+  [147/288] HIT pedestrian_crossing    baseline_conventional            prog=  33.0m v=4.8
+  [148/288] HIT pedestrian_crossing    baseline_conventional            prog=  30.0m v=6.5
+  [149/288] HIT pedestrian_crossing    baseline_conventional            prog=  31.0m v=6.7
+  [150/288] HIT pedestrian_crossing    baseline_conventional            prog=  30.0m v=6.4
+  [151/288] HIT pedestrian_crossing    baseline_conventional            prog=  32.0m v=4.1
+  [152/288] OK  pedestrian_crossing    baseline_conventional            prog= 110.0m v=5.5
+  [153/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [154/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [155/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [156/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [157/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [158/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [159/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [160/288] HIT pedestrian_crossing    no_prediction                    prog=  69.0m v=8.8
+  [161/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=7.9
+  [162/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=8.0
+  [163/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=8.2
+  [164/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=8.1
+  [165/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=7.9
+  [166/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=7.9
+  [167/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=8.0
+  [168/288] OK  pedestrian_crossing    cv_pred_fixed_margin             prog= 110.0m v=7.9
+  [169/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=8.3
+  [170/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=7.2
+  [171/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=8.3
+  [172/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=7.9
+  [173/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=8.0
+  [174/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=8.1
+  [175/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=8.0
+  [176/288] OK  pedestrian_crossing    interaction_pred_fixed_margin    prog= 110.0m v=8.1
+  [177/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=7.8
+  [178/288] HIT pedestrian_crossing    fixed_wide_margin                prog=  71.0m v=7.3
+  [179/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=8.0
+  [180/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=8.1
+  [181/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=8.1
+  [182/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=7.8
+  [183/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=7.9
+  [184/288] OK  pedestrian_crossing    fixed_wide_margin                prog= 110.0m v=8.0
+  [185/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=8.3
+  [186/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=7.8
+  [187/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=8.2
+  [188/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=7.5
+  [189/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=8.1
+  [190/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=8.2
+  [191/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=8.1
+  [192/288] OK  pedestrian_crossing    full_dynamic_margin              prog= 110.0m v=8.2
+  [193/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=7.5
+  [194/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=7.3
+  [195/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=6.9
+  [196/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=7.3
+  [197/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=6.5
+  [198/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=6.7
+  [199/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=7.8
+  [200/288] OK  oncoming_negotiation   baseline_conventional            prog= 110.0m v=6.5
+  [201/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=8.5
+  [202/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=8.6
+  [203/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=7.9
+  [204/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=8.6
+  [205/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=8.6
+  [206/288] HIT oncoming_negotiation   no_prediction                    prog=  75.0m v=7.3
+  [207/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=8.3
+  [208/288] OK  oncoming_negotiation   no_prediction                    prog= 110.0m v=8.5
+  [209/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.1
+  [210/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.4
+  [211/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.2
+  [212/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.4
+  [213/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.5
+  [214/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=7.5
+  [215/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.4
+  [216/288] OK  oncoming_negotiation   cv_pred_fixed_margin             prog= 110.0m v=8.4
+  [217/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.3
+  [218/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.4
+  [219/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.1
+  [220/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.3
+  [221/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.4
+  [222/288] HIT oncoming_negotiation   interaction_pred_fixed_margin    prog=  75.0m v=7.2
+  [223/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.3
+  [224/288] OK  oncoming_negotiation   interaction_pred_fixed_margin    prog= 110.0m v=8.3
+  [225/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.2
+  [226/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.4
+  [227/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.0
+  [228/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.2
+  [229/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.3
+  [230/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=7.4
+  [231/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.3
+  [232/288] OK  oncoming_negotiation   fixed_wide_margin                prog= 110.0m v=8.3
+  [233/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.2
+  [234/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.5
+  [235/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.2
+  [236/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.2
+  [237/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.3
+  [238/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=7.5
+  [239/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.2
+  [240/288] OK  oncoming_negotiation   full_dynamic_margin              prog= 110.0m v=8.3
+  [241/288] HIT mixed_traffic          baseline_conventional            prog=  90.6m v=6.4
+  [242/288] HIT mixed_traffic          baseline_conventional            prog=  87.4m v=6.5
+  [243/288] HIT mixed_traffic          baseline_conventional            prog=  89.5m v=6.6
+  [244/288] HIT mixed_traffic          baseline_conventional            prog=  88.5m v=6.3
+  [245/288] HIT mixed_traffic          baseline_conventional            prog=  45.3m v=7.1
+  [246/288] HIT mixed_traffic          baseline_conventional            prog=  87.4m v=6.5
+  [247/288] HIT mixed_traffic          baseline_conventional            prog=  90.6m v=5.8
+  [248/288] HIT mixed_traffic          baseline_conventional            prog=  88.5m v=6.7
+  [249/288] HIT mixed_traffic          no_prediction                    prog=  73.0m v=7.8
+  [250/288] OK  mixed_traffic          no_prediction                    prog= 120.4m v=7.9
+  [251/288] OK  mixed_traffic          no_prediction                    prog= 120.4m v=8.0
+  [252/288] OK  mixed_traffic          no_prediction                    prog= 120.4m v=7.9
+  [253/288] HIT mixed_traffic          no_prediction                    prog=  78.1m v=7.4
+  [254/288] HIT mixed_traffic          no_prediction                    prog=  75.0m v=7.5
+  [255/288] HIT mixed_traffic          no_prediction                    prog=  77.0m v=7.8
+  [256/288] HIT mixed_traffic          no_prediction                    prog=  78.1m v=7.6
+  [257/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=8.0
+  [258/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=7.9
+  [259/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=8.0
+  [260/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=8.1
+  [261/288] HIT mixed_traffic          cv_pred_fixed_margin             prog=  81.1m v=7.2
+  [262/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=7.9
+  [263/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=7.9
+  [264/288] OK  mixed_traffic          cv_pred_fixed_margin             prog= 120.4m v=5.0
+  [265/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=8.1
+  [266/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=8.0
+  [267/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=8.0
+  [268/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=8.1
+  [269/288] HIT mixed_traffic          interaction_pred_fixed_margin    prog=  83.2m v=7.3
+  [270/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=7.9
+  [271/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=7.9
+  [272/288] OK  mixed_traffic          interaction_pred_fixed_margin    prog= 120.4m v=7.7
+  [273/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=8.0
+  [274/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=8.0
+  [275/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=8.0
+  [276/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=7.9
+  [277/288] HIT mixed_traffic          fixed_wide_margin                prog=  83.2m v=7.3
+  [278/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=7.9
+  [279/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=8.0
+  [280/288] OK  mixed_traffic          fixed_wide_margin                prog= 120.4m v=7.8
+  [281/288] OK  mixed_traffic          full_dynamic_margin              prog= 120.4m v=7.9
+  [282/288] OK  mixed_traffic          full_dynamic_margin              prog= 120.4m v=7.8
+  [283/288] OK  mixed_traffic          full_dynamic_margin              prog= 120.4m v=8.0
+  [284/288] OK  mixed_traffic          full_dynamic_margin              prog= 120.4m v=8.0
+  [285/288] HIT mixed_traffic          full_dynamic_margin              prog=  82.2m v=7.2
+  [286/288] OK  mixed_traffic          full_dynamic_margin              prog= 120.4m v=7.9
+  [287/288] OK  mixed_traffic          full_dynamic_margin              prog= 120.4m v=8.0
+  [288/288] HIT mixed_traffic          full_dynamic_margin              prog=  78.1m v=7.2
+
+====================================================================================================================================
+ABLATION  (each row adds one mechanism to the row above)
+====================================================================================================================================
+stack                                succ   coll    t/o  prog_m  v_mean   TTCok  minClr  d_safe   jerk  latacc  e2e_ms
+------------------------------------------------------------------------------------------------------------------------------------
+baseline_conventional                0.56   0.42   0.02    90.0    6.67    1.95   -0.07    1.00    8.0    3.78   376.0
+no_prediction                        0.65   0.33   0.02    97.4    7.99    2.11   -0.09    0.00    8.0    4.67   260.3
+cv_pred_fixed_margin                 0.92   0.06   0.02   108.7    7.81    0.04   -0.07    1.00    8.0    4.67   282.9
+interaction_pred_fixed_margin        0.90   0.08   0.02   108.0    7.86    0.02   -0.03    1.00    8.0    4.67   335.4
+fixed_wide_margin                    0.90   0.08   0.02   108.0    7.83    1.04   -0.16    1.40    8.0    4.69   345.5
+full_dynamic_margin                  0.90   0.08   0.02   107.9    7.85     0.0   -0.07    1.38    8.0    4.67   304.9
+====================================================================================================================================
+  baseline_conventional              Constant-velocity prediction, fixed 1.0 m buffer, geometric control
+  no_prediction                      MPC over current occupancy only -- no prediction at all
+  cv_pred_fixed_margin               MPC + constant-velocity prediction + fixed margin
+  interaction_pred_fixed_margin      MPC + interaction-aware prediction + fixed margin
+  fixed_wide_margin                  Control arm: fixed margin matching the dynamic arm's MEAN, to separate the effect of margin SIZE from margin VARIATION
+  full_dynamic_margin                Full stack: interaction-aware prediction + confidence-scaled margin
+
+wrote eval_results.json
