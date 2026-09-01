@@ -345,3 +345,83 @@ def test_requesting_a_sensor_turns_rendering_back_on(carla_world):
         assert fast.world.settings.no_rendering_mode is True
     with carla_world(sensors=("rgb",)) as seeing:
         assert seeing.world.settings.no_rendering_mode is False
+
+
+# --------------------------------------------------------------------------
+# guarded by the real client -- these skip on a machine without it
+# --------------------------------------------------------------------------
+
+needs_client = pytest.mark.skipif(
+    not cb.HAVE_CARLA, reason="needs the carla client wheel installed"
+)
+
+
+@needs_client
+def test_drivable_tags_match_carlas_own_enum():
+    """Pin ``DRIVABLE_TAGS`` to ``CityObjectLabel`` rather than to memory.
+
+    The tag numbering changed once already (0.9.14). A silent shift turns the
+    Phase 2 drivable-area ground truth into a mask of some other class, and
+    nothing downstream would notice -- it would just train badly.
+    """
+    import carla
+
+    labels = {n: int(v) for n, v in carla.CityObjectLabel.names.items()}
+    assert set(cb.DRIVABLE_TAGS) == {labels["Roads"], labels["RoadLines"]}
+    assert set(cb.DRIVABLE_TAGS_WITH_SHOULDER) == {
+        labels["Roads"], labels["RoadLines"], labels["Ground"]
+    }
+
+
+@needs_client
+def test_every_carla_name_the_bridge_uses_still_exists():
+    """API drift check, run without a server.
+
+    The bridge is the one module that can be broken by upgrading something
+    other than this repository. Finding out at import time costs a second;
+    finding out two hours into a batch costs the evening.
+    """
+    import carla
+
+    surface = {
+        carla: ["Client", "WeatherParameters", "Transform", "Location",
+                "Rotation", "VehicleControl", "command"],
+        carla.command: ["DestroyActor"],
+        carla.Client: ["set_timeout", "get_world", "load_world",
+                       "get_trafficmanager"],
+        carla.World: ["get_settings", "apply_settings", "tick", "get_map",
+                      "get_blueprint_library", "spawn_actor", "try_spawn_actor",
+                      "set_weather", "get_snapshot",
+                      "get_random_location_from_navigation",
+                      "set_pedestrians_seed", "set_pedestrians_cross_factor"],
+        carla.Map: ["get_spawn_points", "generate_waypoints", "get_waypoint"],
+        carla.BlueprintLibrary: ["find", "filter"],
+        carla.ActorBlueprint: ["has_attribute", "set_attribute", "id"],
+        carla.Actor: ["get_transform", "get_velocity", "destroy", "type_id",
+                      "id", "bounding_box"],
+        carla.Vehicle: ["apply_control", "set_autopilot", "get_physics_control"],
+        carla.Sensor: ["listen", "stop"],
+        carla.WalkerAIController: ["start", "stop", "go_to_location",
+                                   "set_max_speed"],
+        carla.WorldSnapshot: ["find"],
+        carla.Waypoint: ["next", "transform", "lane_width"],
+        carla.WheelPhysicsControl: ["position", "max_steer_angle"],
+        carla.WorldSettings: ["synchronous_mode", "fixed_delta_seconds",
+                              "no_rendering_mode"],
+        carla.TrafficManager: ["set_synchronous_mode", "set_random_device_seed"],
+        carla.BoundingBox: ["extent"],
+        carla.CollisionEvent: ["other_actor"],
+    }
+    missing = [f"{getattr(o, '__name__', o)}.{n}"
+               for o, names in surface.items() for n in names if not hasattr(o, n)]
+    assert missing == []
+
+
+@needs_client
+def test_every_weather_preset_is_constructible():
+    """A typo'd preset key raises only when that weather is first selected --
+    which is halfway through an --all-weather sweep, an hour in."""
+    import carla
+
+    for name, preset in cb.WEATHER_PRESETS.items():
+        carla.WeatherParameters(**preset)          # must not raise

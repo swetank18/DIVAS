@@ -51,13 +51,28 @@ wget -c -O CARLA_0.9.16.tar.gz \
   "https://carla-releases.s3.us-east-005.backblazeb2.com/Linux/CARLA_0.9.16.tar.gz"
 ```
 
-Then:
+The client is **already installed**, in `~/carla-venv`:
+
+```bash
+python3 -m venv ~/carla-venv --system-site-packages   # done
+~/carla-venv/bin/pip install carla==0.9.16            # done
+```
+
+A venv rather than `pip install --break-system-packages`, because Ubuntu 24.04
+refuses system-Python installs (PEP 668) and because this is reversible with
+`rm -rf ~/carla-venv`. `--system-site-packages` matters: `divas` and `carla`
+have to be importable in **one** process, so the venv inherits the system
+numpy 1.26.4, scipy 1.11.4 and matplotlib 3.6.3 rather than reinstalling them.
+**Run everything CARLA through `~/carla-venv/bin/python3`.** The suite is 59
+tests there and 56 + 3 skipped on system Python — the three extra check the
+bridge against the real client.
+
+Then, once the download lands:
 
 ```bash
 tar -xzf CARLA_0.9.16.tar.gz            # ~20 GB extracted; 98 GB free
-pip install carla==0.9.16               # client must match the server build
 ./CarlaUE4.sh -quality-level=Low -RenderOffScreen   # smoke test
-python3 scripts/run_carla.py --check    # then the bridge self-test
+~/carla-venv/bin/python3 scripts/run_carla.py --check
 ```
 
 `~/carla/CARLA_0.9.15.tar.gz` is still on disk, 8.4 GB and complete. Nothing
@@ -81,7 +96,8 @@ Repo: <https://github.com/swetank18/autonomous_path> — all yours, no co-author
 trailers. ~7,100 lines, **56 tests green**, 9 ADRs.
 
 ```bash
-python3 -m pytest tests/ -q                       # 56 passed, no GPU, ROS or CARLA needed
+python3 -m pytest tests/ -q                       # 56 passed + 3 skipped, no GPU, ROS or CARLA
+~/carla-venv/bin/python3 -m pytest tests/ -q      # 59 passed, incl. the real-client checks
 python3 scripts/run_ablation.py --seeds 8 --jobs 12
 python3 scripts/make_comparison.py --scenario pedestrian_crossing \
     --left baseline_conventional --right cv_pred_fixed_margin --seed 1
@@ -165,8 +181,18 @@ runner destroys every actor it spawned. Be clear about what that proves: it
 tests *our* side of the seam, not CARLA's semantics. A misunderstanding of the
 API reproduces faithfully in both places.
 
-**So the bridge is unvalidated, not untested.** Everything below waits on a
-working `nvidia-smi` and an extracted server.
+**What has since been checked against the real 0.9.16 client**, without a
+server: every CARLA name the bridge uses still exists, every weather preset is
+constructible, and `DRIVABLE_TAGS` matches CARLA's own `CityObjectLabel` enum
+(`Roads` 1, `RoadLines` 24, `Ground` 25). Those are now three tests that skip
+when the client is absent, so upgrading CARLA cannot drift them silently — the
+tag numbering already changed once, at 0.9.14, and a silent shift would turn
+the Phase 2 drivable-area ground truth into a mask of some other class.
+
+**So the bridge is unvalidated, not untested.** What remains untested is
+everything that needs a live server: spawning, ticking, the traffic manager,
+and whether `vehicle.nissan.micra` is still a blueprint in 0.9.16 (if it is
+not, `_blueprint()` falls back to another vehicle rather than dying).
 
 ## 3. Next tasks, in priority order
 
