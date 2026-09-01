@@ -20,6 +20,11 @@ from typing import Callable, List, Optional, Sequence, Tuple
 import numpy as np
 from matplotlib.path import Path as MplPath
 
+from divas.sim.geometry import (
+    first_hit as _first_hit,
+    min_clearance as _min_clearance,
+    time_to_collision as _ttc,
+)
 from divas.types import (
     CLASS_EXTENT,
     CLASS_RADIUS,
@@ -565,16 +570,17 @@ class World:
         cy = self.ego.y + offs * s
         return np.stack([cx, cy], axis=1), r
 
+    def _metric_boxes(self):
+        """Actors in the form the shared geometry helpers expect."""
+        return [(a.x, a.y, a.theta, *a.extent, a.v, f"actor:{a.cls}#{a.id}")
+                for a in self.actors if a.alive]
+
     def collision(self) -> Optional[str]:
         """Return a description of what we hit, or ``None``."""
+        hit = _first_hit(self.ego, self.params, self._metric_boxes())
+        if hit is not None:
+            return hit
         centres, r = self.ego_footprint_discs()
-        for a in self.actors:
-            if not a.alive:
-                continue
-            hl, hw = a.extent
-            box = Rect(a.x, a.y, 2 * hl, 2 * hw, a.theta, a.cls)
-            if float(box.sdf(centres[:, 0], centres[:, 1]).min()) <= r:
-                return f"actor:{a.cls}#{a.id}"
         for obj in self.statics:
             if float(obj.sdf(centres[:, 0], centres[:, 1]).min()) <= r:
                 return f"static:{obj.label}"
@@ -584,57 +590,8 @@ class World:
 
     def clearance_to_actors(self) -> float:
         """Smallest surface-to-surface gap to any actor, metres."""
-        centres, r = self.ego_footprint_discs()
-        best = np.inf
-        for a in self.actors:
-            if not a.alive:
-                continue
-            hl, hw = a.extent
-            box = Rect(a.x, a.y, 2 * hl, 2 * hw, a.theta, a.cls)
-            best = min(best, float(box.sdf(centres[:, 0], centres[:, 1]).min()) - r)
-        return best
+        return _min_clearance(self.ego, self.params, self._metric_boxes())
 
     def time_to_collision(self) -> float:
-        """Constant-velocity TTC against the nearest closing actor.
-
-        The standard surrogate safety metric; reported as a distribution over
-        each run because the minimum alone hides how often we were close.
-
-        Computed against an **oriented elliptical** boundary in the actor's
-        heading frame, not a circumscribed disc.  With discs, the ego (1.07 m
-        radius) plus a truck (3.7 m radius) demand 4.8 m of separation, so
-        passing an oncoming truck three metres to the side scores as an
-        imminent collision and the headline safety metric reads near zero on
-        runs that were never in danger.
-        """
-        best = np.inf
-        e = self.ego
-        evx, evy = e.v * np.cos(e.theta), e.v * np.sin(e.theta)
-        ehl, ehw = self.params.half_extent
-        for a in self.actors:
-            if not a.alive:
-                continue
-            ahl, ahw = a.extent
-            # Work in the actor's heading frame so the ellipse is axis-aligned.
-            c, s = np.cos(-a.theta), np.sin(-a.theta)
-            dx, dy = e.x - a.x, e.y - a.y
-            rx = c * dx - s * dy
-            ry = s * dx + c * dy
-            dvx, dvy = evx - a.v * np.cos(a.theta), evy - a.v * np.sin(a.theta)
-            rvx = c * dvx - s * dvy
-            rvy = s * dvx + c * dvy
-            A = ahl + ehl
-            B = ahw + ehw
-            # ((rx+rvx t)/A)^2 + ((ry+rvy t)/B)^2 = 1  ->  quadratic in t
-            qa = (rvx / A) ** 2 + (rvy / B) ** 2
-            qb = 2 * (rx * rvx / A**2 + ry * rvy / B**2)
-            qc = (rx / A) ** 2 + (ry / B) ** 2 - 1.0
-            if qa < 1e-12 or qc <= 0.0:
-                continue
-            disc = qb**2 - 4 * qa * qc
-            if disc < 0.0:
-                continue
-            t = (-qb - np.sqrt(disc)) / (2 * qa)
-            if t > 0.0:
-                best = min(best, float(t))
-        return best
+        """Constant-velocity TTC against the nearest closing actor."""
+        return _ttc(self.ego, self.params, self._metric_boxes())
