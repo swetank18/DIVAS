@@ -1,9 +1,9 @@
 # Where this stands — handoff, 1 Sep 2026
 
-*Updated later the same day: the CARLA bridge is finished and tested (§2, §3),
-and the NVIDIA driver is fixed — `nvidia-smi` sees the RTX 3050. The CARLA
-version changed to 0.9.16 for a Python 3.12 reason worth reading in §0b. The
-deck (§0c) is the one thing still waiting entirely on you.*
+*Updated later the same day: **the stack drives in CARLA.** Driver fixed,
+0.9.16 installed, bridge validated end-to-end on Town10HD — 101 m, no
+collision, 46.7 ms p95. §2 has the numbers. The deck (§0c) is now the only
+thing still waiting entirely on you.*
 
 Read this first when you come back. It is written to be resumable without
 re-reading the conversation.
@@ -27,7 +27,7 @@ harmless to CUDA and to a `-RenderOffScreen` CARLA, both of which are new
 processes linking the new libraries — but **log out and back in, or reboot,
 before trying to render a CARLA window in this session.**
 
-### b) Finish the CARLA download — running now, and the version changed
+### b) ~~Install CARLA~~ — DONE, and the version changed
 
 **Use 0.9.16, not 0.9.15.** 0.9.15 downloaded fine and is unusable here:
 `PythonAPI/carla/dist/` ships clients for Python **2.7 and 3.7 only**, and PyPI
@@ -42,14 +42,9 @@ and want 8 GB+). It also ships
 `carla-0.9.16-cp312-cp312-manylinux_2_31_x86_64.whl`, which installs on system
 Python with no venv gymnastics — already verified against PyPI.
 
-The download is running in the background; `tail -1 ~/carla/download.log`, and
-`wget -c` resumes if it dies:
-
-```bash
-cd ~/carla
-wget -c -O CARLA_0.9.16.tar.gz \
-  "https://carla-releases.s3.us-east-005.backblazeb2.com/Linux/CARLA_0.9.16.tar.gz"
-```
+Downloaded and extracted to `~/carla/0.9.16` (19 GB). Its own
+`PythonAPI/carla/dist/` ships cp310/cp311/**cp312** wheels, which confirms the
+choice from the other direction.
 
 The client is **already installed**, in `~/carla-venv`:
 
@@ -67,16 +62,26 @@ numpy 1.26.4, scipy 1.11.4 and matplotlib 3.6.3 rather than reinstalling them.
 tests there and 56 + 3 skipped on system Python — the three extra check the
 bridge against the real client.
 
-Then, once the download lands:
+To run it:
 
 ```bash
-tar -xzf CARLA_0.9.16.tar.gz            # ~20 GB extracted; 98 GB free
-./CarlaUE4.sh -quality-level=Low -RenderOffScreen   # smoke test
-~/carla-venv/bin/python3 scripts/run_carla.py --check
+./scripts/carla_server.sh                                  # server, offscreen
+~/carla-venv/bin/python3 scripts/run_carla.py --check      # bridge self-test
 ```
 
-`~/carla/CARLA_0.9.15.tar.gz` is still on disk, 8.4 GB and complete. Nothing
-here can use it — delete it once 0.9.16 is extracted and working.
+**Use `scripts/carla_server.sh`, not `CarlaUE4.sh` directly.** This is a
+hybrid-graphics laptop — an AMD Radeon 780M in the CPU and the RTX 3050 on
+`01:00.0` — and Vulkan enumerates the **AMD part as GPU0**. Launched plainly,
+CARLA runs on the integrated chip. It does not error; it just renders at a few
+frames a second, which makes a 20 Hz control loop meaningless and reads as a
+slow planner rather than a wrong GPU. The script sets
+`__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only`, which puts the
+RTX 3050 first. `libomp5` was also missing and is now installed; CARLA will not
+start without it.
+
+Two tarballs are still in `~/carla`, 8.4 GB each. Nothing can use the 0.9.15
+one — `rm ~/carla/CARLA_0.9.15.tar.gz`, and the 0.9.16 one too once you trust
+the extraction.
 
 ### c) Fix the two submission blockers in the deck
 
@@ -189,22 +194,50 @@ when the client is absent, so upgrading CARLA cannot drift them silently — the
 tag numbering already changed once, at 0.9.14, and a silent shift would turn
 the Phase 2 drivable-area ground truth into a mask of some other class.
 
-**So the bridge is unvalidated, not untested.** What remains untested is
-everything that needs a live server: spawning, ticking, the traffic manager,
-and whether `vehicle.nissan.micra` is still a blueprint in 0.9.16 (if it is
-not, `_blueprint()` falls back to another vehicle rather than dying).
+### It has now been run against a real server, and it works
+
+CARLA 0.9.16, Town10HD_Opt, RTX 3050, 20 vehicles and 10 pedestrians:
+
+```
+ego              3.63 x 1.85 m, wheelbase 2.49 m, lock 70 deg   (read off the blueprint)
+route            394 m from the lane graph
+drivable raster  936 x 995 cells @ 0.25 m, rasterised once
+costmap          256 x 256, 70.5% occupied      (Town10 is dense urban)
+```
+
+One closed-loop episode, `cv_pred_fixed_margin`, seed 1, 25 s:
+
+| progress | collision | min clearance | mean speed | e2e p95 |
+|---|---|---|---|---|
+| **101.1 m** | none | 4.95 m | 4.56 m/s | 46.7 ms |
+
+The full sensor rig delivers: semantic 540x960 with 18 distinct tags and
+**41.4% drivable** on a forward view, RGB, 14,747 LiDAR points, 14 radar
+detections at 36–68 m. `hard_rain` applies (precipitation 80). Requesting a
+sensor correctly forced `no_rendering_mode` back off.
+
+**One real bug only a live server could find.** The first `--check` passed and
+then dumped core: a listening sensor callback firing into a half-torn-down
+client throws on CARLA's own thread, where no `try` of ours can catch it; a
+walker controller attached to an already-destroyed walker is itself already
+dead; and in synchronous mode the server only *processes* a destruction on the
+next tick, so destroy-then-disconnect leaves the commands queued. Teardown is
+now one `apply_batch_sync(..., due_tick_cue=True)` with sensors stopped first
+and controllers destroyed before their walkers. Clean exit, and `get_actors()`
+afterwards shows only the map's own traffic lights and the spectator.
 
 ## 3. Next tasks, in priority order
 
-1. **Validate the bridge against a real CARLA server.** Driver, then extract,
-   then `python3 scripts/run_carla.py --check`. Expect the first real failures
-   here — blueprint ids that moved between releases, a town whose spawn points
-   are all occupied, and the longitudinal mapping in `control_from_command`,
-   which is deliberately crude (throttle proportional to requested
-   acceleration, no engine or brake force curve). If the ego undershoots its
-   speed reference in CARLA but not in the built-in sim, that function is the
-   first place to look, not the MPC.
-2. **Perception, Phase 2.** The semantic camera gives free drivable-area ground
+1. **Perception, Phase 2.** Now unblocked, and the highest-value thing left.
+   The semantic camera gives free drivable-area ground truth in the same frame
+   as the RGB the model consumes — verified live at 41.4% drivable on a forward
+   view.
+1b. **Tune the longitudinal mapping.** Mean speed in CARLA was 4.56 m/s against
+   a 9.0 m/s cruise target. Some of that is Town10 traffic, but
+   `control_from_command` is deliberately crude — throttle proportional to
+   requested acceleration, no engine or brake force curve. Check that before
+   blaming the MPC, and re-check it before quoting any CARLA speed number.
+2. **(was Phase 2, now folded into 1.)** The semantic camera gives free drivable-area ground
    truth in the same frame as the RGB the model consumes — `semantic` in
    `--sensors`, then `semantic_drivable_mask`. Note `DRIVABLE_TAGS` excludes
    tag 25, unpaved ground; Indian carriageways routinely include the shoulder,
@@ -252,6 +285,11 @@ Two more, both now guarded by tests:
 
 - **CARLA steer is positive to the right, ours is positive to the left.** See
   §2. `control_from_command` negates; `steer_from_control` un-negates.
+- **Vulkan picks the integrated GPU on this laptop.** See §0b. Always launch
+  through `scripts/carla_server.sh`.
+- **CARLA teardown order is load-bearing.** Sensors stopped first, walker
+  controllers before their walkers, and one batched destroy with the tick cue —
+  see §2. Getting it wrong aborts the process from a thread you cannot catch on.
 - **`no_rendering_mode` blanks every camera.** It is a large speed-up on a
   laptop GPU and the right default for an evaluation batch, but it silently
   returns empty frames, which looks exactly like a sensor that failed to
