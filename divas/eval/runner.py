@@ -153,9 +153,14 @@ def run(
     params: Optional[VehicleParams] = None,
     cfg: Optional[RunnerConfig] = None,
 ) -> RunMetrics:
-    params = params or VehicleParams()
     cfg = cfg or RunnerConfig()
     world = scenario.build(seed)
+    # A simulator may already know its own vehicle -- the CARLA bridge reads
+    # length, width, wheelbase and steering limit off the blueprint it actually
+    # spawned.  Overwriting that with the defaults would mean measuring
+    # clearance for one vehicle while driving another, so the caller's params
+    # win only when the caller supplied any.
+    params = params or getattr(world, "params", None) or VehicleParams()
     world.params = params
     predictor, planner, controller = stack.build(params)
     ego_extent = params.half_extent
@@ -164,119 +169,129 @@ def run(
     trace = {"t": [], "ego": [], "v": [], "actors": [], "path": [],
              "d_safe": [], "progress": []}
 
-    grid = None
-    risk: Optional[RiskField] = None
-    path = None
-    last_pred_t = 0.0
-    prev_accel = 0.0
-    prev_v = world.ego.v
-    speeds: List[float] = []
-    d_safes: List[float] = []
-    stuck_for = 0.0
-    start_progress = world.road.progress(world.ego.x, world.ego.y)
-    step = 0
+    try:
+        grid = None
+        risk: Optional[RiskField] = None
+        path = None
+        last_pred_t = 0.0
+        prev_accel = 0.0
+        prev_v = world.ego.v
+        speeds: List[float] = []
+        d_safes: List[float] = []
+        stuck_for = 0.0
+        start_progress = world.road.progress(world.ego.x, world.ego.y)
+        step = 0
 
-    while world.t < scenario.time_limit:
-        ego = world.ego
+        while world.t < scenario.time_limit:
+            ego = world.ego
 
-        # -- stages 1-3 (stubbed) + stage 4 ---------------------------
-        if step % cfg.perception_every == 0 or grid is None:
-            static_grid, grid = world.ground_truth_grids()
-            tracks = world.ground_truth_tracks()
-            if predictor is not None:
+            # -- stages 1-3 (stubbed) + stage 4 ---------------------------
+            if step % cfg.perception_every == 0 or grid is None:
+                static_grid, grid = world.ground_truth_grids()
+                tracks = world.ground_truth_tracks()
+                if predictor is not None:
+                    t0 = time.perf_counter()
+                    ts = predictor.predict(tracks, static_grid, ego)
+                    risk = RiskField(ts, ego.v, ego_extent, stack.margin)
+                    risk.rasterize(grid)
+                    m.timer("predict").add((time.perf_counter() - t0) * 1e3)
+                    # Only when there is traffic to keep a margin from.  Averaging
+                    # in the zero-actor scenarios drags every stack's figure
+                    # towards zero and makes the fixed/dynamic comparison -- the
+                    # one number the ablation exists to produce -- meaningless.
+                    if len(ts):
+                        d_safes.append(risk.mean_margin())
+                last_pred_t = world.t
+            if risk is not None:
+                risk.age = world.t - last_pred_t
+
+            # -- stage 5 ---------------------------------------------------
+            if step % cfg.plan_every == 0:
+                goal = world.local_goal(cfg.goal_lookahead)
                 t0 = time.perf_counter()
-                ts = predictor.predict(tracks, static_grid, ego)
-                risk = RiskField(ts, ego.v, ego_extent, stack.margin)
-                risk.rasterize(grid)
-                m.timer("predict").add((time.perf_counter() - t0) * 1e3)
-                # Only when there is traffic to keep a margin from.  Averaging
-                # in the zero-actor scenarios drags every stack's figure
-                # towards zero and makes the fixed/dynamic comparison -- the
-                # one number the ablation exists to produce -- meaningless.
-                if len(ts):
-                    d_safes.append(risk.mean_margin())
-            last_pred_t = world.t
-        if risk is not None:
-            risk.age = world.t - last_pred_t
+                res = planner.plan(grid, ego, goal, risk)
+                m.timer("plan").add((time.perf_counter() - t0) * 1e3)
+                m.plan_calls += 1
+                m.plan_success += int(res.success)
+                m.plan_partial += int(res.partial)
+                # A partial plan is still useful -- it is the best reachable
+                # prefix.  Only an empty result leaves the previous path standing.
+                if len(res.path) >= 2:
+                    path = res.path
 
-        # -- stage 5 ---------------------------------------------------
-        if step % cfg.plan_every == 0:
-            goal = world.local_goal(cfg.goal_lookahead)
+            # -- stage 6 ---------------------------------------------------
             t0 = time.perf_counter()
-            res = planner.plan(grid, ego, goal, risk)
-            m.timer("plan").add((time.perf_counter() - t0) * 1e3)
-            m.plan_calls += 1
-            m.plan_success += int(res.success)
-            m.plan_partial += int(res.partial)
-            # A partial plan is still useful -- it is the best reachable
-            # prefix.  Only an empty result leaves the previous path standing.
-            if len(res.path) >= 2:
-                path = res.path
+            cmd = controller.step(path, ego, grid, risk, cfg.sim_dt)
+            m.timer("control").add((time.perf_counter() - t0) * 1e3)
 
-        # -- stage 6 ---------------------------------------------------
-        t0 = time.perf_counter()
-        cmd = controller.step(path, ego, grid, risk, cfg.sim_dt)
-        m.timer("control").add((time.perf_counter() - t0) * 1e3)
+            if cfg.record and step % cfg.record_every == 0:
+                trace["t"].append(world.t)
+                trace["ego"].append((ego.x, ego.y, ego.theta))
+                trace["v"].append(ego.v)
+                trace["actors"].append(
+                    [(a.x, a.y, a.theta, a.cls) for a in world.actors if a.alive]
+                )
+                trace["path"].append(path.xy.copy() if path is not None else None)
+                trace["d_safe"].append(risk.mean_margin() if risk is not None else 0.0)
+                trace["progress"].append(m.progress)
 
-        if cfg.record and step % cfg.record_every == 0:
-            trace["t"].append(world.t)
-            trace["ego"].append((ego.x, ego.y, ego.theta))
-            trace["v"].append(ego.v)
-            trace["actors"].append(
-                [(a.x, a.y, a.theta, a.cls) for a in world.actors if a.alive]
+            world.step(cfg.sim_dt, cmd.accel, cmd.steer)
+            step += 1
+
+            # -- metrics ---------------------------------------------------
+            e = world.ego
+            speeds.append(e.v)
+            # Jerk from the realised acceleration.  Samples where the speed hits
+            # the zero floor are skipped: the clip means the vehicle decelerated
+            # less than commanded, so the difference quotient reports a spike that
+            # the occupant never felt.  Left in, it made a stalled run look like a
+            # violently jerky one and buried the real comfort signal.
+            a_act = (e.v - prev_v) / cfg.sim_dt
+            if e.v > 1e-6 and prev_v > 1e-6:
+                m.max_jerk = max(m.max_jerk, abs(a_act - prev_accel) / cfg.sim_dt)
+            prev_accel, prev_v = a_act, e.v
+            m.max_lat_accel = max(
+                m.max_lat_accel, abs(e.v**2 * np.tan(e.delta) / params.wheelbase)
             )
-            trace["path"].append(path.xy.copy() if path is not None else None)
-            trace["d_safe"].append(risk.mean_margin() if risk is not None else 0.0)
-            trace["progress"].append(m.progress)
+            m.max_speed = max(m.max_speed, e.v)
 
-        world.step(cfg.sim_dt, cmd.accel, cmd.steer)
-        step += 1
+            ttc = world.time_to_collision()
+            m.ttc_samples.append(ttc)
+            m.min_ttc = min(m.min_ttc, ttc)
+            m.min_clearance = min(m.min_clearance, world.clearance_to_actors())
 
-        # -- metrics ---------------------------------------------------
-        e = world.ego
-        speeds.append(e.v)
-        # Jerk from the realised acceleration.  Samples where the speed hits
-        # the zero floor are skipped: the clip means the vehicle decelerated
-        # less than commanded, so the difference quotient reports a spike that
-        # the occupant never felt.  Left in, it made a stalled run look like a
-        # violently jerky one and buried the real comfort signal.
-        a_act = (e.v - prev_v) / cfg.sim_dt
-        if e.v > 1e-6 and prev_v > 1e-6:
-            m.max_jerk = max(m.max_jerk, abs(a_act - prev_accel) / cfg.sim_dt)
-        prev_accel, prev_v = a_act, e.v
-        m.max_lat_accel = max(
-            m.max_lat_accel, abs(e.v**2 * np.tan(e.delta) / params.wheelbase)
-        )
-        m.max_speed = max(m.max_speed, e.v)
-
-        ttc = world.time_to_collision()
-        m.ttc_samples.append(ttc)
-        m.min_ttc = min(m.min_ttc, ttc)
-        m.min_clearance = min(m.min_clearance, world.clearance_to_actors())
-
-        hit = world.collision()
-        if hit is not None:
-            m.collision, m.collision_with = True, hit
-            break
-
-        if e.v < cfg.stuck_speed:
-            stuck_for += cfg.sim_dt
-            if stuck_for > cfg.stuck_time:
-                m.timeout = True
+            hit = world.collision()
+            if hit is not None:
+                m.collision, m.collision_with = True, hit
                 break
-        else:
-            stuck_for = 0.0
 
-        m.progress = world.road.progress(e.x, e.y) - start_progress
-        if m.progress >= scenario.goal_progress:
-            m.success = True
-            break
+            if e.v < cfg.stuck_speed:
+                stuck_for += cfg.sim_dt
+                if stuck_for > cfg.stuck_time:
+                    m.timeout = True
+                    break
+            else:
+                stuck_for = 0.0
 
-    m.sim_time = world.t
-    m.mean_speed = float(np.mean(speeds)) if speeds else 0.0
-    m.mean_d_safe = float(np.mean(d_safes)) if d_safes else 0.0
-    if not m.success and not m.collision:
-        m.timeout = True
-    if cfg.record:
-        m.trace = trace
-    return m
+            m.progress = world.road.progress(e.x, e.y) - start_progress
+            if m.progress >= scenario.goal_progress:
+                m.success = True
+                break
+
+        m.sim_time = world.t
+        m.mean_speed = float(np.mean(speeds)) if speeds else 0.0
+        m.mean_d_safe = float(np.mean(d_safes)) if d_safes else 0.0
+        if not m.success and not m.collision:
+            m.timeout = True
+        if cfg.record:
+            m.trace = trace
+        return m
+    finally:
+        # CARLA keeps every actor a disconnected client spawned, so a run that
+        # dies without cleaning up leaves its traffic parked across the map and
+        # the *next* run spawns into a town that is already full -- which does
+        # not crash, it just quietly produces worse numbers.  The built-in
+        # world has no close(); this costs it nothing.
+        closer = getattr(world, "close", None)
+        if callable(closer):
+            closer()

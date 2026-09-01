@@ -91,3 +91,19 @@ def time_to_collision(ego, params, boxes: Sequence[Box]) -> float:
         if t > 0.0:
             best = min(best, float(t))
     return best
+
+
+def range_noise_sigmas(range_m: float, noise: float) -> Tuple[float, float]:
+    """``(sigma_position, sigma_velocity)`` for a track at ``range_m`` metres.
+
+    Shared by both simulators for the same reason as everything else in this
+    module: prediction confidence -- and therefore the dynamic safety margin --
+    is driven by how noisy the tracks are, so if CARLA and the built-in world
+    used different noise models the margin measured in one would not be the
+    margin measured in the other, and the ablation table would not transfer.
+
+    Noise grows with range because that is what a real detector does, and it is
+    what makes confidence vary meaningfully instead of being a constant dressed
+    up as a variable.
+    """
+    return (noise * (0.15 + 0.012 * range_m), noise * (0.30 + 0.020 * range_m))

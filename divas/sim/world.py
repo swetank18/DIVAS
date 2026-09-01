@@ -23,6 +23,7 @@ from matplotlib.path import Path as MplPath
 from divas.sim.geometry import (
     first_hit as _first_hit,
     min_clearance as _min_clearance,
+    range_noise_sigmas as _range_noise_sigmas,
     time_to_collision as _ttc,
 )
 from divas.types import (
@@ -409,8 +410,7 @@ class Actor:
         evy = self.v * np.sin(self.theta)
 
         rng_m = float(np.hypot(self.x - ego.x, self.y - ego.y))
-        sigma_p = noise * (0.15 + 0.012 * rng_m)
-        sigma_v = noise * (0.30 + 0.020 * rng_m)
+        sigma_p, sigma_v = _range_noise_sigmas(rng_m, noise)
         if noise > 0.0:
             ex += rng.normal(0.0, sigma_p)
             ey += rng.normal(0.0, sigma_p)

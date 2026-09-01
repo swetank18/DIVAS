@@ -12,10 +12,12 @@ A free-space-centric autonomy stack. Where a conventional stack asks *"where is 
 
 Phases 0 and 1 are complete: the full six-stage pipeline runs closed-loop, all three rates are honoured, and the metrics harness reports. Stages 1–3 (perception, projection, fusion) are ground-truth stubs served by the simulator; stages 4–6 (prediction, planning, control) are real.
 
+The [CARLA bridge](divas/sim/carla_bridge.py) is written and unit-tested against a stand-in for the `carla` module, so the same runner and the same metrics drive either simulator — but it has not yet been run against a real server. See [`STATUS.md`](STATUS.md).
+
 ## Quick start
 
 ```bash
-python3 -m pytest tests/ -q                      # 22 tests, no ROS or GPU needed
+python3 -m pytest tests/ -q                      # 56 tests, no ROS, GPU or CARLA needed
 python3 scripts/run_demo.py --scenario mixed_traffic   # run one scenario, write a PNG
 python3 scripts/run_ablation.py --seeds 8 --jobs 8     # the ablation table
 python3 scripts/make_comparison.py --scenario mixed_traffic \
@@ -23,6 +25,7 @@ python3 scripts/make_comparison.py --scenario mixed_traffic \
 python3 scripts/calibration.py                        # is the confidence calibrated?
 python3 scripts/tune_predictor.py                     # open-loop predictor accuracy
 python3 scripts/verify_idd.py --root ~/IDD        # Phase 0 dataset check
+python3 scripts/run_carla.py --check                  # CARLA bridge self-test (needs a server)
 ```
 
 ## The pipeline
