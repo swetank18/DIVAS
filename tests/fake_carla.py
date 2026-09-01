@@ -353,6 +353,15 @@ class TrafficManager:
         self.seed = seed
 
 
+class _DestroyActor:
+    def __init__(self, actor) -> None:
+        self.actor = actor
+
+
+class command:                       # noqa: N801 -- mirrors carla.command
+    DestroyActor = _DestroyActor
+
+
 class Client:
     def __init__(self, host: str, port: int) -> None:
         self.host, self.port = host, port
@@ -374,3 +383,21 @@ class Client:
     def get_trafficmanager(self, port: int = 8000) -> TrafficManager:
         self.tm = TrafficManager(port)
         return self.tm
+
+    def apply_batch_sync(self, commands, due_tick_cue: bool = False):
+        """Destroy server-side in one round trip, as CARLA does.
+
+        Returns a response per command. A command naming an already-dead actor
+        is reported as an error rather than raising, which is what lets the
+        real client warn instead of aborting.
+        """
+        out = []
+        for c in commands:
+            try:
+                c.actor.destroy()
+                out.append(True)
+            except RuntimeError:
+                out.append(False)
+        if due_tick_cue:
+            self.world.tick()
+        return out

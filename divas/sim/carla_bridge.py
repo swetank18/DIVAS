@@ -1027,45 +1027,63 @@ class CarlaWorld:
         Idempotent, and every stage is wrapped: a half-finished cleanup that
         raises on the first dead actor leaves the rest of the town littered,
         which is worse than the error it is reporting.
+
+        Three things here were learned from a live server, and all three look
+        like fussiness until you have seen the core dump:
+
+        1. **Stop the sensors before destroying anything.** A listening sensor
+           whose callback fires into a half-torn-down client is an exception
+           thrown on CARLA's own thread, which no ``try`` of ours can catch --
+           it reaches ``std::terminate`` and the process aborts.
+        2. **Destroy walker controllers before their walkers.** A controller
+           attached to an already-destroyed walker is itself already dead, and
+           destroying it warns and then throws.
+        3. **Destroy in one server-side batch, with the tick cue set.** In
+           synchronous mode the server only *processes* a destruction on the
+           next tick. Destroy-then-disconnect leaves the commands queued and
+           the actors alive, which is the leak this method exists to prevent.
         """
         if self._closed:
             return
         self._closed = True
-        for sensor in list(self._sensors.values()) + [
-            getattr(self, "_collision_sensor", None)
-        ]:
-            if sensor is None:
-                continue
+
+        sensors = [s for s in list(self._sensors.values())
+                   + [getattr(self, "_collision_sensor", None)] if s is not None]
+        for sensor in sensors:
             try:
                 sensor.stop()
             except (RuntimeError, AttributeError):
                 pass
-            try:
-                sensor.destroy()
-            except (RuntimeError, AttributeError):
-                pass
-        self._sensors.clear()
         for controller in self._walker_controllers:
             try:
                 controller.stop()
-                controller.destroy()
             except (RuntimeError, AttributeError):
                 pass
-        self._walker_controllers.clear()
-        for info in self._spawned.values():
-            try:
-                info.handle.destroy()
-            except (RuntimeError, AttributeError):
-                pass
-        self._spawned.clear()
+
+        # Controllers first, then sensors, then traffic, then the ego.
+        doomed = (list(self._walker_controllers) + sensors
+                  + [info.handle for info in self._spawned.values()]
+                  + [getattr(self, "vehicle", None)])
         try:
-            self.vehicle.destroy()
+            self.client.apply_batch_sync(
+                [carla.command.DestroyActor(a) for a in doomed if a is not None],
+                True,                       # due_tick_cue: process it this tick
+            )
         except (RuntimeError, AttributeError):
-            pass
-        # Back to async mode last. Leaving the server synchronous with no
-        # client ticking it freezes it for the next person who connects, and
-        # that person is usually you, ten minutes later, wondering why CARLA
-        # hangs.
+            # Fall back to one-by-one rather than leaving a town full of actors.
+            for actor in doomed:
+                try:
+                    actor.destroy()
+                except (RuntimeError, AttributeError):
+                    pass
+        self._sensors.clear()
+        self._walker_controllers.clear()
+        self._spawned.clear()
+
+        # Back to async mode last, and only after the destruction has been
+        # ticked through. Leaving the server synchronous with no client ticking
+        # it freezes it for the next person who connects, and that person is
+        # usually you, ten minutes later, wondering why CARLA hangs.
         try:
             self.tm.set_synchronous_mode(False)
         except (RuntimeError, AttributeError):
