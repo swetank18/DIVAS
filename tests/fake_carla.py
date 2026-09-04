@@ -43,9 +43,42 @@ class Transform:
 
 
 class BoundingBox:
-    def __init__(self, x: float, y: float, z: float = 0.75) -> None:
+    def __init__(self, x: float, y: float, z: float = 0.75,
+                 location: "Location | None" = None,
+                 rotation: "Rotation | None" = None) -> None:
         self.extent = Vector3D(x, y, z)
-        self.location = Location()
+        self.location = location if location is not None else Location()
+        self.rotation = rotation if rotation is not None else Rotation()
+
+
+class CityObjectLabel:
+    """CARLA's semantic label enum, as far as the bridge uses it.
+
+    Plain ints, and deliberately the *real* numbering -- ``Car`` is 14 in
+    0.9.16.  The values themselves never reach our code (it looks labels up by
+    name), but a stand-in that invented its own numbers would hide a rename,
+    and this enum has shifted before: the segmentation tags moved at 0.9.14.
+    """
+
+    Car = 14
+    Truck = 15
+    Bus = 16
+    Motorcycle = 18
+    Bicycle = 19
+
+
+class EnvironmentObject:
+    """A baked-in map mesh. Not an actor: nothing spawns it and it cannot be
+    destroyed, which is exactly why the bridge has to carve it out of the
+    drivable raster instead of tracking it."""
+
+    def __init__(self, name: str, x: float, y: float, yaw: float,
+                 half_length: float, half_width: float) -> None:
+        self.name = name
+        self.bounding_box = BoundingBox(
+            half_length, half_width,
+            location=Location(x, y, 0.0), rotation=Rotation(yaw=yaw),
+        )
 
 
 class VehicleControl:
@@ -108,12 +141,62 @@ class BlueprintLibrary:
         return [bp for bp in self._bps if bp.id.startswith(prefix)]
 
 
+class TrafficLightState:
+    Red = "Red"
+    Yellow = "Yellow"
+    Green = "Green"
+
+
+class TrafficLight:
+    """A light the ego is standing at, with stop waypoints across every lane.
+
+    The multi-lane stop line is the part worth having in a stand-in: a
+    keep-out across only the ego's lane is one a free-space planner drives
+    round, into the oncoming lane, which is a worse outcome than the red it
+    was obeying.
+    """
+
+    def __init__(self, state=TrafficLightState.Red, x: float = 60.0) -> None:
+        self._state = state
+        self._x = x
+
+    def get_state(self):
+        return self._state
+
+    def set_state(self, state) -> None:
+        self._state = state
+
+    def get_stop_waypoints(self) -> List["Waypoint"]:
+        return [Waypoint(self._x, 0.0), Waypoint(self._x, -3.5)]
+
+
+class LaneType:
+    """Only the members the bridge names. Driving is the one that matters:
+    asking for it explicitly is what stops ``get_waypoint`` snapping the ego
+    onto a pavement or a parking bay."""
+
+    Driving = 1
+    Parking = 2
+    Shoulder = 3
+    Sidewalk = 4
+    Any = -1
+
+
 class Waypoint:
-    """A point on the fake town's road: two straight lanes along CARLA +x."""
+    """A point on the fake town's road: two straight lanes along CARLA +x.
+
+    Carries the OpenDRIVE identifiers the bridge reads for telemetry.
+    ``lane_id`` is derived from y so that moving between the two lanes shows
+    up as a lane change, which is what makes the lane-change counter testable
+    without a server.
+    """
 
     def __init__(self, x: float, y: float, lane_width: float = 3.5) -> None:
         self.transform = Transform(Location(x, y, 0.0), Rotation(yaw=0.0))
         self.lane_width = lane_width
+        self.road_id = 0
+        self.lane_id = -1 if y < -1.75 else 1
+        self.is_junction = False
 
     def next(self, distance: float) -> List["Waypoint"]:
         nxt = self.transform.location.x + distance
@@ -147,6 +230,20 @@ class Actor:
 
     def get_physics_control(self) -> PhysicsControl:
         return PhysicsControl()
+
+    def get_traffic_light(self):
+        """The light governing this vehicle, or None outside a trigger volume.
+
+        The fake town puts one at CARLA x = 60 and reports it only within 25 m,
+        which is what makes "no light here" a case the tests actually cover --
+        ``get_traffic_light()`` returning None is the normal state for most of
+        any route, and code that assumes a light is always present fails on
+        open road rather than at a junction.
+        """
+        light = getattr(self._world, "traffic_light", None)
+        if light is None:
+            return None
+        return light if abs(self._tf.location.x - 60.0) < 25.0 else None
 
     def apply_control(self, control: VehicleControl) -> None:
         self.control = control
@@ -221,7 +318,17 @@ class Map:
             x += distance
         return out
 
-    def get_waypoint(self, location: Location) -> Waypoint:
+    def get_waypoint(self, location: Location, project_to_road: bool = True,
+                     lane_type=None) -> Waypoint:
+        """The real signature takes both keywords, and the bridge passes them.
+
+        ``project_to_road=False`` means "return None if this point is not on a
+        lane of that type", which is how the calibration rig discards a sample
+        taken off the carriageway -- so the stand-in has to be able to say no.
+        The fake town's road is the band |y| <= 5.25 m.
+        """
+        if not project_to_road and abs(location.y) > 5.25:
+            return None
         return Waypoint(location.x, location.y)
 
 
@@ -235,6 +342,10 @@ class World:
         self.weather = None
         self.ticks = 0
         self.pedestrian_seed = None
+        #: None means the town has no signals, which is the default so that
+        #: every test written before red lights existed still describes the
+        #: same world. Tests that want one set it explicitly.
+        self.traffic_light = None
         self.cross_factor = None
         self._next_id = 1
         self._map = Map()
@@ -264,6 +375,26 @@ class World:
 
     def get_map(self) -> Map:
         return self._map
+
+    #: Parked cars baked into the fake town, in the *second* lane (CARLA
+    #: y = -3.5) so the ego's own lane at y = 0 stays clear and an episode can
+    #: still run. Two of them, because one would not catch a loop that carves
+    #: only the first.
+    PARKED = (
+        ("SM_FakeParked_1", 60.0, -3.5, 0.0, 2.3, 0.9),
+        ("SM_FakeParked_2", 90.0, -3.5, 0.0, 2.3, 0.9),
+    )
+
+    def get_environment_objects(self, label=None) -> List[EnvironmentObject]:
+        """Baked map meshes for one semantic label.
+
+        Only ``Car`` has any here. The bridge asks for five labels and must
+        cope with a town that has none of most of them -- an empty list is the
+        normal case, not an error.
+        """
+        if label not in (None, CityObjectLabel.Car):
+            return []
+        return [EnvironmentObject(*spec) for spec in self.PARKED]
 
     def get_blueprint_library(self) -> BlueprintLibrary:
         return self._blueprints
