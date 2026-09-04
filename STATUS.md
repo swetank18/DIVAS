@@ -933,3 +933,70 @@ IDD also ships no camera calibration, so the bird's-eye metre scale comes from
 a nominal field of view and mounting height — the geometry is self-consistent,
 the absolute distances are an assumption, and that caption is printed on every
 figure.
+
+---
+
+## 11. The decomposition — it is the tracker, not the motion model
+
+`scripts/required_margin.py --track-noise 0` reruns the sweep with the
+simulator's measurement noise removed, which separates the two things the
+required margin was mixing together.
+
+| lookahead | with sensor noise | model error only | noise share |
+|---|---|---|---|
+| 0.5 s | 3.05 m | **0.30 m** | **90%** |
+| 1.0 s | 4.33 m | 1.09 m | 75% |
+| 1.5 s | 5.89 m | 2.36 m | 60% |
+| 2.0 s | 7.91 m | 4.09 m | 48% |
+| 2.5 s | 9.91 m | 6.16 m | 38% |
+| 3.0 s | 12.01 m | 8.43 m | 30% |
+
+**The motion model is not the problem at the lookaheads that could fit.** At
+half a second constant velocity is wrong by 0.30 m, and 90% of what the margin
+must cover there is measurement noise. Model error only becomes the majority
+beyond about two seconds.
+
+The mechanism is `range_noise_sigmas`: velocity noise is
+`0.30 + 0.020 · range`, so 0.9 m/s at 30 m, and the predictor **extrapolates
+that over the whole horizon** — 2.7 m per axis at 3 s before the motion model
+errs at all.
+
+### The actionable horizon
+
+Against the 1.8 m margin cap from ADR-003, the lookahead at which an honest
+90% keep-out still fits:
+
+```
+with perfect sensing        1.2 s
+with the current tracker    0.0 s
+what the stack plans over   3.0 s
+```
+
+So the planner is committing three seconds ahead on predictions that are not
+covered at **any** lookahead. That is a better explanation of the Phase 1 null
+result than anything before it: the adaptive margin never had a chance,
+because no margin inside the budget covers this prediction at this horizon.
+
+### This reverses a roadmap item
+
+ADR-009 concluded that fixing the predictor was the next task, on the evidence
+that the social-force model was no better than constant velocity. That is
+still true, and it is now also beside the point: **at the horizon where the
+margin could fit, constant velocity is already accurate to 30 cm.** The
+expensive term is the tracker, and the cheap fix is a shorter horizon.
+
+Ordered by measured value:
+
+1. **Shorten the planning horizon** to what is actually covered, and re-run the
+   ablation. `StackConfig.horizon` exists for this.
+2. **Reduce velocity noise** — smoothing, or a filter with a motion model, so
+   that extrapolation is not amplifying a raw per-frame estimate.
+3. **Improve the motion model**, which matters only beyond 2 s and only once
+   the first two are done.
+
+### The caveat to settle before quoting "0.0 s"
+
+RSM here aggregates over *every* tracked actor, including ones at the 60 m
+track range where the noise model is largest, while the planner mostly cares
+about near ones. Conditioning RSM on range will raise the actionable horizon,
+and it should be measured before the 0.0 s figure is used anywhere.
