@@ -49,6 +49,74 @@ SIM_DT = frames[1]["t"] - frames[0]["t"] if len(frames) > 1 else 0.05
 def clear():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
+ASSETS = "assets"
+
+
+def tex_mat(name, base, normal=None, rough_map=None, scale=7.0, tint=(1, 1, 1)):
+    """A PBR material from Poly Haven maps, tiled over the surface.
+
+    Flat colours are what made the first render read as a toy. A real diffuse
+    map with a normal and a roughness map costs almost nothing in EEVEE and is
+    most of the distance between "blocks" and "surfaces".
+    """
+    import os
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    coord = nt.nodes.new("ShaderNodeTexCoord")
+    mapping = nt.nodes.new("ShaderNodeMapping")
+    mapping.inputs["Scale"].default_value = (scale, scale, scale)
+    nt.links.new(coord.outputs["Object"], mapping.inputs["Vector"])
+
+    def img(path, non_color=False):
+        if not path or not os.path.exists(path):
+            return None
+        n = nt.nodes.new("ShaderNodeTexImage")
+        n.image = bpy.data.images.load(path, check_existing=True)
+        if non_color:
+            n.image.colorspace_settings.name = "Non-Color"
+        nt.links.new(mapping.outputs["Vector"], n.inputs["Vector"])
+        return n
+
+    d = img(base)
+    if d:
+        if tint != (1, 1, 1):
+            mix = nt.nodes.new("ShaderNodeMixRGB")
+            mix.blend_type = "MULTIPLY"
+            mix.inputs["Fac"].default_value = 1.0
+            mix.inputs["Color2"].default_value = (*tint, 1.0)
+            nt.links.new(d.outputs["Color"], mix.inputs["Color1"])
+            nt.links.new(mix.outputs["Color"], bsdf.inputs["Base Color"])
+        else:
+            nt.links.new(d.outputs["Color"], bsdf.inputs["Base Color"])
+    r = img(rough_map, non_color=True)
+    if r:
+        nt.links.new(r.outputs["Color"], bsdf.inputs["Roughness"])
+    n = img(normal, non_color=True)
+    if n:
+        nm = nt.nodes.new("ShaderNodeNormalMap")
+        nt.links.new(n.outputs["Color"], nm.inputs["Color"])
+        nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
+    return m
+
+
+def bevel_edges(obj, width=0.045, segments=2):
+    """Catch a highlight on every edge.
+
+    A perfectly sharp 90-degree edge does not exist and reads instantly as
+    computer graphics. Faces stay flat on purpose: subdivision was tried and
+    rounded every primitive into its own blob -- a car with glass shards and
+    cattle like balloon animals.
+    """
+    m = obj.modifiers.new("bevel", "BEVEL")
+    m.width = width
+    m.segments = segments
+    m.limit_method = "ANGLE"
+    m.angle_limit = math.radians(50)
+    return obj
+
+
 def mat(name, rgb, rough=0.8, metal=0.0, emit=0.0):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
@@ -83,7 +151,7 @@ def cyl(name, r, h, loc, material, rot=(0, 0, 0)):
     o.data.materials.append(material)
     return o
 
-def join(objs, name):
+def join(objs, name, bevel=0.045):
     for o in bpy.context.selected_objects:
         o.select_set(False)
     for o in objs:
@@ -92,13 +160,28 @@ def join(objs, name):
     bpy.ops.object.join()
     o = bpy.context.object
     o.name = name
+    if bevel:
+        bevel_edges(o, width=bevel)
     return o
 
 # ------------------------------------------------------------------ palette
 M = {}
 def build_materials():
-    M["tarmac"] = mat("tarmac", (0.10, 0.10, 0.11), rough=0.95)
-    M["dust"] = mat("dust", (0.52, 0.42, 0.28), rough=1.0)
+    import os
+    tex = os.path.join(ASSETS, "tex")
+    def t(n, m):
+        return os.path.join(tex, f"{n}_{m}.jpg")
+    if os.path.exists(t("asphalt_02", "Diffuse")):
+        M["tarmac"] = tex_mat("tarmac", t("asphalt_02", "Diffuse"),
+                              t("asphalt_02", "nor_gl"), t("asphalt_02", "Rough"),
+                              scale=7.0, tint=(0.78, 0.76, 0.73))
+        # brown_mud_dry, not a rocky/grassy map: a green verge is the single
+        # thing that makes a dusty Indian roadside read as an English one.
+        M["dust"] = tex_mat("dust", t("dirt", "Diffuse"), t("dirt", "nor_gl"),
+                            t("dirt", "Rough"), scale=6.0, tint=(1.10, 1.0, 0.86))
+    else:
+        M["tarmac"] = mat("tarmac", (0.10, 0.10, 0.11), rough=0.95)
+        M["dust"] = mat("dust", (0.52, 0.42, 0.28), rough=1.0)
     M["kerb"] = mat("kerb", (0.55, 0.53, 0.50), rough=0.9)
     M["ego"] = mat("ego", (0.85, 0.86, 0.88), rough=0.35, metal=0.4)
     M["glass"] = mat("glass", (0.06, 0.09, 0.11), rough=0.15, metal=0.6)
@@ -236,6 +319,10 @@ def build_world(road_poly, statics, length_hint):
     g.data.materials.append(M["dust"])
 
     road = box("road", (x1 - x0, 2 * half, 0.04), ((x0 + x1) / 2, 0, 0.0), M["tarmac"])
+    for obj in (g, road):
+        mod = obj.modifiers.new("subd", "SUBSURF")
+        mod.subdivision_type = "SIMPLE"
+        mod.levels = mod.render_levels = 2
     for sy in (half, -half):
         box("kerb", (x1 - x0, 0.5, 0.22), ((x0 + x1) / 2, sy, 0.11), M["kerb"])
 
@@ -284,7 +371,7 @@ def build_lighting():
     """Warm, high, hazy -- Indian midday, not an overcast European afternoon."""
     bpy.ops.object.light_add(type="SUN", location=(0, 0, 60))
     sun = bpy.context.object
-    sun.data.energy = 5.5
+    sun.data.energy = 2.6
     # A small angular diameter gives hard-edged shadows. Indian midday sun is
     # harsh, and soft shadows read as an overcast European afternoon.
     sun.data.angle = math.radians(0.9)
@@ -296,7 +383,23 @@ def build_lighting():
         w = bpy.data.worlds.new("World")
         bpy.context.scene.world = w
     w.use_nodes = True
-    bg = w.node_tree.nodes["Background"]
+    nt = w.node_tree
+    bg = nt.nodes["Background"]
+    import os
+    hdri = os.path.join(ASSETS, "hdri", "sky.hdr")
+    if os.path.exists(hdri):
+        # A captured sky. Its value is the *lighting*, not the backdrop: a
+        # hemisphere of measured radiance gives every surface a plausible
+        # ambient term, which one flat colour cannot at any strength.
+        env = nt.nodes.new("ShaderNodeTexEnvironment")
+        env.image = bpy.data.images.load(hdri, check_existing=True)
+        mp = nt.nodes.new("ShaderNodeMapping")
+        cd = nt.nodes.new("ShaderNodeTexCoord")
+        mp.inputs["Rotation"].default_value = (0, 0, math.radians(150))
+        nt.links.new(cd.outputs["Generated"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs["Vector"], env.inputs["Vector"])
+        nt.links.new(env.outputs["Color"], bg.inputs["Color"])
+        bg.inputs["Strength"].default_value = 0.85
     # Warm, slightly dusty sky rather than clean blue: the haze is what puts
     # distance in a flat scene with no atmospheric perspective of its own.
     bg.inputs["Color"].default_value = (0.74, 0.76, 0.76, 1.0)
@@ -432,10 +535,13 @@ def configure_render():
     except AttributeError:
         pass
     scene.view_settings.view_transform = "AgX"
-    scene.view_settings.look = "AgX - Medium High Contrast"
+    scene.view_settings.look = "AgX - High Contrast"
+    scene.view_settings.exposure = -0.3
 
 
 def main():
+    global ASSETS
+    ASSETS = arg("--assets", "assets")
     clear()
     build_materials()
     build_world(data["road"], data["statics"], 120.0)

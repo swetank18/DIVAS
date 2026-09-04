@@ -164,6 +164,94 @@ def cattle_and_crowd(seed: int) -> World:
                  seed=seed)
 
 
+def cattle_and_crowd_long(seed: int) -> World:
+    """The bazaar street, extended into a continuous run of about a minute.
+
+    Same character as :func:`cattle_and_crowd` and the same reasons for each
+    element, but laid out in four zones along 260 m rather than one cluster,
+    so the vehicle meets a fresh problem roughly every fifteen seconds
+    instead of solving one and then driving down an empty road:
+
+    * 30-60 m   the herd, standing across the carriageway;
+    * 70-110 m  a market crowd crossing from both verges;
+    * 120-160 m a pinch, between a stopped bus and a handcart;
+    * 170-240 m mixed traffic -- autos, two-wheelers, a bullock cart.
+
+    Built for the rendered walkthrough rather than for the ablation. The
+    ablation wants short, isolated scenarios where one mechanism explains the
+    outcome; a minute-long run through four different problems is the
+    opposite, and averaging over it would hide which part did what.
+    """
+    # Two passes of the four-zone pattern, 260 m apart, so the run lasts about
+    # a minute at the 8 m/s cruise instead of ending in thirty seconds. The
+    # offsets are applied programmatically rather than by writing out forty
+    # more actors, which would be forty more chances to typo a coordinate.
+    road = Road.straight(length=620.0, half_width=6.5)
+    statics, actors = [], []
+    for rep, off in enumerate((0.0, 260.0)):
+        statics += [
+            Rect(46.0 + off, 5.0, 9.0, 2.6, 0.0, "stopped_bus"),
+            Circle(30.0 + off, 1.6, 0.8, "pothole"),
+            Rect(128.0 + off, -5.4, 9.0, 2.6, 0.0, "stopped_bus"),
+            Rect(140.0 + off, 5.6, 2.2, 1.4, 0.0, "handcart"),
+            Circle(96.0 + off, -2.2, 0.9, "pothole"),
+            Rect(196.0 + off, 5.2, 4.4, 1.9, 0.0, "parked_car"),
+            Circle(172.0 + off, 2.4, 0.7, "pothole"),
+            Rect(232.0 + off, -5.2, 4.4, 1.9, 0.02, "parked_car"),
+        ]
+        # Each pass starts about 32 s later, which is how long the previous one
+        # takes to drive; the crowd is then still waiting when the ego arrives.
+        dt = 32.0 * rep
+        b = 100 * rep
+        actors += [
+            # the herd
+            Actor(b + 1, "animal", 34.0 + off, 1.4, 0.25, 0.0, "wait_then_go",
+                  {"cruise": 0.8, "start_time": 1.0 + dt}),
+            Actor(b + 2, "animal", 37.5 + off, 3.0, -0.15, 0.0, "wait_then_go",
+                  {"cruise": 0.6, "start_time": 2.2 + dt}),
+            Actor(b + 3, "animal", 36.0 + off, 0.2, 0.30, 0.0, "wait_then_go",
+                  {"cruise": 0.7, "start_time": 3.6 + dt}),
+            Actor(b + 4, "animal", 40.5 + off, 2.2, 0.0, 0.0, "constant"),
+            # the market crowd
+            Actor(b + 10, "pedestrian", 74.0 + off, -6.1, 1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.4, "start_time": 7.0 + dt}),
+            Actor(b + 11, "pedestrian", 80.0 + off, -6.3, 1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.1, "start_time": 8.5 + dt}),
+            Actor(b + 12, "pedestrian", 86.0 + off, 6.2, -1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.3, "start_time": 10.0 + dt}),
+            Actor(b + 13, "pedestrian", 94.0 + off, -6.0, 1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.5, "start_time": 12.0 + dt}),
+            Actor(b + 14, "pedestrian", 102.0 + off, 6.1, -1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.2, "start_time": 14.0 + dt}),
+            Actor(b + 15, "pedestrian", 110.0 + off, -6.2, 1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.0, "start_time": 16.0 + dt}),
+            # the pinch
+            Actor(b + 20, "animal", 132.0 + off, -1.0, 0.10, 0.0, "wait_then_go",
+                  {"cruise": 0.5, "start_time": 20.0 + dt}),
+            Actor(b + 21, "animal", 136.0 + off, 0.8, 0.0, 0.0, "constant"),
+            Actor(b + 22, "pedestrian", 146.0 + off, 6.0, -1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.2, "start_time": 24.0 + dt}),
+            Actor(b + 23, "pedestrian", 152.0 + off, -6.1, 1.5708, 0.0,
+                  "wait_then_go", {"cruise": 1.4, "start_time": 26.0 + dt}),
+            # mixed traffic
+            Actor(b + 30, "autorickshaw", 60.0 + off, -3.4, 0.0, 5.0,
+                  "stop_and_go", {"cruise": 5.5, "period": 9.0}),
+            Actor(b + 31, "motorcycle", 100.0 + off, 3.6, 0.0, 7.0, "erratic",
+                  {"sigma": 0.07, "vmin": 5.0, "vmax": 9.0}),
+            Actor(b + 32, "autorickshaw", 178.0 + off, 2.6, 0.0, 4.5,
+                  "stop_and_go", {"cruise": 5.0, "period": 8.0}),
+            Actor(b + 33, "motorcycle", 190.0 + off, -3.8, 0.0, 8.0, "cutin",
+                  {"trigger_gap": 13.0, "heading_change": 0.42,
+                   "duration": 1.5}),
+            Actor(b + 34, "bicycle", 210.0 + off, -4.6, 0.0, 3.5, "constant"),
+            Actor(b + 35, "animal", 216.0 + off, 1.2, 0.05, 0.0, "constant"),
+            Actor(b + 37, "motorcycle", 240.0 + off, 2.8, 0.0, 6.5, "erratic",
+                  {"sigma": 0.06, "vmin": 4.5, "vmax": 8.0}),
+        ]
+    return World(road=road, statics=statics, actors=actors, ego=_ego(8.0),
+                 seed=seed)
+
+
 def oncoming_negotiation(seed: int) -> World:
     """Shared narrow carriageway: an oncoming truck, parked vehicles pinching
     the gap.  There is no lane to yield into -- only free space to share."""
@@ -264,6 +352,11 @@ SCENARIOS: Dict[str, Scenario] = {
                  pedestrian_crossing, tests="agents stay in their lane"),
         Scenario("oncoming_negotiation", "Shared carriageway, oncoming truck, parked cars",
                  oncoming_negotiation, tests="a lane graph defines legal routes"),
+        Scenario("cattle_and_crowd_long",
+                 "The bazaar street over 260 m: herd, market crowd, a pinch "
+                 "between stopped buses, then mixed traffic",
+                 cattle_and_crowd_long, goal_progress=500.0, time_limit=90.0,
+                 tests="a walkthrough, not an ablation arm"),
         Scenario("cattle_and_crowd",
                  "Cattle standing in the carriageway, a crowd crossing from both "
                  "verges, corridor pinched by a stopped bus",
