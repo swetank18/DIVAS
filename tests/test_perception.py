@@ -15,7 +15,8 @@ import numpy as np
 import pytest
 
 from divas.perception.bev import (
-    BevSpec, Camera, free_space_to_grid, horizon_row, max_reliable_range, project,
+    BevSpec, Camera, free_space_to_grid, horizon_row, max_reliable_range,
+    min_visible_range, project,
 )
 from divas.perception.datasets.idd_polygons import (
     IGNORE, OTHER, ROAD, SHOULDER, class_of, drivable_from_mask, rasterize,
@@ -170,7 +171,19 @@ def test_unseen_ground_is_occupied_rather_than_free():
     cam = _cam()
     nothing_drivable = np.zeros((288, 512), dtype=bool)
     grid = free_space_to_grid(nothing_drivable, cam, BevSpec(forward=20, lateral=8))
-    assert grid.occupied_mask().all()
+    occ = grid.occupied_mask()
+    # Everything is occupied *except* the near-field corridor the vehicle is
+    # standing on, which is bridged deliberately -- see
+    # test_the_near_field_blind_spot_is_bridged. That exception is small: a
+    # corridor about a vehicle wide out to the nearest visible ground.
+    assert occ.mean() > 0.92
+    # The corridor runs from the rear of the grid to the nearest visible
+    # ground: the vehicle drove through the ground behind it, so that is
+    # evidence too.
+    spec = BevSpec(forward=20, lateral=8)
+    expected = 2 * spec.near_field_halfwidth * (min_visible_range(cam, 288) + spec.behind)
+    free_area = (~occ).sum() * grid.resolution ** 2
+    assert free_area < expected + 1.0
 
     all_drivable = np.ones((288, 512), dtype=bool)
     grid = free_space_to_grid(all_drivable, cam, BevSpec(forward=20, lateral=8))
@@ -187,3 +200,40 @@ def test_the_grid_is_ego_centred_with_room_behind():
                               BevSpec(forward=24, behind=4, lateral=10))
     assert grid.origin[0] == pytest.approx(-4.0, abs=0.3)
     assert grid.origin[1] == pytest.approx(-10.0, abs=0.3)
+
+
+def test_the_near_field_blind_spot_is_bridged():
+    """A forward camera cannot see the road under its own bumper.
+
+    Unseen ground is occupied, so without a bridge the ego starts inside an
+    obstacle and *every* plan fails -- which is exactly what the first run of
+    the demo did: every frame came back partial with no path drawn. A still
+    image has no previous frame to carry forward, so the corridor the vehicle
+    is standing on is taken as drivable.
+    """
+    cam = _cam()
+    near = min_visible_range(cam, 288)
+    assert 1.0 < near < 12.0                     # the wedge is real and bounded
+
+    grid = free_space_to_grid(np.zeros((288, 512), dtype=bool), cam,
+                              BevSpec(forward=20, behind=3, lateral=8))
+    occ = grid.occupied_mask()
+
+    # directly ahead, inside the blind spot: bridged
+    iy, ix = grid.world_to_cell(0.5 * near, 0.0)[::-1]
+    assert not occ[iy, ix]
+    # the same distance but well off to the side: still occupied, because the
+    # bridge is a corridor and not a blanket clearing
+    iy, ix = grid.world_to_cell(0.5 * near, 6.0)[::-1]
+    assert occ[iy, ix]
+
+
+def test_the_bridge_does_not_reach_past_what_the_camera_sees():
+    """Beyond the nearest visible ground the evidence is real, so the bridge
+    must stop -- otherwise it would paint free space over a detected obstacle."""
+    cam = _cam()
+    near = min_visible_range(cam, 288)
+    grid = free_space_to_grid(np.zeros((288, 512), dtype=bool), cam,
+                              BevSpec(forward=20, behind=3, lateral=8))
+    iy, ix = grid.world_to_cell(near + 4.0, 0.0)[::-1]
+    assert grid.occupied_mask()[iy, ix]

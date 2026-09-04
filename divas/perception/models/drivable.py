@@ -97,7 +97,7 @@ class DrivableSegmenter:
     def load(checkpoint: Path, device: str = "cuda",
              size: Tuple[int, int] = (512, 288)) -> "DrivableSegmenter":
         model = build_model(pretrained=False)
-        state = torch.load(str(checkpoint), map_location="cpu")
+        state = torch.load(str(checkpoint), map_location="cpu", weights_only=True)
         model.load_state_dict(state["model"] if "model" in state else state)
         model.eval().to(device)
         return DrivableSegmenter(model=model, device=device, size=size)

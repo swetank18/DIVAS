@@ -72,6 +72,9 @@ class BevSpec:
     behind: float = 4.0           # m behind, so the ego's own footprint exists
     lateral: float = 16.0         # m either side
     resolution: float = 0.25      # m per cell, matching ADR-001
+    #: Half-width of the near-field corridor assumed drivable, metres. See
+    #: :func:`min_visible_range` for why it is needed at all.
+    near_field_halfwidth: float = 1.6
 
     @property
     def shape(self) -> Tuple[int, int]:
@@ -140,9 +143,45 @@ def free_space_to_grid(
         spec.resolution,
     )
     occupied = ~sampled if unknown_is_occupied else ~(sampled | ~inside)
+
+    # Bridge the near-field blind spot: the strip from the ego to the closest
+    # ground the camera can see. Kept to a corridor about a vehicle wide, so
+    # it cannot invent free space out to the sides where the planner might
+    # actually want to go.
+    near = min_visible_range(cam, h)
+    if np.isfinite(near) and near > 0.0:
+        bridge = (gx <= near) & (np.abs(gy) <= spec.near_field_halfwidth)
+        occupied &= ~bridge
+
     grid.data = occupied.astype(np.float32)
     grid.invalidate_cache()
     return grid
+
+
+def min_visible_range(cam: Camera, image_height: int) -> float:
+    """Nearest ground distance the camera can see, metres.
+
+    A forward-facing camera cannot see the road under its own bumper: the
+    ground between the vehicle and this range falls below the bottom edge of
+    the frame. Projecting a single photograph therefore leaves a wedge of
+    "unseen" directly ahead, and since unseen is treated as occupied, **the
+    planner starts inside an obstacle and every plan fails**. That is exactly
+    what the first run of the demo did -- every plan came back partial, with
+    nothing drawn.
+
+    A vehicle in motion resolves this by carrying previous frames forward; a
+    still image has no previous frame. :func:`free_space_to_grid` therefore
+    takes the corridor from the ego to this range as drivable, on the
+    reasoning that the vehicle is standing on it. That is an assumption and it
+    is narrow -- a corridor barely wider than the car -- rather than a blanket
+    clearing of the near field.
+    """
+    dv = ((image_height - 1) - cam.cy) / cam.fy
+    c, s = math.cos(cam.pitch), math.sin(cam.pitch)
+    denom = dv * c + s
+    if denom <= 1e-6:
+        return float("inf")
+    return float(cam.height * (c - dv * s) / denom + cam.x_offset)
 
 
 def horizon_row(cam: Camera) -> float:
