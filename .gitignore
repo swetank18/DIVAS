@@ -8,6 +8,12 @@ demo_*.png
 # datasets and checkpoints stay out of the repo
 data/
 datasets/
+# ...but divas/perception/datasets/ is *code* that loads them, not data. The
+# bare `datasets/` rule above matches it at any depth, which silently dropped
+# idd_polygons.py from a commit -- the file was written, staged, refused, and
+# the commit succeeded without it.
+!divas/perception/datasets/
+!divas/perception/datasets/**
 *.pth
 *.onnx
 *.engine
