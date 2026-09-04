@@ -12,7 +12,7 @@ A free-space-centric autonomy stack. Where a conventional stack asks *"where is 
 
 Phases 0 and 1 are complete: the full six-stage pipeline runs closed-loop, all three rates are honoured, and the metrics harness reports. Stages 1–3 (perception, projection, fusion) are ground-truth stubs served by the simulator; stages 4–6 (prediction, planning, control) are real.
 
-The [CARLA bridge](divas/sim/carla_bridge.py) is written and unit-tested against a stand-in for the `carla` module, so the same runner and the same metrics drive either simulator — but it has not yet been run against a real server. See [`STATUS.md`](STATUS.md).
+The [CARLA bridge](divas/sim/carla_bridge.py) drives the same runner and the same metrics against a live CARLA 0.9.16 server: one closed-loop episode on Town10HD reaches its 200 m goal with no collision at 7.12 m/s mean, and `demo/carla_town10_ours.mp4` shows it. The longitudinal plant was identified against that server rather than assumed — see [`docs/longitudinal-calibration.png`](docs/longitudinal-calibration.png) and §6 of [`STATUS.md`](STATUS.md), which also records what the measurement did *not* support.
 
 ## Quick start
 
@@ -26,6 +26,16 @@ python3 scripts/calibration.py                        # is the confidence calibr
 python3 scripts/tune_predictor.py                     # open-loop predictor accuracy
 python3 scripts/verify_idd.py --root ~/IDD        # Phase 0 dataset check
 python3 scripts/run_carla.py --check                  # CARLA bridge self-test (needs a server)
+python3 scripts/export_for_matlab.py                  # references for the MATLAB check
+```
+
+Against a live CARLA server, through `~/carla-venv/bin/python3`:
+
+```bash
+./scripts/carla_server.sh                             # server on the discrete GPU
+~/carla-venv/bin/python3 scripts/calibrate_longitudinal.py --plot   # identify the pedal plant
+~/carla-venv/bin/python3 scripts/record_carla.py      # the jury video
+matlab -batch "cd('sim/matlab'); validate_against_python"           # cross-check the models
 ```
 
 ## The pipeline

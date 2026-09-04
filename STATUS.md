@@ -1,9 +1,15 @@
 # Where this stands — handoff, 1 Sep 2026
 
-*Updated later the same day: **the stack drives in CARLA.** Driver fixed,
-0.9.16 installed, bridge validated end-to-end on Town10HD — 101 m, no
-collision, 46.7 ms p95. §2 has the numbers. The deck (§0c) is now the only
-thing still waiting entirely on you.*
+*Updated 3 Sep 2026, the night before the presentation: **the ego now reaches
+its goal in CARLA** — 201.7 m, no collision, 7.12 m/s mean, up from 101.1 m and
+4.56 m/s. The cause was the pedal model, it was identified against the live
+server rather than guessed at, and the honest size of the effect is smaller
+than it first looked. There is a rendered jury video. §6 is the whole account,
+and it corrects §3 item 1b, which blamed the wrong thing.*
+
+*Updated 1 Sep 2026, later the same day: **the stack drives in CARLA.** Driver
+fixed, 0.9.16 installed, bridge validated end-to-end on Town10HD — 101 m, no
+collision, 46.7 ms p95. §2 has the numbers.*
 
 Read this first when you come back. It is written to be resumable without
 re-reading the conversation.
@@ -88,21 +94,31 @@ the extraction.
 Still outstanding from the very first analysis, and independent of any code:
 
 1. **Faculty Mentor and Industry Mentor rows on slide 7 are empty** and both
-   are marked *(Mandatory)*. Hard submission blocker.
-2. Slide 1 says "SMART INDIA HACKATHON **2025**"; the PS ID is SIH26037.
-3. Two registration numbers look malformed — Swetank `RA25033010134` (13
-   chars) and Aneek `RA251102601641` (14), where the others are 15.
+   are marked *(Mandatory)*. Hard submission blocker, and the only one left
+   that nobody but you can clear. `scripts/fill_deck_mentors.py` writes them
+   in place, keeping the row's existing font — pass
+   `--faculty "Name|Dept|Year|Sem|Gender|Email|Mobile"` and the same for
+   `--industry`. It prints what is still blocking, so it is also the check.
+2. ~~Slide 1 says "SMART INDIA HACKATHON **2025**"~~ — **fixed 3 Sep**, now
+   2026. A timestamped backup of the previous file sits beside it.
+3. Two registration numbers are still malformed — Swetank `RA25033010134`
+   (13 chars) and Aneek `RA251102601641` (14), where the other four are 15.
+   **Not guessed and not patched**: the pattern would suggest
+   `RA2511026010134` and `RA2511026010641`, but these are identity numbers on
+   a submitted form, and a plausible-looking wrong one is worse than a
+   visibly wrong one. Confirm them and run
+   `--fix-reg "SWETANK KUMAR=RA..."`, repeatable.
 
 ---
 
 ## 1. What exists and works
 
 Repo: <https://github.com/swetank18/autonomous_path> — all yours, no co-author
-trailers. ~7,100 lines, **56 tests green**, 9 ADRs.
+trailers. ~8,300 lines, **70 tests green**, 9 ADRs.
 
 ```bash
-python3 -m pytest tests/ -q                       # 56 passed + 3 skipped, no GPU, ROS or CARLA
-~/carla-venv/bin/python3 -m pytest tests/ -q      # 59 passed, incl. the real-client checks
+python3 -m pytest tests/ -q                       # 70 passed + 3 skipped, no GPU, ROS or CARLA
+~/carla-venv/bin/python3 -m pytest tests/ -q      # 73 passed, incl. the real-client checks
 python3 scripts/run_ablation.py --seeds 8 --jobs 12
 python3 scripts/make_comparison.py --scenario pedestrian_crossing \
     --left baseline_conventional --right cv_pred_fixed_margin --seed 1
@@ -232,11 +248,9 @@ afterwards shows only the map's own traffic lights and the spectator.
    The semantic camera gives free drivable-area ground truth in the same frame
    as the RGB the model consumes — verified live at 41.4% drivable on a forward
    view.
-1b. **Tune the longitudinal mapping.** Mean speed in CARLA was 4.56 m/s against
-   a 9.0 m/s cruise target. Some of that is Town10 traffic, but
-   `control_from_command` is deliberately crude — throttle proportional to
-   requested acceleration, no engine or brake force curve. Check that before
-   blaming the MPC, and re-check it before quoting any CARLA speed number.
+1b. ~~**Tune the longitudinal mapping.**~~ **DONE, 3 Sep — and the guess in
+   this item was wrong.** The mapping was indeed the problem, but not for the
+   reason written here, and not at the size implied. See §6.
 2. **(was Phase 2, now folded into 1.)** The semantic camera gives free drivable-area ground
    truth in the same frame as the RGB the model consumes — `semantic` in
    `--sensors`, then `semantic_drivable_mask`. Note `DRIVABLE_TAGS` excludes
@@ -315,3 +329,364 @@ Western roads *with* lane markings. Your stack ignores lane markings by
 design, so free-space navigation still tests honestly — but the road *texture*
 will not be Indian until you build a custom map in RoadRunner, which needs the
 MATLAB licence. Worth knowing so the deck does not overclaim.
+
+---
+
+## 6. The night before, 3 Sep — the pedal model, and a demo that reaches its goal
+
+### What was wrong, and what was wrong about the diagnosis
+
+§3 item 1b said the ego crawled because `control_from_command` was crude. Half
+right, and the reasoning under it was wrong in a way worth recording, because
+the wrong version is the one that sounds convincing.
+
+The mapping was `throttle = accel / max_accel`, open loop. Stage 6 emits
+`accel = 1.1 * (v_ref - v)`, so the command decays to zero exactly as the ego
+arrives at its reference — and zero throttle means coasting. The first guess
+was that this alone explained 4.56 m/s against a 9.0 m/s cruise target.
+
+**It cannot.** The steady-state error of a proportional loop against a
+disturbance is `disturbance / gain`. Producing a 4.4 m/s error at a gain of 1.1
+needs a resistance of nearly 5 m/s², and a real car coasts at about 0.3. The
+first test written for the fix failed on exactly this point, which is what the
+test was for. Two things were actually true:
+
+1. **CARLA's coast-down is enormous** — not 0.3 m/s² but **4.08 m/s² at
+   9 m/s**, measured. The default vehicle physics carry
+   `damping_rate_zero_throttle_clutch_engaged = 2.0` and an autobox that
+   downshifts hard on lift-off (gear 3 → 2 → 1 within a second). This is
+   engine braking, it is an order of magnitude beyond real drag, and it is
+   *the plant*, so it has to be modelled rather than argued with.
+2. **`max_accel` and `min_accel` are the planner's comfort limits**, 2.0 and
+   −4.0 m/s², and were being used as the pedal normalisation. The vehicle's
+   real authority is **6.47** and **3.44** m/s² per unit of pedal. Normalising
+   a pedal by a comfort bound is a category error, and it is wrong here by
+   more than a factor of one and a half in both directions.
+
+Even together these are worth about **1.1 m/s**, not 4.4. The rest of the
+original 4.56 m/s mean was always legitimate: Town10 traffic, junctions, and a
+curvature-limited reference that is simply below cruise on a dense urban route.
+**Do not let the deck claim otherwise.**
+
+### The plant was identified, not guessed
+
+`scripts/calibrate_longitudinal.py` measures it on the live server: coast-down
+segments at 3, 5, 7, 9, 11 and 13 m/s with lane keeping, then a pedal-authority
+sweep, then the same speed-hold run under the old mapping and the new one.
+Record in `docs/longitudinal-calibration.{json,png}`.
+
+```
+resistance  ResistanceModel(c0=2.3915, c1=0.18802, c2=0.0)   RMS residual 0.77 m/s^2
+pedals      throttle_gain 6.47   brake_gain 3.44   m/s^2 per unit
+speed hold  open loop (old)   7.88 m/s      closed loop (new)   9.01 m/s
+            against a 9.0 m/s reference, straight and empty
+```
+
+Two traps paid for in the rig itself, both now guarded:
+
+- **Steering straight ahead is not a control experiment.** The first version
+  held `steer = 0` on Town04, whose highway curves; the ego left the
+  carriageway in seconds and the coast-down it measured — 1.5 to 3.3 m/s² —
+  was the rolling resistance of *grass*. Every sample is now discarded unless
+  the ego stayed on a `Driving` lane for the whole window.
+- **Clamping fitted coefficients is not the same as constraining a fit.**
+  `fit_resistance` originally forced `c0, c2 >= 0` after solving the joint
+  normal equations, because drag cannot be negative. CARLA's curve flattens
+  above 9 m/s and genuinely wants a negative quadratic term; pinning it turned
+  a good fit into `1.31 v`, which reads 11.8 m/s² at cruise, and the resulting
+  feedforward floored the throttle and drove the ego to **26 m/s** before it
+  crashed. The fit is now unconstrained and the *curve* is validated for
+  positivity, falling back to a line and then to the mean.
+
+Also: **Town04 segfaults the server.** 6 GB of VRAM does not fit the large
+maps. Calibration runs on Town10HD_Opt.
+
+### The controller
+
+`LongitudinalTracker` in the bridge: resistance feedforward, measured pedal
+gains, and an integral trim on the *acceleration* tracking error with
+anti-windup. The trim matters more than it looks — the feedforward is a
+three-parameter fit with a 0.77 m/s² residual to a gear-dependent, hysteretic
+curve, so it is wrong everywhere by a little. `control_from_command` is kept
+as the open-loop baseline the calibration compares against.
+
+`ki = 0.60`, `i_limit = 3.0`. The limit is generous on purpose: braking
+saturates constantly in traffic. It is *not* enough to overcome a plant that
+physically cannot reach the reference, and it should not be — there is a test
+that asks for an unreachable speed and asserts the tracker sits on a floored
+throttle at the plant's ceiling instead of integrating against physics.
+
+### The result, same scenario and seed as §2
+
+| | 1 Sep | 3 Sep |
+|---|---|---|
+| progress | 101.1 m | **201.7 m — goal reached** |
+| mean speed | 4.56 m/s | **7.12 m/s** |
+| min clearance | 4.95 m | 4.66 m |
+| collision | none | none |
+| e2e p95 | 46.7 ms | 51.6 ms |
+
+### The jury video
+
+```bash
+~/carla-venv/bin/python3 scripts/record_carla.py --stack cv_pred_fixed_margin --seed 1
+```
+
+`demo/carla_town10_ours.mp4` — chase camera on the left, the stack's own view
+on the right: drivable area, the planned path, tracked actors, and a halo at
+`d_safe` around each one. Both panels are the *same* episode, so they cannot
+disagree. A `chase` camera was added to the sensor rig for this and nothing
+upstream of stage 1 may read it.
+
+Encode settings are deliberate — straight from 1920-wide frames at CRF 20 this
+came out at 39 MB, six times the size of the whole repository. 1600 wide at
+CRF 26 is 8 MB and indistinguishable on a projector.
+
+### The CARLA episode does not discriminate between the arms — know this
+
+The baseline arm was recorded on the same map, same seed, same traffic
+(`demo/carla_town10_baseline.mp4`) and it **also reaches the goal**: 201.7 m,
+7.31 m/s, min clearance 4.39 m, no collision. Ours: 201.7 m, 7.12 m/s, 4.66 m,
+no collision.
+
+So be precise about what the CARLA video is evidence *for*. It is an
+integration and feasibility claim — the same six stages drive a full vehicle
+dynamics model in a rendered town at 51.6 ms p95, which is what ADR-005 and
+the stage contracts were built to make possible. It is **not** evidence that
+prediction-aware planning helps, and presenting it that way would be
+overclaiming something the run does not show.
+
+The reason is not subtle: CARLA's traffic manager drives *politely* and its
+walkers use AI controllers that largely keep to the pavement, so this episode
+never contains the conflict the method addresses. The 2-D scenarios were built
+adversarially on purpose — a pedestrian steps off the kerb, a two-wheeler cuts
+in — and that is where the baseline hits things and the ablation separates
+0.42 from 0.06.
+
+**In the deck:** lead the scientific claim with
+`demo/compare_pedestrian_crossing_*.mp4` and the ablation table, and use the
+CARLA video for "and it runs in a real simulator, on real vehicle dynamics".
+Discriminating between arms *in CARLA* would need scripted adversarial
+scenarios rather than the traffic manager, which is a real next task and is
+not done.
+
+### Free space now means free space
+
+`DrivableRaster.carve` clears oriented boxes out of the drivable mask, and
+`CarlaWorld` feeds it the town's baked-in obstacles from
+`get_environment_objects`. This matters because the mask is painted from the
+lane graph, and **Town10HD carries 48 parked vehicles as static meshes rather
+than actors** — nothing spawns them, `ground_truth_tracks` cannot report them,
+and left alone they read as drivable.
+
+**Measured effect on Town10HD: essentially none, and say so.** Of the 32 that
+fall inside the rasterised area, *zero* have their centre on a driving lane;
+the median sits 3.38 m clear of one, because this is a US-style town that
+parks in bays. One cell gets carved, from a corner overlap. The mechanism is
+kept because it is the correct definition of free space and because the roads
+this project is actually about do not park in bays — a lorry stopped in the
+carriageway is the normal case on an Indian road, and it is precisely the case
+a lane-graph raster gets silently wrong. **This is not a Town10 result.**
+
+### MATLAB
+
+Installer is `~/Downloads/matlab_R2026a_Linux` (the *online* installer, 672 MB,
+which downloads products at install time). `sudo ~/Downloads/matlab_R2026a_Linux/install`,
+and select MATLAB, Simulink, Automated Driving Toolbox, Model Predictive
+Control Toolbox, Computer Vision Toolbox and Navigation Toolbox.
+
+`sim/matlab/` holds an independent implementation of the two models every
+published number rests on — the kinematic bicycle and the longitudinal
+controller — plus `validate_against_python.m`, which replays references
+exported by `scripts/export_for_matlab.py` and reports the disagreement. It
+needs base MATLAB only; `divas_wrap_angle.m` exists so that `wrapToPi`
+(Mapping Toolbox) is not required.
+
+```bash
+python3 scripts/export_for_matlab.py
+matlab -batch "cd('sim/matlab'); validate_against_python"
+```
+
+The exported Python reference already reproduces the live server: closed loop
+settles at 9.0000 m/s and the old mapping at 7.9100, against 9.01 and 7.88
+measured in CARLA. **The MATLAB half has not been executed** — MATLAB is not
+installed yet, and there is no Octave on this machine to stand in for it (and
+Octave would not, honestly: `readtable`, `yline` and `exportgraphics` are not
+in it). Treat the `.m` files as reviewed but unrun until that command prints
+PASS.
+
+Be careful what this buys. It establishes that the integrator and the pedal
+controller are not artefacts of one codebase. It says nothing about the
+planner, the predictor or the risk field, none of which are reimplemented, and
+it cannot catch an error *shared* by both implementations. RoadRunner — the
+actual reason the licence matters — is a multi-day asset job and the deck
+should not claim an Indian custom map.
+
+---
+
+## 7. Extended navigation, 3 Sep — what a long drive exposed
+
+Asked for a long run with full navigation, lane changes, parking and traffic.
+Three of those four are now real; the fourth is not, and this section says why
+rather than dressing something else up as it.
+
+### Routes longer than the town
+
+Town10HD is about 400 x 230 m, so any drive past roughly a kilometre is a
+circuit -- and `Route.progress` searched the **whole** polyline for the nearest
+point, which on a self-crossing route is not a small inaccuracy but a wrong
+answer. `Route(windowed=True)` follows a cursor instead. It is opt-in
+(`CarlaConfig.long_route`, `--long-route`) because every published number was
+measured with the global search, and silently changing how progress is
+measured would move all of them.
+
+Getting it right took two goes, and both failures are worth keeping:
+
+1. **Argmin over a band of arc length teleports.** The band is measured along
+   the route; "near" is measured in space. On a two-way street the opposite
+   carriageway is 3.5 m away spatially and tens of metres away along the
+   route, so the cursor jumped to it. Measured: a 25 s run reporting
+   **1808 m** of progress, or 72 m/s. Following the route forward to the first
+   local minimum of distance cannot cross that gap.
+2. **Starting the walk behind the cursor stalls it.** A 20 m backward window
+   looks like harmless robustness. From there the nearest local minimum
+   genuinely *is* the outbound carriageway, so the cursor never follows onto
+   the return leg: an out-and-back route stalled at **67 m of 123 m**. The
+   walk now starts at the cursor and progress ratchets, which is safe because
+   neither simulator lets the vehicle reverse.
+
+Both are pinned by tests using realistic geometry -- a closed lap driven twice,
+and an out-and-back on separated carriageways. The earlier test used a route
+that overlapped itself *exactly*, which no road does and which no algorithm
+can resolve without heading.
+
+### Lane changes, measured rather than asserted
+
+`CarlaWorld.lane_context()` reports the OpenDRIVE `road_id`, `lane_id` and
+junction flag; `record_carla.lane_events` turns a run into a count. Two things
+it gets right and a naive version does not: lane ids are unique only *within* a
+road, so the pair is what changes; and junction frames are excluded, because
+lane ids inside a junction describe connecting roads and every turn would
+otherwise read as a burst of lane changes -- the first HUD reported **33
+junctions in 88 m** for exactly that reason.
+
+State this carefully in the deck. **The planner has no concept of a lane.** It
+plans over free space, which is the entire design. These are lane changes
+*observed* in the trajectory a free-space planner produced, not manoeuvres it
+selected. That is a more interesting claim than the one it is easy to overstate
+into, and it is the true one.
+
+### Red lights
+
+The stack had no signal handling at all, which on a signalled Western town is a
+real gap. It now arrives the only way it honestly can: a red light becomes a
+**keep-out in the static costmap**, spanning every lane that light stops --
+because a free-space planner asked to avoid a barrier across one lane will
+drive round it into the oncoming one. Ground truth from the simulator, exactly
+like the tracks and the drivable area, standing in for the perception that
+would report it. Not a contribution; do not present it as one.
+
+Verified live: with every light in Town10HD frozen red, the ego is handed two
+keep-out boxes 3.8 m ahead, correctly oriented across both lanes.
+
+**But be honest about how little this was exercised.** Instrumenting a 25 s
+dense run: of 237 perception steps, the ego had **no light governing it 226
+times and a green 11 times -- and never once a red.** So red-light handling
+neither caused nor prevented anything measured below, and its only live test is
+the forced one above.
+
+### Dense traffic: it collides about half the time
+
+Five seeds, 40 vehicles and 20 pedestrians, 25 s, long route:
+
+| | collision rate | mean progress |
+|---|---|---|
+| without red-light keep-outs | 0.40 | 453 m |
+| with them | 0.60 | 503 m |
+
+Two of five versus three of five is not a difference at n=5, and it could not
+be one given the ego never met a red. **The honest reading is that at this
+density the stack collides roughly half the time**, always with a vehicle
+(`actor:car`, `actor:truck`) and at a minimum time-to-collision of 0.3--0.8 s.
+
+The likely cause is not signals and not the pedal model: **the stack has no
+right-of-way or yielding logic.** It plans through free space, and at a
+junction free space includes the path of a vehicle that is about to occupy it.
+The risk field extends the predicted actors, but a constant-velocity prediction
+of a car that has not yet started its turn does not cover where it will be.
+This is a real limitation, it is the next thing worth fixing, and it should be
+said out loud rather than discovered by a juror.
+
+### The long-route crawl is congestion, not the controller
+
+A 1343 m windowed route at 20 vehicles covers 189 m in the first 30 s -- the
+same 6-7 m/s the short route managed -- and then slows to about 0.5 m/s for the
+next minute. Two things it is **not**, both checked rather than assumed:
+
+* **Not the progress metric.** Instrumented against distance actually driven:
+  221.6 m of progress against 222.1 m driven. The windowed cursor tracks.
+* **Not the red-light keep-outs.** Same seed, same route, 90 s:
+  221.6 m with them and 225.1 m without. Within noise.
+
+What is left is congestion: Town10's traffic manager queues at signals, the ego
+queues behind it, and it has no overtaking policy that would justify pulling
+out around a stopped queue into an oncoming lane. That is realistic urban
+behaviour rather than a defect, but it does mean **mean speed over a long town
+route is dominated by waiting**, and quoting it as a capability number would be
+misleading in the other direction from the 4.56 m/s figure in §6.
+
+### The extended run, and what it ends on
+
+`demo/carla_town10_extended.mp4` -- seed 3, 1369 m windowed route, 20 vehicles
+and 10 pedestrians, 3x speed:
+
+```
+415.9 m driven    4 lane changes    6 junction traversals
+no collision      min clearance 1.08 m      mean speed 6.06 m/s
+```
+
+It **ends stopped at a junction after 68 s**, with no plan drawn, terminated by
+the runner's stuck detector rather than by the 200 s limit. That is not the
+pedal model and not the route: on the same seed over 45 s the long route plans
+at **0.99 success and 81 ms e2e p95**, indistinguishable from the short route
+(0.98, 89 ms), and the goal geometry is identical -- median 28.2 m ahead,
+maximum 30.9 m, all comfortably inside the 32 m costmap.
+
+What changes is congestion. When the ego is boxed in at a busy junction the
+goal 28 m ahead is genuinely unreachable through stopped traffic, Hybrid A*
+runs to its 4000-iteration ceiling proving it, and `plan_success_rate` falls to
+0.48 with e2e p95 at 530-720 ms. **Those latency figures are the planner
+failing, not the planner being slow**, and they must not be quoted as timing
+for a working stack -- nor as a real-time claim at all, per ADR-008.
+
+The honest summary for the deck: the stack navigates a kilometre-scale town
+route through traffic, changes lanes and negotiates junctions, and gets stuck
+when a junction jams. Fixing that is the yielding/right-of-way work above, plus
+a fallback for a goal that is temporarily unreachable -- neither of which
+exists yet.
+
+### Parking — not supported, and not faked
+
+Two independent blockers, both checked rather than assumed:
+
+1. **The planner cannot reverse.** `HybridAStar._expand` generates forward arc
+   primitives only (`+L`), and both simulators clamp `v >= 0` -- the built-in
+   world at `divas/sim/world.py`, and the bridge through the same state. Any
+   parking manoeuvre that needs a reverse leg is unreachable, and parallel
+   parking needs one by definition.
+2. **Town10HD has no parking bays in its road network.** Its OpenDRIVE carries
+   only `Driving`, `Shoulder` and `NONE` lane types next to the carriageway;
+   there is no `Parking` lane to target. The 48 parked vehicles are static
+   meshes standing on shoulders, not bays.
+
+What it would take, honestly: reverse motion primitives in Hybrid A* with a
+direction-switch cost (the branching factor doubles), signed speed through the
+MPC and the bicycle model, reverse gear in `control_from_command`, and a map
+with somewhere to park. That is a day or two of careful work touching the
+planner every published result depends on -- not a thing to attempt the night
+before a presentation.
+
+What the stack *does* do at the end of a route is taper to a controlled stop
+(`Path.terminal_stop`), which the new longitudinal controller now holds
+properly through its standstill branch. Call that "comes to a controlled stop
+at its destination". Do not call it parking.
