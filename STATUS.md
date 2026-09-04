@@ -690,3 +690,246 @@ What the stack *does* do at the end of a route is taper to a controlled stop
 (`Path.terminal_stop`), which the new longitudinal controller now holds
 properly through its standstill branch. Call that "comes to a controlled stop
 at its destination". Do not call it parking.
+
+---
+
+## 8. Phase 4, 4 Sep — the margin becomes a measurement
+
+The Phase 1 ablation killed this project's headline mechanism: a fixed margin
+equal to the dynamic arm's mean scored identically, 0.90/0.08. Phase 4 is the
+answer to *why*, and to what replaces it.
+
+### Why the adaptive margin could not have worked
+
+Not because adaptivity is worthless, and not because the confidence signal is
+noise. ADR-009 measured that signal and it is real: prediction error by
+confidence quintile runs **7.01, 5.59, 4.47, 3.90, 2.66 m**, correlation −0.27.
+
+**The problem is scale.** That is 4.35 m of error variation. `lam` is 0.8 m and
+the margin is capped at 1.8 m, because ADR-003 found that ~5 m keep-outs block
+a 10 m carriageway outright. The margin's entire dynamic range is about a fifth
+of the variation it is responding to. With a range that small, only the mean
+can matter — which is exactly what the control arm reported.
+
+There is a second, sharper problem with the signal itself. Confidence is the
+spatial dispersion of the predictor's modes: *the predictor disagreeing with
+itself*, which is not *the predictor being wrong*. With the constant-velocity
+predictor there is one mode, so dispersion is identically zero and the
+"dynamic" margin is **literally a constant** — for every actor, at every step,
+in every scenario. There is a test asserting that.
+
+### What replaces it
+
+```
+tuned       d_safe(t) = d0 + k_v·v_ego + λ·(1 − confidence(t))
+calibrated  d_safe(t) = d0 + k_v·v_ego + q_{1−α}(t)
+```
+
+`q_{1−α}(t)` is the conformal quantile of the predictor's **own recent error**
+at lookahead `t`. Split conformal gives a distribution-free finite-sample
+guarantee, `P(‖actual − predicted‖ ≤ q) ≥ 1 − α`, with no assumption about the
+predictor, the noise or the traffic — a property no tuned coefficient has at
+any value. Realised coverage: **0.941 / 0.891 / 0.793** against nominal
+0.95 / 0.90 / 0.80, flat across every horizon step.
+
+This is also the honest answer to the closest prior art. Fisac et al. (RSS
+2018) get the same *shape* from Bayesian model confidence and Hamilton–Jacobi
+reachability; this is weaker in per-step guarantee and stronger in assumptions,
+because it needs none.
+
+### Two bugs found in our own calibrator, and one reversed conclusion
+
+1. **Coverage was self-referential.** `observe` scored each residual against a
+   quantile recomputed *after* inserting that residual. It now scores against
+   the margin that was in force when the prediction was made — which is both
+   unbiased and the question the vehicle actually faced.
+2. **The quantile was recomputed per residual**, re-partitioning the whole
+   window every time. Quadratic in the window; a calibration sweep ran for
+   forty minutes without finishing.
+
+Fixing (1) reversed the conclusion on adaptive conformal inference (Gibbs &
+Candès 2021). Post-shift coverage, honestly scored:
+
+| window | plain rolling | with ACI |
+|---|---|---|
+| 240 (default) | 0.880 | **0.844** |
+| 1200 | 0.848 | 0.834 |
+| 4000 | 0.771 | 0.814 |
+
+**ACI makes things worse at the default window** — the rolling quantile already
+tracks the shift, and ACI is a second feedback loop correcting an error the
+first one fixed. It is off by default, and a test fails if it is switched back
+on silently. The earlier claim that it recovered 0.700 → 0.860 came from the
+biased measurement and is withdrawn.
+
+### The finding that matters most
+
+The first live run of the conformal arm **saturated its own cap**: mean
+`d_safe` 2.45 m against a 2.5 m ceiling, coverage still only 0.854.
+
+**An honest 90% keep-out for constant-velocity prediction at a 3 s lookahead
+does not fit on the road.** No margin policy — fixed, tuned or calibrated — can
+cover an error wider than the carriageway. Calibration does not create
+accuracy; it reveals its absence, as a number rather than as a mis-tuned
+coefficient nobody can see.
+
+Two instruments follow, and they are the Phase 4 deliverables:
+
+* **Required Safety Margin**, `scripts/required_margin.py` — a predictor metric
+  denominated in metres of carriageway rather than in ADE/FDE. A predictor
+  change that does not reduce RSM has bought the planner nothing.
+* **Actionable horizon** — the lookahead past which an honestly calibrated
+  keep-out stops fitting on the road. `StackConfig.horizon` exists so the
+  ablation can test whether a shorter, well-covered horizon beats a longer,
+  under-covered one.
+
+### What Phase 4 does not yet claim
+
+That any of this reduces collisions. That is the ablation's job, and it will be
+answered with the same control arm that killed the heuristic — a fixed margin
+at the conformal arm's own mean. If it ties again, the conclusion is again that
+size beat variation, and it gets reported the same way.
+
+---
+
+## 9. Phase 4 result — the required safety margin
+
+`scripts/required_margin.py` measures the quantity the planner actually needs,
+which falls straight out of conformal calibration:
+
+> **RSM(t, α)** — the (1−α) quantile of the predictor's displacement error at
+> lookahead `t`, in metres. The radius a keep-out must have for the actor to be
+> inside it (1−α) of the time.
+
+It is denominated in **metres of carriageway** rather than in ADE/FDE, because
+that is a budget the vehicle either has or does not, and it is a *quantile*
+rather than a mean, so it speaks about the tail that collides.
+
+Over 323,414 residuals, 8 scenarios × 3 seeds, at 90% coverage:
+
+| lookahead | 0.5 s | 1.0 s | 1.5 s | 2.0 s | 2.5 s | 3.0 s |
+|---|---|---|---|---|---|---|
+| constant velocity | 3.05 | 4.33 | 5.89 | 7.91 | 9.91 | **12.01 m** |
+| social force | 3.09 | 4.41 | 6.05 | 8.19 | 10.20 | **12.43 m** |
+
+**The margin the stack carries is capped at 1.8 m.** The margin an honest 90%
+keep-out needs at a 3 s lookahead is **12 m**, and even at half a second it is
+already 3 m. Short by a factor of seven at the horizon the planner actually
+uses.
+
+That is the whole explanation of the Phase 1 null result, and it is a better
+one than "the confidence signal is weak". A fixed 1.4 m margin and a dynamic
+one averaging 1.4 m scored identically because **both are equally inadequate**:
+the difference between them is noise against an error an order of magnitude
+larger. No margin policy can cover an error wider than the road.
+
+It also refutes the interaction-aware arm on its own terms rather than by
+ablation alone: social force needs **more** margin than constant velocity
+(12.43 against 12.01 m), consistent with ADR-009's finding that its obstacle
+term made it less accurate than the baseline.
+
+### The decomposition, which decides what to claim
+
+Part of that 12 m is the simulator's own measurement noise rather than the
+motion model. `range_noise_sigmas` gives
+
+```
+sigma_position = 0.15 + 0.012 · range        0.51 m at 30 m
+sigma_velocity = 0.30 + 0.020 · range        0.90 m/s at 30 m
+```
+
+and **velocity noise is extrapolated by the predictor over the whole horizon**:
+0.9 m/s at a 3 s lookahead is 2.7 m per axis before the model makes a single
+mistake. So a large part of RSM's growth with `t` is sensor noise amplified by
+extrapolation, not a bad motion model, and the two lead to opposite fixes —
+better tracking and a shorter horizon on one hand, a better predictor on the
+other. `--track-noise 0` runs the same sweep with the noise removed to
+separate them.
+
+**Do not attribute the 12 m to the predictor until that split is measured.**
+
+### The design consequence
+
+RSM turns the prediction horizon from a constant into a measured variable. A
+3 s horizon is only useful if the planner can carry a 12 m keep-out, and on a
+10 m carriageway it cannot. The **actionable horizon** is the lookahead at
+which RSM still fits the margin budget, and `StackConfig.horizon` exists so the
+ablation can test whether a shorter, honestly-covered horizon beats a longer,
+under-covered one.
+
+---
+
+## 10. Phase 5, 4 Sep — the stack finally sees
+
+Until now stages 1–3 were ground-truth stubs: the simulator handed the planner
+its free space. The project is *named* for segmenting drivable area instead of
+detecting lanes, and that was the one part not implemented. It is now.
+
+### What was built
+
+```
+IDD photograph → drivable-area segmentation → BEV free space → Hybrid A*
+```
+
+* `divas/perception/datasets/idd_polygons.py` — IDD ships **only**
+  `_gtFine_polygons.json`; there are no label PNGs in the archive. That is
+  better than it sounds, because polygons carry label *names*, which removes
+  the need for `idd.py`'s flagged `DRIVABLE_LEVEL3_IDS` hypothesis entirely.
+* `divas/perception/models/drivable.py` — LR-ASPP over MobileNetV3-Large,
+  fine-tuned from ImageNet. **3.22 M parameters, 3.7 ms per frame at 512×288
+  on an RTX 3050 — 267 FPS against a stage-1 budget of 10 Hz.**
+* `divas/perception/bev.py` — ground-plane projection, BEV cell → image pixel.
+* `scripts/{prepare_idd,train_drivable,demo_perception,eval_perception_planning}.py`
+
+### What checking the data corrected
+
+**There is no `parking` class in IDD.** `idd.py` names the drivable set as
+`("road", "parking", "drivable fallback")`; scanning 400 annotation files found
+32 distinct labels and no `parking` among them. The set is `road` plus
+`drivable fallback`.
+
+**And a claim made from one frame that the aggregate refuted.** A single val
+image showed 19.5% road against 26.0% shoulder, which looked like a superb
+line — *the shoulder is bigger than the road*. Over 800 masks the true split is
+**road 25.40%, drivable fallback 4.27%, not drivable 70.34%**. The shoulder is
+a *rare* class, which makes it the hard one to learn, and the line does not
+survive. What does survive is narrower and still true: Cityscapes and KITTI
+have no label for it at all, so a model trained on them cannot represent it.
+
+That correction also fixed a real bug — the loss weights had been hard-coded
+from that single frame, and would have trained the model to under-weight
+exactly the class the dataset was chosen for. They are now measured from the
+cache at startup.
+
+### The metric that IoU cannot give
+
+Every frame is planned **twice** — once on the network's free space, once on
+the annotator's, same goal, same Hybrid A\* that produced the closed-loop
+ablation — and the difference is reported in metres. A frame with IoU 0.85
+where both planners produce the same path is a frame where perception was good
+enough; a frame with IoU 0.95 where the paths diverge by two metres is not, and
+the pixel metric cannot tell them apart.
+
+### Three bugs found by looking at the figure rather than the numbers
+
+1. **The near-field blind spot.** A forward camera cannot see the road under
+   its own bumper — `min_visible_range` puts it at 3.55 m — and unseen ground
+   is occupied, so the ego started *inside an obstacle* and every plan failed.
+   Visible in the first figure as a black wedge directly ahead.
+2. **"Furthest free cell ahead" is a trap.** Free space seen through a gap in a
+   hedge is free, and disconnected. Half the goals chosen that way were
+   unreachable, and the planner's failure to reach them read as a planning
+   failure.
+3. **Cell connectivity is not vehicle traversability.** Cells connect through a
+   one-cell gap; a 3.9 × 1.7 m vehicle does not. The reachability flood fill now
+   runs on configuration space — free space eroded by half the vehicle width
+   plus the planner's inflation.
+
+### What Phase 5 does not claim
+
+It is stages 1 → 2 → 5 on real imagery. It is **not closed-loop**: a single
+photograph has no next frame, so there is no control step and no prediction.
+IDD also ships no camera calibration, so the bird's-eye metre scale comes from
+a nominal field of view and mounting height — the geometry is self-consistent,
+the absolute distances are an assumption, and that caption is printed on every
+figure.
