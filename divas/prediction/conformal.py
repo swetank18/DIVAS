@@ -42,12 +42,18 @@ than glossed.**  Closed-loop driving violates exchangeability in two ways: the
 ego's own actions change the distribution of what it observes next, and traffic
 is non-stationary.  Two things follow.  First, the window is rolling, so the
 calibration tracks the current regime rather than the average of the episode.
-Second -- and this is why the method is defensible rather than merely
-fashionable -- ``alpha`` is adapted online in the manner of Gibbs & Candes
-(2021), *Adaptive Conformal Inference Under Distribution Shift*: when realised
-coverage runs below nominal the effective alpha shrinks and the interval widens,
-and vice versa.  ACI's guarantee is on *long-run* coverage and survives
-arbitrary distribution shift, which is the right guarantee for a control loop.
+Second, ``alpha`` *can* be adapted online in the manner of Gibbs & Candes
+(2021), *Adaptive Conformal Inference Under Distribution Shift*, whose
+guarantee is on long-run coverage and survives arbitrary shift.
+
+It is **off by default**, and the reason is a measurement rather than a
+preference.  With the rolling window at its default 240 the window itself
+already tracks a shift, and ACI then becomes a second feedback loop correcting
+an error the first has fixed: it overshoots, ``alpha_t`` settles near 0.13, and
+coverage comes out *worse* than plain rolling conformal -- 0.844 against 0.880.
+It only pays when the window is too long to adapt, which is what it was
+designed for: at a 4000-sample window it recovers 0.771 to 0.814.  See
+:class:`ConformalConfig`.
 
 **The claim this module is allowed to support.**  That the margin is
 *calibrated* -- that its empirical coverage matches its nominal target -- is a
@@ -91,8 +97,22 @@ class ConformalConfig:
     #: actor's own speed error, so a linear prior in lookahead time is the
     #: right shape to start from.
     prior_rate: float = 0.55
-    #: Adaptive conformal inference. Off gives plain rolling split conformal.
-    adaptive: bool = True
+    #: Adaptive conformal inference (Gibbs & Candes 2021). **Off by default,
+    #: on a measurement rather than on the citation.** Post-shift coverage,
+    #: scoring each residual against the margin that was actually in force:
+    #:
+    #:     window   plain    ACI     delta
+    #:        240   0.880   0.844   -0.036
+    #:       1200   0.848   0.834   -0.014
+    #:       4000   0.771   0.814   +0.043
+    #:
+    #: At the default window the rolling quantile already tracks the shift,
+    #: and ACI is a second, slower feedback loop correcting an error the first
+    #: one has already fixed -- it overshoots, alpha_t settles near 0.13, and
+    #: the margin systematically under-covers. It earns its place only when
+    #: the window is too long to adapt on its own, which is the case it was
+    #: designed for. Turn it on with a long window, not with a short one.
+    adaptive: bool = False
     #: ACI step size. Gibbs & Candes use 0.005-0.05; larger tracks shift
     #: faster and is noisier.
     gamma: float = 0.02
@@ -126,8 +146,14 @@ class ConformalCalibrator:
         self._scores: List[Deque[float]] = [
             deque(maxlen=self.cfg.window) for _ in range(self.n_steps)
         ]
-        #: Outstanding predictions: actor id -> list of (target_t, step, xy).
-        self._pending: Dict[int, List[Tuple[float, int, np.ndarray]]] = {}
+        #: Outstanding predictions: actor id -> list of
+        #: ``(target_t, step, xy, margin_in_force)``.
+        self._pending: Dict[int, List[Tuple[float, int, np.ndarray, float]]] = {}
+        #: Cached quantile per step, cleared when that step's window changes.
+        #: Without it ``observe`` re-partitions the whole window for every
+        #: residual it scores, which is quadratic in the window size and turns
+        #: a long calibration sweep into an overnight job.
+        self._q_cache: List[Optional[float]] = [None] * self.n_steps
         #: ACI state. alpha_t is the *effective* level; cfg.alpha is the target.
         self._alpha_t = float(self.cfg.alpha)
         self._hits = 0
@@ -152,9 +178,9 @@ class ConformalCalibrator:
         half = 0.5 * self.dt
         for aid, entries in list(self._pending.items()):
             keep: List[Tuple[float, int, np.ndarray]] = []
-            for target_t, step, xy in entries:
+            for target_t, step, xy, q_then in entries:
                 if target_t > t + half:
-                    keep.append((target_t, step, xy))
+                    keep.append((target_t, step, xy, q_then))
                     continue
                 here = actual.get(aid)
                 # An actor that has left the scene is dropped, not scored.
@@ -162,9 +188,14 @@ class ConformalCalibrator:
                 # predictor for a disappearance it did not predict.
                 if here is not None and t - target_t <= half:
                     err = float(np.linalg.norm(here - xy))
+                    # Judged against the margin that was in force when the
+                    # prediction was made, not one recomputed now -- which
+                    # would contain this very residual and bias the answer
+                    # towards success. This is the question the vehicle
+                    # actually faced, and it is the honest one to score.
+                    covered = err <= q_then
                     self._scores[step].append(err)
-                    q = self._quantile_at(step)
-                    covered = err <= q
+                    self._q_cache[step] = None
                     self._hits += int(covered)
                     self._total += 1
                     self._per_step_hits[step] += int(covered)
@@ -190,7 +221,8 @@ class ConformalCalibrator:
             entries = self._pending.setdefault(int(tr.track_id), [])
             for k in range(n):
                 entries.append((t + (k + 1) * self.dt, k,
-                                np.asarray(path[k], dtype=np.float64)))
+                                np.asarray(path[k], dtype=np.float64),
+                                self._quantile_at(k)))
 
     def _expire(self, t: float) -> None:
         """Drop predictions whose moment passed with nothing to score against."""
@@ -214,11 +246,22 @@ class ConformalCalibrator:
         if not self.cfg.adaptive:
             return
         err = 0.0 if covered else 1.0
+        before = self._alpha_t
         self._alpha_t += self.cfg.gamma * (self.cfg.alpha - err)
         self._alpha_t = float(min(max(self._alpha_t, 0.01), 0.5))
+        if self._alpha_t != before:      # every quantile depends on alpha
+            self._q_cache = [None] * self.n_steps
 
     # -- the margin -------------------------------------------------------
     def _quantile_at(self, step: int) -> float:
+        cached = self._q_cache[step]
+        if cached is not None:
+            return cached
+        q = self._compute_quantile(step)
+        self._q_cache[step] = q
+        return q
+
+    def _compute_quantile(self, step: int) -> float:
         s = self._scores[step]
         n = len(s)
         prior = self.cfg.prior_rate * (step + 1) * self.dt

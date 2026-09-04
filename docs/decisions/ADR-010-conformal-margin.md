@@ -61,28 +61,41 @@ art invites. Fisac et al. (RSS 2018) derive the same *shape* of behaviour from
 Bayesian model confidence plus Hamilton–Jacobi reachability; the mechanism here
 is weaker in guarantee-per-step and stronger in assumptions: it needs none.
 
-Verified rather than asserted: realised coverage is 0.948 / 0.900 / 0.801
-against nominal 0.95 / 0.90 / 0.80, and flat across every horizon step.
+Verified rather than asserted: realised coverage is **0.941 / 0.891 / 0.793**
+against nominal 0.95 / 0.90 / 0.80, and flat across every horizon step. It sits
+about a point under nominal by construction, because the online margin is the
+one that was in force when the prediction was made and therefore lags the
+current window by a cycle. That is the number the vehicle actually gets.
 
-## Adaptive conformal, and when it earns its place
+## Adaptive conformal is available, and is off by default
 
 Closed-loop driving breaks exchangeability twice over — the ego's actions
-change what it observes next, and traffic is non-stationary. `alpha` is
-therefore adapted online after Gibbs & Candès (2021), whose guarantee is on
-long-run coverage and survives arbitrary shift.
+change what it observes next, and traffic is non-stationary — so `alpha` *can*
+be adapted online after Gibbs & Candès (2021), whose guarantee is on long-run
+coverage and survives arbitrary shift.
 
-It is on by default because of a measurement, not a citation. Post-shift
-coverage under a 3× error jump:
+**It is off by default, and the reason is a measurement that contradicted the
+expectation.** Post-shift coverage under a 3× error jump, scoring each residual
+against the margin that was actually in force at prediction time:
 
-| window | plain rolling | with ACI |
-|---|---|---|
-| 240 | 0.890 | 0.895 |
-| 1200 | 0.832 | 0.882 |
-| 4000 | 0.700 | 0.860 |
+| window | plain rolling | with ACI | ACI's effect |
+|---|---|---|---|
+| 240 (default) | 0.880 | 0.844 | **−0.036** |
+| 1200 | 0.848 | 0.834 | −0.014 |
+| 4000 | 0.771 | 0.814 | +0.043 |
 
-At the default window the rolling quantile adapts on its own and ACI is within
-noise; it is insurance against a window that is too long for the regime, and it
-costs nothing.
+At the default window the rolling quantile already tracks the shift, and ACI
+becomes a *second* feedback loop correcting an error the first has fixed. It
+overshoots, `alpha_t` settles near 0.13, and coverage comes out worse than
+plain rolling conformal. It earns its place only where it was designed to —
+a window too long to adapt on its own.
+
+**An earlier draft of this ADR reported ACI recovering 0.700 → 0.860 and had it
+on by default.** Those figures came from a calibrator that scored each residual
+against a quantile recomputed *after* inserting that residual, which biases
+coverage upward and flattered the adaptive arm. The bookkeeping is fixed
+(`observe` now scores against the margin in force at `record` time) and the
+conclusion reversed with it.
 
 ## The uncomfortable part, again
 

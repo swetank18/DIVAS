@@ -96,29 +96,38 @@ def test_the_margin_is_a_quantile_not_a_mean():
 # --------------------------------------------------------------------------
 
 
-def test_aci_recovers_coverage_when_the_window_cannot():
-    """Why ACI is on by default, stated as a measurement.
+def _shift_coverage(adaptive, window):
+    cal = ConformalCalibrator(STEPS, DT, ConformalConfig(
+        alpha=0.1, adaptive=adaptive, window=window, min_samples=30))
+    drive(cal, n=6000, shift_at=2500, seed=1)
+    return cal.coverage()
 
-    With a short window the rolling quantile adapts on its own and ACI is
-    within noise. With a long one it cannot, and plain conformal under-covers
-    badly after a distribution shift. ACI decouples the level from the window,
-    which is the case it earns its place in.
+
+def test_aci_helps_only_when_the_window_is_too_long_to_adapt():
+    """Why ACI is OFF by default, stated as a measurement.
+
+    It is the citation everyone reaches for, and at this project's default
+    window it makes coverage *worse*. The rolling quantile already tracks the
+    shift, so ACI becomes a second feedback loop correcting an error the first
+    one has fixed; it overshoots and the margin under-covers. It pays only
+    where it was designed to, with a window too long to adapt on its own.
     """
-    def run(adaptive, window):
-        cal = ConformalCalibrator(STEPS, DT, ConformalConfig(
-            alpha=0.1, adaptive=adaptive, window=window, min_samples=30))
-        drive(cal, n=6000, shift_at=2500, seed=1)
-        return cal.coverage()
+    assert _shift_coverage(True, 4000) > _shift_coverage(False, 4000) + 0.02
 
-    plain_long, aci_long = run(False, 4000), run(True, 4000)
-    assert plain_long < 0.82                       # badly under-covered
-    assert aci_long > plain_long + 0.05            # and ACI pulls it back
+
+def test_aci_is_not_free_at_a_short_window():
+    """The measurement that set the default. Pinned so that turning ACI back
+    on silently -- because the paper is good -- fails loudly."""
+    plain, aci = _shift_coverage(False, 240), _shift_coverage(True, 240)
+    assert plain > aci
+    assert ConformalConfig().adaptive is False
 
 
 def test_aci_moves_alpha_in_the_right_direction():
     """Under-coverage must widen the interval, not narrow it. A sign error
     here is silent: the margin still moves, just always the wrong way."""
-    cal = ConformalCalibrator(STEPS, DT, ConformalConfig(alpha=0.1, gamma=0.05))
+    cal = ConformalCalibrator(STEPS, DT, ConformalConfig(
+        alpha=0.1, gamma=0.05, adaptive=True))
     start = cal.alpha_t
     for _ in range(50):
         cal._update_alpha(covered=False)           # persistent misses
@@ -131,7 +140,8 @@ def test_aci_moves_alpha_in_the_right_direction():
 def test_alpha_stays_off_both_ends():
     """At alpha <= 0 the quantile is unbounded and the vehicle freezes; at
     alpha >= 1 there is no margin at all."""
-    cal = ConformalCalibrator(STEPS, DT, ConformalConfig(alpha=0.1, gamma=0.5))
+    cal = ConformalCalibrator(STEPS, DT, ConformalConfig(
+        alpha=0.1, gamma=0.5, adaptive=True))
     for _ in range(500):
         cal._update_alpha(covered=False)
     assert cal.alpha_t >= 0.01
