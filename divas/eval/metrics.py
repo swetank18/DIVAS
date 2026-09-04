@@ -124,6 +124,14 @@ class RunMetrics:
             "plan_ms_p95": round(self.timer("plan").p95, 1),
             "control_ms_p95": round(self.timer("control").p95, 1),
             "e2e_ms_p95": round(self.end_to_end_p95, 1),
+            # Present only for the conformal arm. Serialised because a
+            # coverage number that lives only in a process that has exited
+            # cannot be checked against the collision rate it explains.
+            "conformal_coverage": round(self.conformal_coverage, 4)
+            if self.conformal_coverage is not None else None,
+            "conformal_alpha": round(self.conformal_alpha, 4)
+            if self.conformal_alpha is not None else None,
+            "conformal_scored": self.conformal_scored,
         }
 
 
