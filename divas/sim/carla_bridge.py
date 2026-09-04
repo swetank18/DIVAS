@@ -882,6 +882,42 @@ class _Spawned:
     half_width: float
 
 
+@dataclass(frozen=True)
+class ObstructionSpec:
+    """An unstructured-traffic scene laid along the ego's own route.
+
+    CARLA's traffic manager produces orderly Western traffic: vehicles keep
+    their lanes, pedestrians keep to the pavement, and nothing stands in the
+    carriageway. That is the opposite of the case this project exists for, and
+    it is why the stock CARLA episode does not discriminate between the
+    ablation arms -- there is no conflict in it.
+
+    This places the conflict deliberately, anchored to the route rather than
+    scattered across the map, so the ego actually meets it.
+
+    **On the cattle.** CARLA 0.9.16 ships no animal blueprint -- 214
+    blueprints, and the only match for "cow", "goat" or "buffalo" is
+    ``static.prop.doghouse``. The herd is therefore represented by *standing
+    pedestrians in the carriageway*, which is a substitution and is labelled
+    as one wherever this scene is shown. Structurally it poses the planner the
+    same question: a non-vehicle obstruction, stationary, occupying the lane,
+    that no amount of lane-following can resolve. It is not a picture of
+    cattle and must not be presented as one.
+    """
+
+    #: Standing in the carriageway, no AI controller, so they do not walk away.
+    standing: int = 8
+    #: Crossing from the verges, with controllers aimed at the far side.
+    crossing: int = 10
+    #: Stopped vehicles, partially in lane, pinching the corridor.
+    blockers: int = 3
+    #: Where along the route the scene begins and how far it runs, metres.
+    start_m: float = 25.0
+    span_m: float = 70.0
+    #: Lateral spread of the standing group about the route centre, metres.
+    lateral: float = 3.0
+
+
 @dataclass
 class CarlaConfig:
     """Everything about a CARLA session that is a choice rather than a fact."""
@@ -905,6 +941,18 @@ class CarlaConfig:
     #: Let the route cross itself, for drives longer than the town. Implies a
     #: windowed :class:`Route`; see :func:`route_from_waypoint`.
     long_route: bool = False
+    #: Start the ego where the pedestrians actually are. CARLA's walker
+    #: navigation mesh covers only part of a town -- in Town10HD it is a
+    #: district around ``y = +75..+82`` -- and walkers cannot be spawned or
+    #: sent anywhere else, because one placed off the mesh is dead by the next
+    #: tick. Rather than move the crowd to the ego, this moves the ego to the
+    #: crowd, which is the only direction that works.
+    spawn_in_crowd: bool = False
+    #: Populate the ego's own route with an unstructured-traffic scene --
+    #: standing obstructions in the carriageway and a crowd crossing it.
+    #: ``None`` leaves the town as the traffic manager arranges it, which is
+    #: orderly Western traffic and is not what this project is about.
+    obstruction: Optional["ObstructionSpec"] = None
     #: Stop at red lights, as a keep-out in the static costmap. On by default:
     #: a stack that drives through reds in a signalled town gets T-boned in
     #: dense traffic, which is what the first long run did. Ground truth from
@@ -987,6 +1035,8 @@ class CarlaWorld:
         self._start_traffic_manager()
         self._spawn_vehicles()
         self._spawn_walkers()
+        # After the route exists: the scene is anchored to it, not scattered.
+        self._spawn_obstruction()
         self._attach_sensors()
 
         # One tick so physics settles and every sensor has delivered a frame
@@ -1042,7 +1092,10 @@ class CarlaWorld:
         spawn_points = list(self.map.get_spawn_points())
         if not spawn_points:                            # pragma: no cover
             raise RuntimeError("map has no spawn points")
-        order = self.rng.permutation(len(spawn_points))
+        if self.cfg.spawn_in_crowd:
+            order = self._spawn_points_by_crowd(spawn_points)
+        else:
+            order = self.rng.permutation(len(spawn_points))
         vehicle = None
         for i in order:
             vehicle = self.world.try_spawn_actor(bp, spawn_points[int(i)])
@@ -1087,6 +1140,29 @@ class CarlaWorld:
             col_bp, carla.Transform(), attach_to=vehicle
         )
         self._collision_sensor.listen(self._on_collision)
+
+    def _spawn_points_by_crowd(self, spawn_points, samples: int = 300):
+        """Spawn-point indices ordered by nearness to the walker navigation mesh.
+
+        Sampling the mesh rather than assuming where it is: its extent is a
+        property of the map's build, not of anything readable from the API,
+        and it differs between towns. Three hundred samples is enough to find
+        the centroid of a district and cheap enough to do at connect time.
+
+        Ordered rather than reduced to a single best point, because the caller
+        still has to try them in turn -- a spawn point can be occupied.
+        """
+        pts = []
+        for _ in range(samples):
+            loc = self.world.get_random_location_from_navigation()
+            if loc is not None:
+                pts.append((loc.x, loc.y))
+        if not pts:                                     # pragma: no cover
+            return self.rng.permutation(len(spawn_points))
+        centre = np.mean(np.asarray(pts, dtype=np.float64), axis=0)
+        d = [float(np.hypot(sp.location.x - centre[0], sp.location.y - centre[1]))
+             for sp in spawn_points]
+        return np.argsort(d)
 
     def _build_route(self) -> None:
         start = self.map.get_waypoint(self._ego_spawn.location)
@@ -1315,6 +1391,150 @@ class CarlaWorld:
         self.ego.a = float((v - prev_v) / max(dt, 1e-6))
         self.t += dt
         self.ego.t = self.t
+
+    def _route_frame(self, s_m: float):
+        """``(x, y, tangent_unit)`` at arc length ``s_m`` along the route, odom.
+
+        The tangent is what makes a lateral offset mean "across the road"
+        rather than "along the world's y axis" -- the route turns, and an
+        obstruction placed by world axes ends up on the pavement half the
+        time.
+        """
+        pts = self.road.points
+        cum = self.road._cum
+        i = int(np.searchsorted(cum, s_m))
+        i = int(np.clip(i, 1, len(pts) - 1))
+        p0, p1 = pts[i - 1], pts[i]
+        t = p1 - p0
+        n = float(np.linalg.norm(t))
+        t = t / n if n > 1e-6 else np.array([1.0, 0.0])
+        return float(p1[0]), float(p1[1]), t
+
+    def _spawn_obstruction(self) -> None:
+        """Lay the unstructured-traffic scene along the route.
+
+        See :class:`ObstructionSpec` for what the standing group stands in for
+        and why it is not cattle.
+
+        **Two CARLA rules this obeys, both learned the hard way.**
+
+        *Walkers must come from the navigation mesh.* Spawning one at an
+        arbitrary point on a carriageway appears to succeed -- ``try_spawn_actor``
+        returns a handle -- and the walker is dead by the next tick, which
+        shows up much later as a scene with no pedestrians in it. So candidate
+        positions are drawn from ``get_random_location_from_navigation`` and
+        kept only when they land near the route.
+
+        *Vehicles must come from the lane graph.* A blocker is placed on a
+        waypoint beside the route rather than at a computed offset, because a
+        computed offset lands in a wall as often as on tarmac.
+        """
+        spec = self.cfg.obstruction
+        if spec is None:
+            return
+        lib = self.world.get_blueprint_library()
+        walker_bps = list(lib.filter("walker.pedestrian.*"))
+        ctrl_bp = lib.find("controller.ai.walker")
+        vehicle_bps = [b for b in lib.filter("vehicle.*")
+                       if b.get_attribute("number_of_wheels").as_int() == 4]
+        if not walker_bps:                               # pragma: no cover
+            return
+        if hasattr(self.world, "set_pedestrians_seed"):
+            self.world.set_pedestrians_seed(int(self.cfg.seed))
+
+        base = self.road.progress(self.ego.x, self.ego.y)
+        lo, hi = base + spec.start_m, base + spec.start_m + spec.span_m
+
+        def route_xy(s_m):
+            x, y, _t = self._route_frame(s_m)
+            return np.array([x, y])
+
+        anchors = [route_xy(s) for s in np.linspace(lo, hi, 24)]
+
+        def near_route(loc, limit):
+            ox, oy, _ = carla_to_odom(loc.x, loc.y, 0.0)
+            p = np.array([ox, oy])
+            return min(float(np.linalg.norm(p - a)) for a in anchors) <= limit
+
+        def sample_nav(limit, tries=400):
+            for _ in range(tries):
+                loc = self.world.get_random_location_from_navigation()
+                if loc is not None and near_route(loc, limit):
+                    return loc
+            return None
+
+        # -- standing in and beside the carriageway, no controller ---------
+        standing = 0
+        for _ in range(spec.standing):
+            loc = sample_nav(spec.lateral + 2.0)
+            if loc is None:
+                continue
+            bp = walker_bps[int(self.rng.integers(len(walker_bps)))]
+            if bp.has_attribute("is_invincible"):
+                bp.set_attribute("is_invincible", "false")
+            actor = self.world.try_spawn_actor(bp, carla.Transform(loc))
+            if actor is not None:
+                self._register(actor)                    # no controller: it stands
+                standing += 1
+
+        # -- crossing, aimed at the far side of the road -------------------
+        crossing = 0
+        for _ in range(spec.crossing):
+            loc = sample_nav(12.0)
+            if loc is None:
+                continue
+            bp = walker_bps[int(self.rng.integers(len(walker_bps)))]
+            if bp.has_attribute("is_invincible"):
+                bp.set_attribute("is_invincible", "false")
+            actor = self.world.try_spawn_actor(bp, carla.Transform(loc))
+            if actor is None:
+                continue
+            controller = self.world.try_spawn_actor(
+                ctrl_bp, carla.Transform(), attach_to=actor)
+            if controller is None:                       # pragma: no cover
+                actor.destroy()
+                continue
+            target = sample_nav(12.0) or \
+                self.world.get_random_location_from_navigation()
+            controller.start()
+            controller.go_to_location(target)
+            controller.set_max_speed(float(self.rng.uniform(0.7, 1.5)))
+            self._walker_controllers.append(controller)
+            self._register(actor)
+            crossing += 1
+
+        # -- stopped vehicles, on the lane graph, pinching the corridor ----
+        blockers = 0
+        for k in range(spec.blockers):
+            if not vehicle_bps:                          # pragma: no cover
+                break
+            s_off = spec.start_m + spec.span_m * (0.25 + 0.22 * k)
+            x, y, _t = self._route_frame(base + s_off)
+            cx, cy, _ = odom_to_carla(x, y, 0.0)
+            wp = self.map.get_waypoint(carla.Location(x=cx, y=cy, z=0.5),
+                                       project_to_road=True,
+                                       lane_type=carla.LaneType.Driving)
+            if wp is None:
+                continue
+            side = wp.get_right_lane() if k % 2 == 0 else wp.get_left_lane()
+            target = side if (side is not None and
+                              side.lane_type == carla.LaneType.Driving) else wp
+            tf = target.transform
+            tf.location.z += 0.4
+            bp = vehicle_bps[int(self.rng.integers(len(vehicle_bps)))]
+            actor = self.world.try_spawn_actor(bp, tf)
+            if actor is not None:
+                actor.set_autopilot(False)
+                actor.apply_control(carla.VehicleControl(hand_brake=True))
+                self._register(actor)
+                blockers += 1
+
+        self._obstruction_counts = {"standing": standing, "crossing": crossing,
+                                    "blockers": blockers}
+        # One tick so the spawns are real before anything reads a transform:
+        # in synchronous mode a fresh actor reports (0, 0) until the server
+        # has processed it, which reads as "everything spawned at the origin".
+        self.world.tick()
 
     def lane_context(self) -> Dict[str, object]:
         """Where the ego is in CARLA's road network, for telemetry only.

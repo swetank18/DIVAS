@@ -43,6 +43,7 @@ from divas.sim.carla_bridge import (
     WEATHER_PRESETS,
     CarlaConfig,
     CarlaWorld,
+    ObstructionSpec,
 )
 from divas.types import CLASS_EXTENT
 
@@ -330,6 +331,24 @@ def main() -> int:
     ap.add_argument("--time-limit", type=float, default=35.0)
     ap.add_argument("--goal", type=float, default=200.0)
     ap.add_argument("--route-length", type=float, default=400.0)
+    ap.add_argument("--bazaar", action="store_true",
+                    help="lay an unstructured-traffic scene along the route: "
+                         "standing obstructions in the carriageway and a crowd "
+                         "crossing it. CARLA has no animal blueprint, so the "
+                         "standing group is pedestrians and must be labelled "
+                         "as a stand-in, not shown as cattle")
+    ap.add_argument("--standing", type=int, default=8)
+    ap.add_argument("--crossing", type=int, default=10)
+    ap.add_argument("--blockers", type=int, default=3)
+    ap.add_argument("--in-crowd", action="store_true",
+                    help="start the ego in the pedestrian district. CARLA's "
+                         "walker navigation mesh covers only part of a town and "
+                         "walkers cannot live outside it, so the ego goes to "
+                         "the crowd rather than the crowd to the ego")
+    ap.add_argument("--cross-factor", type=float, default=0.5,
+                    help="fraction of pedestrians willing to cross away from a "
+                         "crossing. 1.0 is the unstructured case and is what "
+                         "makes the town look Indian rather than Californian")
     ap.add_argument("--long-route", action="store_true",
                     help="let the route cross itself, for drives longer than "
                          "the town. Town10HD is ~400x230 m, so anything past "
@@ -353,8 +372,14 @@ def main() -> int:
         host=args.host, port=args.port, town=args.town, timeout=args.timeout,
         fixed_delta_seconds=args.dt, n_vehicles=args.vehicles,
         n_walkers=args.walkers, weather=args.weather, seed=args.seed,
+        walker_cross_factor=args.cross_factor,
+        spawn_in_crowd=args.in_crowd,
         route_length=args.route_length,
         long_route=args.long_route,
+        obstruction=(ObstructionSpec(standing=args.standing,
+                                     crossing=args.crossing,
+                                     blockers=args.blockers)
+                     if args.bazaar else None),
         sensors=("chase",),          # forces rendering back on -- see the bridge
         render=True,
     )
