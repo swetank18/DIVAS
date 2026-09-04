@@ -145,16 +145,38 @@ planner, predictor, risk field, or perception** — none of those are
 reimplemented in MATLAB. Don't present it as validating anything beyond
 the two models it actually covers.
 
-### If you're building a new MATLAB simulation (not just the cross-check)
+### A real scenario replay now exists — `sim/MATLABS/`
 
-Nothing beyond the bicycle/longitudinal cross-validation currently exists
-in `sim/matlab/`. Building an actual MATLAB/Simulink scenario simulation
-(the RoadRunner scenario library, Automated Driving Toolbox stuff from
-`PROJECT_OVERVIEW.md`) is real, unstarted work — the toolbox list in the
-deck implies it, the repo doesn't have it yet. Scope this explicitly
-before promising it in a pitch: it needs the MATLAB licence with
-Automated Driving Toolbox + Model Predictive Control Toolbox +
-Navigation Toolbox, none of which the base cross-validation needs.
+`sim/MATLABS/replay_animation.m` plays back a real recorded closed-loop
+episode (two stacks, same seed, side by side) from the same JSON
+`scripts/export_replay.py` already writes for the web replay — not a
+re-simulation, a player. No toolboxes.
+
+```bash
+python3 scripts/export_replay.py --scenario pedestrian_crossing   # if the JSON isn't already in docs/
+matlab -batch "cd('sim/MATLABS'); replay_animation('../../docs/replay-pedestrian_crossing.json', true)"   # true = also write an .avi
+```
+
+**Written but not run on real MATLAB — this dev machine has none
+installed.** Reviewed carefully, including two MATLAB `jsondecode`
+gotchas it works around (mixed-type JSON arrays and objects with
+differing field sets both decode to cell arrays, not matrices/struct
+arrays — see `idx_any()`/`numel_rows()` in the file). **Run it once on
+real MATLAB before trusting it or presenting it** — same rule the team
+already applies to `sim/matlab/`'s files. If something breaks, it's
+almost certainly in the `jsondecode` assumptions the README documents,
+not in the geometry.
+
+### Building an actual MATLAB/Simulink scenario simulation
+
+The replay above visualises a run that already happened — it's not the
+same thing as RoadRunner scenario authoring or Simulink control
+validation. That (the Automated Driving Toolbox / Model Predictive
+Control Toolbox / Navigation Toolbox stuff from `PROJECT_OVERVIEW.md`) is
+still real, unstarted work — the toolbox list in the deck implies it, the
+repo doesn't have it. Scope this explicitly before promising it in a
+pitch; it needs a licence with those toolboxes, none of which the replay
+or the base cross-validation need.
 
 RoadRunner specifically (custom Indian-road-texture maps) is a
 multi-day asset job, not a script — the CARLA Bengaluru OSM import
