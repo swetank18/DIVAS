@@ -126,6 +126,9 @@ def main() -> int:
     ap.add_argument("--shoulder", action="store_true",
                     help="count drivable fallback as free space")
     ap.add_argument("--out", default="demo/perception")
+    ap.add_argument("--video", default=None,
+                    help="also encode the figures into an MP4 reel at this path")
+    ap.add_argument("--fps", type=int, default=2)
     args = ap.parse_args()
 
     ckpt = FsPath(args.checkpoint)
@@ -170,6 +173,27 @@ def main() -> int:
               f"goal {goal[0]:5.1f} m  {'OK' if res.success else 'partial'}")
 
     print(f"\nwrote {len(picks)} figures to {out}")
+
+    if args.video:
+        import shutil
+        import subprocess
+        if shutil.which("ffmpeg") is None:
+            print("ffmpeg not found; figures are in", out, file=sys.stderr)
+            return 0
+        vid = FsPath(args.video)
+        vid.parent.mkdir(parents=True, exist_ok=True)
+        # A reel rather than a continuous drive, and the difference matters:
+        # IDD samples frames out of its sequences, so consecutive images are
+        # from the same drive but seconds apart. Encoding them at 2 fps makes
+        # that obvious instead of implying a video the dataset does not carry.
+        subprocess.run(
+            ["ffmpeg", "-y", "-framerate", str(args.fps),
+             "-pattern_type", "glob", "-i", str(out / "perception_*.png"),
+             "-vf", "scale=1600:-2", "-c:v", "libx264", "-preset", "slow",
+             "-crf", "24", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+             str(vid)],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"wrote {vid}  ({len(picks)} frames at {args.fps} fps)")
     return 0
 
 
