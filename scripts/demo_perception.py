@@ -39,7 +39,9 @@ sys.path.insert(0, str(FsPath(__file__).resolve().parents[1]))
 
 import cv2
 
-from divas.perception.bev import BevSpec, Camera, free_space_to_grid, max_reliable_range
+from divas.perception.bev import (
+    BevSpec, Camera, free_space_to_grid, max_reliable_range, reachable_goal,
+)
 from divas.perception.datasets.idd_polygons import (
     OTHER, ROAD, SHOULDER, find_pairs, load_record, rasterize,
 )
@@ -120,6 +122,12 @@ def main() -> int:
     ap.add_argument("--split", default="val")
     ap.add_argument("--n", type=int, default=6)
     ap.add_argument("--stride", type=int, default=97, help="spread the picks out")
+    ap.add_argument("--sequence", default=None,
+                    help="restrict to one IDD drive sequence, e.g. 63. Frames "
+                         "within a sequence come from the same vehicle on the "
+                         "same drive, so the reel reads as one journey -- though "
+                         "IDD samples them sparsely (median gap of ~2400 frame "
+                         "ids), so it is a montage and not continuous video")
     ap.add_argument("--fov", type=float, default=90.0)
     ap.add_argument("--height", type=float, default=1.35)
     ap.add_argument("--pitch", type=float, default=4.0, help="degrees, nose down")
@@ -139,6 +147,11 @@ def main() -> int:
 
     seg = DrivableSegmenter.load(ckpt)
     pairs = find_pairs(FsPath(args.root).expanduser(), args.split)
+    if args.sequence:
+        pairs = [p for p in pairs if p.key.split("/")[0] == args.sequence]
+        if not pairs:
+            print(f"no frames in sequence {args.sequence!r}", file=sys.stderr)
+            return 2
     picks = pairs[:: max(args.stride, 1)][: args.n]
 
     out = FsPath(args.out); out.mkdir(parents=True, exist_ok=True)

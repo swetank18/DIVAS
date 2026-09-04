@@ -40,3 +40,9 @@ ablation_margin.txt
 IDD/
 IDD_Segmentation/
 idd-segmentation*
+
+# Blender intermediate frames -- 526 PNGs at 1600x900 is ~300 MB and the MP4
+# beside them is the artefact worth keeping.
+demo/blender_frames/
+demo/indian_drive/
+demo/perception/
