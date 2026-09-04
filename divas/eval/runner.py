@@ -34,6 +34,7 @@ from divas.prediction.predictors import (
     Predictor,
     SocialForcePredictor,
 )
+from divas.prediction.conformal import ConformalCalibrator, ConformalConfig
 from divas.prediction.risk import MarginParams, RiskField
 from divas.types import EgoState, VehicleParams
 
@@ -47,13 +48,27 @@ class StackConfig:
     margin: MarginParams = field(default_factory=MarginParams)
     controller: str = "mpc"              # mpc | pure_pursuit
     description: str = ""
+    #: When set, the heuristic ``lam * (1 - confidence)`` term is replaced by
+    #: the conformal quantile of this predictor's own recent error. The rest
+    #: of the margin -- ``d0`` and the speed term -- is unchanged, so the arm
+    #: differs from its neighbours in exactly one mechanism, which is the
+    #: whole point of the table.
+    conformal: Optional[ConformalConfig] = None
+    #: Prediction horizon, seconds. ``None`` keeps the predictor's own default
+    #: of 3.0 s. Exposed because the conformal measurement turns the horizon
+    #: into a *design variable* rather than a constant: past the lookahead at
+    #: which an honestly-calibrated keep-out stops fitting on the road, the
+    #: prediction is not actionable, and carrying it is worse than not having
+    #: it. See ADR-010.
+    horizon: Optional[float] = None
 
     def build(self, params: VehicleParams):
         pred: Optional[Predictor]
+        kw = {} if self.horizon is None else {"horizon": float(self.horizon)}
         if self.predictor == "social_force":
-            pred = SocialForcePredictor()
+            pred = SocialForcePredictor(**kw)
         elif self.predictor == "constant_velocity":
-            pred = ConstantVelocityPredictor()
+            pred = ConstantVelocityPredictor(**kw)
         elif self.predictor == "none":
             pred = None
         else:
@@ -121,6 +136,21 @@ ABLATION: List[StackConfig] = [
         controller="mpc",
         description="Full stack: interaction-aware prediction + confidence-scaled margin",
     ),
+    # -- Phase 4: the margin, calibrated rather than tuned --------------
+    # Differs from cv_pred_fixed_margin in exactly one thing: where the
+    # keep-out radius comes from. Same predictor, same controller, same d0 and
+    # speed term. So a difference in this row is attributable to the margin
+    # and to nothing else, which is the only reason the table is worth
+    # reading.
+    StackConfig(
+        "cv_pred_conformal_margin",
+        predictor="constant_velocity",
+        margin=MarginParams(d0=0.4, k_v=0.10, lam=0.0, max_margin=2.5),
+        controller="mpc",
+        conformal=ConformalConfig(alpha=0.1),
+        description="MPC + CV prediction + conformal margin calibrated on the "
+                    "predictor's own recent error (90% nominal coverage)",
+    ),
 ]
 
 
@@ -172,6 +202,10 @@ def run(
     try:
         grid = None
         risk: Optional[RiskField] = None
+        # Built on the first prediction rather than here, so it takes its
+        # horizon and step from the TrajectorySet the predictor actually
+        # emits instead of from a second copy of those constants.
+        calibrator: Optional[ConformalCalibrator] = None
         path = None
         last_pred_t = 0.0
         prev_accel = 0.0
@@ -191,8 +225,23 @@ def run(
                 tracks = world.ground_truth_tracks()
                 if predictor is not None:
                     t0 = time.perf_counter()
+                    # Score the predictions whose moment has arrived *before*
+                    # making new ones. The other order scores a fresh
+                    # prediction against the observation that produced it --
+                    # a residual of exactly zero, which drags every quantile
+                    # down and reports a beautifully calibrated margin that
+                    # has measured nothing.
+                    if calibrator is not None:
+                        calibrator.observe(tracks, world.t)
                     ts = predictor.predict(tracks, static_grid, ego)
-                    risk = RiskField(ts, ego.v, ego_extent, stack.margin)
+                    if stack.conformal is not None and calibrator is None:
+                        calibrator = ConformalCalibrator(
+                            ts.n_steps, ts.dt, stack.conformal
+                        )
+                    if calibrator is not None:
+                        calibrator.record(ts, world.t)
+                    risk = RiskField(ts, ego.v, ego_extent, stack.margin,
+                                     conformal=calibrator)
                     risk.rasterize(grid)
                     m.timer("predict").add((time.perf_counter() - t0) * 1e3)
                     # Only when there is traffic to keep a margin from.  Averaging
@@ -281,6 +330,14 @@ def run(
         m.sim_time = world.t
         m.mean_speed = float(np.mean(speeds)) if speeds else 0.0
         m.mean_d_safe = float(np.mean(d_safes)) if d_safes else 0.0
+        if calibrator is not None:
+            # The number that decides whether the conformal arm did what it
+            # claims. A margin whose realised coverage misses its nominal
+            # target is not calibrated, whatever else it achieved -- and this
+            # is reported whether it is flattering or not.
+            m.conformal_coverage = calibrator.coverage()
+            m.conformal_alpha = calibrator.alpha_t
+            m.conformal_scored = calibrator.n_scored
         if not m.success and not m.collision:
             m.timeout = True
         if cfg.record:

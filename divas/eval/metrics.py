@@ -70,6 +70,15 @@ class RunMetrics:
     timers: Dict[str, StageTimer] = field(default_factory=dict)
     trace: Optional[dict] = None
 
+    #: Realised coverage of the conformal margin, or None for the arms that
+    #: do not use one. Reported next to the collision rate on purpose: an arm
+    #: that hits its coverage target and still collides has a calibrated
+    #: margin and a planning problem, which is a different bug from an
+    #: uncalibrated margin.
+    conformal_coverage: Optional[float] = None
+    conformal_alpha: Optional[float] = None
+    conformal_scored: int = 0
+
     def timer(self, name: str) -> StageTimer:
         return self.timers.setdefault(name, StageTimer())
 

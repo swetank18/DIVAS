@@ -18,11 +18,14 @@ policy, which is exactly the ablation Phase 4 has to run.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING, Optional, Tuple
 
 import numpy as np
 
 from divas.types import OccupancyGrid, TrajectorySet
+
+if TYPE_CHECKING:                                   # pragma: no cover
+    from divas.prediction.conformal import ConformalCalibrator
 
 
 @dataclass
@@ -63,9 +66,18 @@ class RiskField:
         ego_speed: float,
         ego_extent: Tuple[float, float],
         margin: Optional[MarginParams] = None,
+        conformal: Optional["ConformalCalibrator"] = None,
     ) -> None:
         self.ts = traj_set
         self.margin = margin or MarginParams()
+        # When a calibrator is supplied it *replaces* the heuristic term: the
+        # margin becomes the conformal quantile of this predictor's own recent
+        # error at that lookahead, rather than lam times a mode-dispersion
+        # score. See :mod:`divas.prediction.conformal` for why those are
+        # different quantities, and ADR-010 for why the swap is total rather
+        # than a blend -- two uncertainty terms added together are two things
+        # to tune and one number nobody can attribute.
+        self.conformal = conformal
         # A single circumscribed radius for the ego is the same modelling
         # error as a disc for a bus: it charges the *lateral* keep-out for the
         # vehicle's full diagonal.  Summing the two boxes axis-wise is both
@@ -81,14 +93,27 @@ class RiskField:
         # Flatten (trajectory, mode) into parallel arrays once; every query
         # below is then a single vectorised expression.
         pts, weights, semi_a, semi_b, margins = [], [], [], [], []
+        conformal_q = None
+        if self.conformal is not None:
+            q = self.conformal.margins()
+            # The calibrator is built for the horizon it was configured with;
+            # a shorter trajectory takes the leading slice rather than
+            # silently broadcasting the wrong lookahead onto every step.
+            conformal_q = q[:self.n_steps] if q.size >= self.n_steps else np.pad(
+                q, (0, self.n_steps - q.size), mode="edge")
+
         for tr in traj_set:
-            conf = tr.confidence_profile()                       # (T,)
-            d_safe = (
-                self.margin.d0
-                + self.margin.k_v * self.ego_speed
-                + self.margin.lam * (1.0 - conf)
-            )
-            d_safe = np.minimum(d_safe, self.margin.max_margin)
+            if conformal_q is not None:
+                d_safe = self.margin.d0 + self.margin.k_v * self.ego_speed + conformal_q
+                d_safe = np.minimum(d_safe, self.conformal.cfg.max_margin)
+            else:
+                conf = tr.confidence_profile()                       # (T,)
+                d_safe = (
+                    self.margin.d0
+                    + self.margin.k_v * self.ego_speed
+                    + self.margin.lam * (1.0 - conf)
+                )
+                d_safe = np.minimum(d_safe, self.margin.max_margin)
             w = tr.weights()
             for k, mode in enumerate(tr.modes):
                 pts.append(mode.points)                              # (T, 2)
