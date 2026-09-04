@@ -56,6 +56,8 @@ def build_config(args, seed: int, weather: str) -> CarlaConfig:
         seed=seed,
         tm_port=args.tm_port,
         route_length=args.route_length,
+        long_route=args.long_route,
+        obey_traffic_lights=not args.ignore_lights,
         sensors=tuple(args.sensors),
         render=args.render,
     )
@@ -97,6 +99,11 @@ def check(args) -> int:
         print(f"  route            {world.road.length:.0f} m")
         print(f"  drivable raster  {world._raster.mask.shape} cells "
               f"@ {world._raster.resolution} m")
+        print(f"  static obstacles {len(world._static_boxes)} baked map meshes, "
+              f"{world._carved_cells} cells carved out of free space")
+        if world._static_boxes and world._carved_cells < 20:
+            print("                   (few cells: this town parks in bays, off the "
+                  "driving lanes -- expected)")
         print(f"  costmap          {full.data.shape}, "
               f"{100 * float(full.occupied_mask().mean()):.1f}% occupied "
               f"(static {100 * float(static.occupied_mask().mean()):.1f}%)")
@@ -133,6 +140,14 @@ def main() -> int:
     ap.add_argument("--seeds", type=int, default=1, help="seeds per arm, from --seed")
     ap.add_argument("--route-length", type=float, default=400.0,
                     help="metres of lane graph to follow from the spawn point")
+    ap.add_argument("--long-route", action="store_true",
+                    help="let the route cross itself, and measure progress with "
+                         "a windowed search. Required past about a kilometre: "
+                         "Town10HD is ~400x230 m, and a global nearest-point "
+                         "search on a self-crossing route reports nonsense")
+    ap.add_argument("--ignore-lights", action="store_true",
+                    help="do not stop at reds (reproduces runs measured before "
+                         "red-light keep-outs existed)")
     ap.add_argument("--goal", type=float, default=200.0, help="route metres for success")
     ap.add_argument("--time-limit", type=float, default=60.0)
     ap.add_argument("--out", default="carla_results.json")
