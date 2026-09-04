@@ -13,7 +13,9 @@ datasets/
 # idd_polygons.py from a commit -- the file was written, staged, refused, and
 # the commit succeeded without it.
 !divas/perception/datasets/
-!divas/perception/datasets/**
+# Only the source. A bare `**` here also negates the __pycache__ rule above,
+# because later patterns win -- which committed three .pyc files.
+!divas/perception/datasets/*.py
 *.pth
 *.onnx
 *.engine
