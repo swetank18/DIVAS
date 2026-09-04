@@ -16,7 +16,7 @@ import pytest
 
 from divas.perception.bev import (
     BevSpec, Camera, free_space_to_grid, horizon_row, max_reliable_range,
-    min_visible_range, project,
+    min_visible_range, project, reachable_goal,
 )
 from divas.perception.datasets.idd_polygons import (
     IGNORE, OTHER, ROAD, SHOULDER, class_of, drivable_from_mask, rasterize,
@@ -237,3 +237,46 @@ def test_the_bridge_does_not_reach_past_what_the_camera_sees():
                               BevSpec(forward=20, behind=3, lateral=8))
     iy, ix = grid.world_to_cell(near + 4.0, 0.0)[::-1]
     assert grid.occupied_mask()[iy, ix]
+
+
+def _grid_with_corridor(gap_m: float):
+    """A grid whose only route forward is a corridor ``gap_m`` wide."""
+    cam = Camera.from_fov(512, 288, fov_deg=90.0, height=1.35, pitch=math.radians(5))
+    free = np.zeros((288, 512), dtype=bool)
+    free[150:, :] = True                       # ground ahead is drivable
+    grid = free_space_to_grid(free, cam, BevSpec(forward=25, behind=3, lateral=10))
+    occ = grid.occupied_mask()
+    # wall across the corridor at ~12 m, with a gap of the given width
+    ix, _iy = grid.world_to_cell(12.0, 0.0)
+    occ[:, int(ix):int(ix) + 2] = True
+    half = max(int(round(0.5 * gap_m / grid.resolution)), 1)
+    _jx, iy = grid.world_to_cell(12.0, 0.0)
+    occ[int(iy) - half:int(iy) + half, int(ix):int(ix) + 2] = False
+    grid.data = occ.astype(np.float32)
+    grid.invalidate_cache()
+    return grid
+
+
+def test_a_goal_is_only_offered_if_a_vehicle_could_reach_it():
+    """Cells connect through a one-cell gap; a 3.9 x 1.7 m vehicle does not.
+
+    Flood-filling the raw grid offered goals that were formally connected and
+    physically unreachable -- on two IDD frames the planner got 2 m from a
+    start whose goal the fill had blessed. The fill runs on configuration
+    space instead.
+    """
+    wide = reachable_goal(_grid_with_corridor(4.0), 25.0, clearance=1.2)
+    narrow = reachable_goal(_grid_with_corridor(0.5), 25.0, clearance=1.2)
+
+    assert wide[0] > 12.0            # a 4 m gap is passable, so go past it
+    assert narrow[0] <= 12.5         # a 0.5 m gap is not; stop short of it
+
+
+def test_a_goal_is_returned_even_when_the_ego_does_not_fit_where_it_stands():
+    """Normal in a narrow frame, and not a reason to return nothing -- the
+    caller needs *some* goal or the demo has no query to make."""
+    cam = _cam()
+    grid = free_space_to_grid(np.zeros((288, 512), dtype=bool), cam,
+                              BevSpec(forward=20, behind=3, lateral=8))
+    goal = reachable_goal(grid, 20.0, clearance=1.2)
+    assert np.isfinite(goal).all() and goal[0] > 0.0

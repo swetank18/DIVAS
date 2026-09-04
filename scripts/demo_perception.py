@@ -61,30 +61,6 @@ def overlay(image_rgb, pred, alpha=0.45):
     return out.astype(np.uint8)
 
 
-def pick_goal(grid, reach: float) -> np.ndarray:
-    """Furthest free point roughly ahead, as a stand-in for a route.
-
-    A photograph carries no route, so the demo needs a goal from somewhere.
-    Taking the furthest *free* cell near the centreline is honest about what
-    the stack is being asked to do -- drive into the open space it can see --
-    and it adapts to the scene rather than assuming every road runs straight.
-    """
-    occ = grid.occupied_mask()
-    ny, nx = occ.shape
-    best = None
-    for ix in range(nx - 1, 0, -1):
-        for iy in range(ny):
-            wx, wy = grid.cell_to_world(np.array(ix), np.array(iy))
-            if abs(float(wy)) > 4.0 or float(wx) > reach:
-                continue
-            if not occ[iy, ix]:
-                best = np.array([float(wx), float(wy)])
-                break
-        if best is not None:
-            break
-    return best if best is not None else np.array([8.0, 0.0])
-
-
 def render(fig_path, photo, pred, grid, result, cam, reach, title, truth=None):
     import matplotlib
     matplotlib.use("Agg")
@@ -180,7 +156,7 @@ def main() -> int:
         grid = free_space_to_grid(free, cam, BevSpec(forward=reach, behind=3.0,
                                                      lateral=12.0))
 
-        goal = pick_goal(grid, reach)
+        goal = reachable_goal(grid, reach)
         res = planner.plan(grid, EgoState(x=0.0, y=0.0, theta=0.0, v=6.0), goal)
 
         drivable_pct = 100.0 * float(free.mean())
