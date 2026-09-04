@@ -25,12 +25,15 @@ prediction → planning → control.
   harness (`divas/eval/`).
 - **Perception (stage 1) — real, trained, not a stub:**
   `divas/perception/models/drivable.py`'s `DrivableSegmenter` loads
-  `drivable_idd.pt`, a checkpoint actually trained on IDD (not
-  Cityscapes-pretrained). This is the one true "trained model" in the
-  repo. `scripts/train_drivable.py` / `scripts/prepare_idd.py` are the
-  training pipeline; `divas/perception/datasets/idd.py` is the real IDD
-  loader (my earlier hand-written stand-in for this was superseded and
-  removed when this landed).
+  `drivable_idd.pt` — LR-ASPP/MobileNetV3-Large, 3.22M params, trained on
+  IDD polygon labels (`divas/perception/datasets/idd_polygons.py`, not
+  the label-PNG-based `idd.py` — IDD's archive ships no label PNGs).
+  **3.7ms/frame at 512×288 on an RTX 3050, 267 FPS** — real measured
+  number, not a guess. Drivable = `road` + `drivable fallback` only;
+  **IDD has no `parking` class**, an earlier assumption corrected by
+  actually scanning 400 annotation files. Still single-image training
+  data, same as everything else IDD gives you — still can't do
+  prediction, see the tracking bridge below for why that matters.
 - **BEV projection (stage 2) — real, no longer a stub:**
   `divas/perception/bev.py` — camera → bird's-eye free-space grid.
 - **Fusion (stage 3) — still a ground-truth stub.** No Bayesian occupancy
@@ -38,16 +41,27 @@ prediction → planning → control.
 - **Object detection — real, added by me, additive not overlapping:**
   `divas/perception/detection.py`'s `ObjectDetector` — pretrained
   YOLOv8n/COCO, no training, CPU. Boxes + class + confidence for
-  car/truck/bus/motorcycle/bicycle/pedestrian/animal. This is separate
-  from the drivable-mask model above and from BEV — outputs **image-pixel
-  boxes**, not world-frame tracks. Turning a box into a `divas.types.Track`
-  (world x/y/vx/vy) still needs BEV projection to actually be wired
-  through it, which hasn't happened yet.
+  car/truck/bus/motorcycle/bicycle/pedestrian/animal.
   Demo: `.venv/bin/python scripts/run_perception.py <image.png>` (runs
-  segmentation + detection together, writes one overlay). Two honest
-  gaps: COCO has no "autorickshaw" class; the two perception models
-  (mine, YOLO/COCO detection; teammate's, IDD/drivable segmentation)
-  aren't fused into one call yet — separate scripts.
+  segmentation + detection together, writes one overlay). Honest gap:
+  COCO has no "autorickshaw" class.
+- **Detections → real-world tracks → prediction — real, added by me,
+  bridges detection and the predictor:** `divas/perception/tracking.py`
+  projects a box's ground-contact pixel to a vehicle-frame point (inverse
+  of `bev.project`, flat-ground, same nominal-FOV caveat as the rest of
+  perception), and — given two frames — matches actors between them for a
+  **measured** velocity (greedy nearest-neighbour, not a real tracker; one
+  photo alone gets zero velocity, honestly, not guessed). Feeds straight
+  into the existing `SocialForcePredictor` — same physics, real input.
+  Demo: `.venv/bin/python scripts/run_prediction_demo.py <img1> [img2] --dt 0.5`.
+  Verified on two real frames pulled from `demo/carla_bazaar_crowd.mp4`
+  0.5s apart — detected + tracked a pedestrian at a measured 2.8 m/s,
+  predicted its position 3s out, drew it on the image.
+  **Not wired into the closed loop.** This is a standalone script.
+  `eval/runner.py` and `carla_bridge.py` still feed the predictor
+  simulator ground truth, not camera detections — the closed-loop sims
+  behave exactly as before this bridge was built. Wiring it in is real,
+  unstarted work, not a small config flip.
 - **Pothole handling — changed this session.** `World.collision()` no
   longer ends the episode on a pothole hit; instead both controllers cap
   speed near one (`POTHOLE_SAFE_SPEED=2.0 m/s`, ramped over 6m — see
@@ -139,8 +153,10 @@ caveat still fully applies. Verify, don't assume either way.
 ## Known real gaps (say these out loud, don't let a judge find them)
 
 - Fusion (stage 3) still a ground-truth stub — no real EKF tracker.
-- Object detection outputs pixel boxes, not world-frame tracks — BEV
-  projection exists but isn't wired through the detector yet.
+- Detection → tracking → prediction bridge exists and is verified on
+  real footage, but **only as a standalone script** — not wired into
+  `eval/runner.py` or `carla_bridge.py`. Closed-loop sims still run on
+  simulator ground truth.
 - No yielding/right-of-way logic — dense traffic collided ~50% of the
   time at junctions in the last measurement (STATUS.md §7) — may be
   affected by the pothole fix, not re-measured since.
@@ -164,6 +180,12 @@ blanks every camera.
 A knowledge graph of this repo exists in `graphify-out/` (gitignored,
 local only — rerun `/graphify --update` if it's gone or stale) —
 **use it before grepping.** See `CLAUDE.md` for the tools and workflow.
+
+## Building a CARLA or MATLAB simulation
+
+See `SIMULATION.md` — setup, commands, traps already paid for, and what
+each simulation does and doesn't prove. Written for a teammate handoff,
+equally useful for a fresh Claude session working on sim code.
 
 ## Submission blockers (independent of code)
 

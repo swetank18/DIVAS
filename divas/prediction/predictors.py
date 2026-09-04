@@ -224,7 +224,11 @@ class SocialForcePredictor(Predictor):
 
                 vel = vel + f * self.dt
                 sp = np.linalg.norm(vel, axis=1, keepdims=True)
-                vel = np.where(sp > self.max_speed, vel / sp * self.max_speed, vel)
+                # np.maximum guards a stationary actor (sp == 0, e.g. a
+                # single-photo detection with no measured velocity): the
+                # unused branch of np.where is still evaluated elementwise,
+                # so 0/0 would warn even though the result is discarded.
+                vel = np.where(sp > self.max_speed, vel / np.maximum(sp, 1e-9) * self.max_speed, vel)
                 pos = pos + vel * self.dt
                 traj[i] = pos
             all_modes.append(traj)
