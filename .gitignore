@@ -22,3 +22,13 @@ ros2_ws/log/
 # the repository private first.
 deck/
 ablation_margin.txt
+
+# Datasets must never enter this repository. The IDD segmentation archive
+# alone is 18.5 GB, and GitHub's hard limit is 100 MB per file -- a single
+# accidental `git add .` would wedge the repository irrecoverably.
+*.tar.gz
+*.tar
+*.zip
+IDD/
+IDD_Segmentation/
+idd-segmentation*
