@@ -551,6 +551,33 @@ class World:
             full.invalidate_cache()
         return static, full
 
+    def ground_truth_pothole_grid(
+        self, half_extent: float = 32.0, resolution: float = 0.25
+    ) -> OccupancyGrid:
+        """Ego-centred grid of pothole footprints only -- nothing else.
+
+        Separate from :meth:`ground_truth_grid` on purpose: potholes are a
+        slow-down hazard, not a hard obstacle, so they must not be lumped in
+        with walls and parked vehicles.  The controller turns distance to
+        the nearest ``True`` cell here into a speed cap; see
+        :func:`divas.control.controllers._pothole_speed_limit`.
+        """
+        grid = OccupancyGrid.empty(
+            (self.ego.x - half_extent, self.ego.x + half_extent),
+            (self.ego.y - half_extent, self.ego.y + half_extent),
+            resolution,
+        )
+        potholes = [o for o in self.statics if getattr(o, "label", "") == "pothole"]
+        if potholes:
+            gx, gy = np.meshgrid(np.arange(grid.nx), np.arange(grid.ny))
+            wx, wy = grid.cell_to_world(gx, gy)
+            occ = grid.data
+            for obj in potholes:
+                occ[obj.sdf(wx, wy) <= 0.0] = 1.0
+            grid.data = occ
+            grid.invalidate_cache()
+        return grid
+
     def ground_truth_tracks(self) -> List[Track]:
         return [
             a.to_track(self.ego, self.rng, self.track_noise)
@@ -576,12 +603,21 @@ class World:
                 for a in self.actors if a.alive]
 
     def collision(self) -> Optional[str]:
-        """Return a description of what we hit, or ``None``."""
+        """Return a description of what we hit, or ``None``.
+
+        Potholes are excluded on purpose: a pothole is a slow-down hazard, not
+        a wall.  Real drivers ease over one at low speed rather than treating
+        contact as a crash; ``ground_truth_pothole_grid`` and the controller's
+        speed cap are what stand in for that judgement here.  See
+        :meth:`ground_truth_pothole_grid`.
+        """
         hit = _first_hit(self.ego, self.params, self._metric_boxes())
         if hit is not None:
             return hit
         centres, r = self.ego_footprint_discs()
         for obj in self.statics:
+            if getattr(obj, "label", "") == "pothole":
+                continue
             if float(obj.sdf(centres[:, 0], centres[:, 1]).min()) <= r:
                 return f"static:{obj.label}"
         if not self._road_poly.contains_points(centres).all():
@@ -595,3 +631,20 @@ class World:
     def time_to_collision(self) -> float:
         """Constant-velocity TTC against the nearest closing actor."""
         return _ttc(self.ego, self.params, self._metric_boxes())
+
+    def pothole_clearance(self) -> float:
+        """Signed surface distance to the nearest pothole, metres.
+
+        Negative while the ego footprint overlaps one -- expected and no
+        longer a collision, see :meth:`collision`. ``inf`` when there are
+        none in the scenario.
+        """
+        potholes = [o for o in self.statics if getattr(o, "label", "") == "pothole"]
+        if not potholes:
+            return float("inf")
+        centres, r = self.ego_footprint_discs()
+        best = float("inf")
+        for obj in potholes:
+            d = float(obj.sdf(centres[:, 0], centres[:, 1]).min()) - r
+            best = min(best, d)
+        return best

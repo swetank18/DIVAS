@@ -57,6 +57,11 @@ class RunMetrics:
     ttc_samples: List[float] = field(default_factory=list)
     min_clearance: float = float("inf")
 
+    # Potholes are a speed hazard, not a collision -- see World.collision.
+    # These verify the speed cap actually engaged rather than assuming it did.
+    pothole_encounters: int = 0
+    min_speed_in_pothole: float = float("inf")
+
     max_lat_accel: float = 0.0
     max_jerk: float = 0.0
     max_speed: float = 0.0
@@ -115,6 +120,9 @@ class RunMetrics:
             "ttc_p5": round(self.ttc_p5, 2) if np.isfinite(self.ttc_p5) else None,
             "min_clearance_m": round(self.min_clearance, 2)
             if np.isfinite(self.min_clearance) else None,
+            "pothole_encounters": self.pothole_encounters,
+            "min_speed_in_pothole": round(self.min_speed_in_pothole, 2)
+            if np.isfinite(self.min_speed_in_pothole) else None,
             "max_lat_accel": round(self.max_lat_accel, 2),
             "max_jerk": round(self.max_jerk, 2),
             "mean_speed": round(self.mean_speed, 2),

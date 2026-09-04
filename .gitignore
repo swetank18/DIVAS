@@ -3,6 +3,8 @@ __pycache__/
 .pytest_cache/
 ablation_final.txt
 eval_results.json
+eval_results_reactive*.json
+graphify-out/
 demo_*.png
 *.gif
 # datasets and checkpoints stay out of the repo
@@ -17,6 +19,7 @@ datasets/
 # because later patterns win -- which committed three .pyc files.
 !divas/perception/datasets/*.py
 *.pth
+*.pt
 *.onnx
 *.engine
 # ROS 2 build products
