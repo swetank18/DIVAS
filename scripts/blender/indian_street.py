@@ -38,6 +38,10 @@ OUT = arg("--out", "demo/frames")
 ARM = int(arg("--arm", "1"))
 FPS = int(arg("--fps", "30"))
 SAMPLES = int(arg("--samples", "16"))
+ENGINE = arg("--engine", "eevee")
+F0 = int(arg("--frame-start", "0"))
+F1 = int(arg("--frame-end", "0"))
+DOF = float(arg("--dof", "0"))
 RES_X, RES_Y = int(arg("--width", "1600")), int(arg("--height", "900"))
 
 data = json.load(open(REPLAY))
@@ -101,6 +105,53 @@ def tex_mat(name, base, normal=None, rough_map=None, scale=7.0, tint=(1, 1, 1)):
     return m
 
 
+def loft(name, sections, material, subsurf=2, close_ends=True):
+    """Build a mesh by bridging a series of cross-sections along +X.
+
+    This is the difference between a model and a pile of primitives. A cow's
+    barrel is not a box: it is an oval that starts narrow at the chest, swells
+    over the ribs and tapers to the hips, and a car body is the same idea with
+    a different profile. Bridging real cross-sections gives that shape
+    directly, and subdivision then smooths it into a surface rather than
+    inflating a cube into a balloon -- which is what happened when subdivision
+    was applied to joined primitives.
+
+    ``sections`` is a list of ``(x, half_width, z_bottom, z_top)``. Each
+    becomes an ellipse-ish ring of eight vertices; consecutive rings are
+    bridged into quads.
+    """
+    verts, faces = [], []
+    ring = 8
+    for (x, hw, z0, z1) in sections:
+        cz, hz = 0.5 * (z0 + z1), 0.5 * (z1 - z0)
+        for k in range(ring):
+            a = 2.0 * math.pi * k / ring
+            verts.append((x, hw * math.cos(a), cz + hz * math.sin(a)))
+    for i in range(len(sections) - 1):
+        b0, b1 = i * ring, (i + 1) * ring
+        for k in range(ring):
+            k2 = (k + 1) % ring
+            faces.append((b0 + k, b0 + k2, b1 + k2, b1 + k))
+    if close_ends:
+        faces.append(tuple(range(ring - 1, -1, -1)))
+        last = (len(sections) - 1) * ring
+        faces.append(tuple(range(last, last + ring)))
+
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [], faces)
+    me.validate()
+    me.update()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.collection.objects.link(o)
+    o.data.materials.append(material)
+    if subsurf:
+        m = o.modifiers.new("subd", "SUBSURF")
+        m.levels = m.render_levels = subsurf
+        for poly in o.data.polygons:
+            poly.use_smooth = True
+    return o
+
+
 def bevel_edges(obj, width=0.045, segments=2):
     """Catch a highlight on every edge.
 
@@ -117,13 +168,45 @@ def bevel_edges(obj, width=0.045, segments=2):
     return obj
 
 
-def mat(name, rgb, rough=0.8, metal=0.0, emit=0.0):
+def mat(name, rgb, rough=0.8, metal=0.0, emit=0.0, coat=0.0, sss=0.0,
+        noise=0.0):
+    """A Principled surface, with the physical extras that matter.
+
+    ``coat`` is a clearcoat layer -- car paint is pigment under lacquer, and
+    without the second specular lobe painted metal reads as coloured plastic.
+    ``sss`` is subsurface scattering, which is why skin and hide glow slightly
+    at grazing angles instead of going flat black in shadow. ``noise`` breaks
+    up the roughness with a procedural texture: a perfectly uniform roughness
+    is the single most synthetic-looking property a surface can have, because
+    nothing real is equally worn everywhere.
+    """
     m = bpy.data.materials.new(name)
     m.use_nodes = True
-    b = m.node_tree.nodes["Principled BSDF"]
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*rgb, 1.0)
     b.inputs["Roughness"].default_value = rough
     b.inputs["Metallic"].default_value = metal
+    for key, val in (("Coat Weight", coat), ("Subsurface Weight", sss)):
+        if key in b.inputs and val:
+            b.inputs[key].default_value = val
+    if sss and "Subsurface Radius" in b.inputs:
+        b.inputs["Subsurface Radius"].default_value = (0.4, 0.18, 0.10)
+    if noise:
+        tex = nt.nodes.new("ShaderNodeTexNoise")
+        tex.inputs["Scale"].default_value = 22.0
+        tex.inputs["Detail"].default_value = 6.0
+        ramp = nt.nodes.new("ShaderNodeValToRGB")
+        ramp.color_ramp.elements[0].position = 0.35
+        ramp.color_ramp.elements[0].color = (max(rough - noise, 0.05),) * 3 + (1,)
+        ramp.color_ramp.elements[1].position = 0.65
+        ramp.color_ramp.elements[1].color = (min(rough + noise, 1.0),) * 3 + (1,)
+        nt.links.new(tex.outputs["Fac"], ramp.inputs["Fac"])
+        nt.links.new(ramp.outputs["Color"], b.inputs["Roughness"])
+        bump = nt.nodes.new("ShaderNodeBump")
+        bump.inputs["Strength"].default_value = 0.08
+        nt.links.new(tex.outputs["Fac"], bump.inputs["Height"])
+        nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
     if emit:
         b.inputs["Emission Color"].default_value = (*rgb, 1.0)
         b.inputs["Emission Strength"].default_value = emit
@@ -182,26 +265,52 @@ def build_materials():
     else:
         M["tarmac"] = mat("tarmac", (0.10, 0.10, 0.11), rough=0.95)
         M["dust"] = mat("dust", (0.52, 0.42, 0.28), rough=1.0)
-    M["kerb"] = mat("kerb", (0.55, 0.53, 0.50), rough=0.9)
-    M["ego"] = mat("ego", (0.85, 0.86, 0.88), rough=0.35, metal=0.4)
-    M["glass"] = mat("glass", (0.06, 0.09, 0.11), rough=0.15, metal=0.6)
-    M["cow"] = mat("cow", (0.80, 0.76, 0.70), rough=0.9)
-    M["cow2"] = mat("cow2", (0.42, 0.30, 0.20), rough=0.9)
-    M["auto_y"] = mat("auto_y", (0.94, 0.72, 0.08), rough=0.5)
-    M["auto_g"] = mat("auto_g", (0.05, 0.35, 0.18), rough=0.5)
-    M["bus"] = mat("bus", (0.72, 0.20, 0.16), rough=0.6)
-    M["bike"] = mat("bike", (0.12, 0.12, 0.14), rough=0.5)
-    M["skin"] = mat("skin", (0.62, 0.44, 0.30), rough=0.85)
-    M["cloth"] = [mat(f"cloth{i}", c, rough=0.9) for i, c in enumerate(
+    def has(n):
+        return tex and os.path.exists(t(n, "Diffuse"))
+    def pbr(name, n, scale, tint=(1, 1, 1), fallback=None):
+        if has(n):
+            return tex_mat(name, t(n, "Diffuse"), t(n, "nor_gl"), t(n, "Rough"),
+                           scale=scale, tint=tint)
+        return fallback
+
+    M["kerb"] = pbr("kerb", "brushed_concrete", 4.0, (0.92, 0.90, 0.86)) \
+        or mat("kerb", (0.55, 0.53, 0.50), rough=0.88, noise=0.14)
+    # Shopfronts get real weathered surfaces and a colour tint each, so a row
+    # of them reads as a row of buildings rather than a row of the same
+    # building. Damaged plaster and painted brick alternate: a street of one
+    # material is as synthetic as a street of one colour.
+    M["wall"] = [
+        pbr(f"wall{i}", n, 2.6, c) or mat(f"wall{i}", c[:3], rough=0.8, noise=0.18)
+        for i, (n, c) in enumerate([
+            ("damaged_plaster", (0.92, 0.55, 0.45)),
+            ("painted_brick", (0.55, 0.72, 0.86)),
+            ("damaged_plaster", (0.95, 0.86, 0.52)),
+            ("painted_brick", (0.60, 0.80, 0.60)),
+            ("damaged_plaster", (0.80, 0.68, 0.86)),
+            ("painted_brick", (0.95, 0.72, 0.50)),
+        ])]
+    M["bark"] = pbr("bark", "bark_brown_02", 2.0, (0.95, 0.88, 0.78))
+    # Car paint: pigment under lacquer. The clearcoat is the difference
+    # between painted metal and coloured plastic.
+    M["ego"] = mat("ego", (0.80, 0.82, 0.85), rough=0.22, metal=0.15, coat=1.0)
+    M["glass"] = mat("glass", (0.03, 0.05, 0.07), rough=0.05, metal=0.1, coat=1.0)
+    M["cow"] = mat("cow", (0.78, 0.74, 0.68), rough=0.82, sss=0.22, noise=0.10)
+    M["cow2"] = mat("cow2", (0.40, 0.28, 0.19), rough=0.82, sss=0.22, noise=0.10)
+    M["auto_y"] = mat("auto_y", (0.92, 0.68, 0.06), rough=0.30, coat=0.8)
+    M["auto_g"] = mat("auto_g", (0.04, 0.30, 0.16), rough=0.30, coat=0.8)
+    M["bus"] = mat("bus", (0.68, 0.18, 0.14), rough=0.42, coat=0.5)
+    M["bike"] = mat("bike", (0.10, 0.10, 0.12), rough=0.35, metal=0.6)
+    M["skin"] = mat("skin", (0.58, 0.40, 0.27), rough=0.72, sss=0.35)
+    M["cloth"] = [mat(f"cloth{i}", c, rough=0.86, sss=0.12) for i, c in enumerate(
         [(0.80, 0.20, 0.25), (0.15, 0.35, 0.70), (0.95, 0.85, 0.30),
          (0.20, 0.55, 0.35), (0.85, 0.45, 0.15), (0.75, 0.75, 0.78)])]
-    M["shop"] = [mat(f"shop{i}", c, rough=0.85) for i, c in enumerate(
+    M["shop"] = [mat(f"shop{i}", c, rough=0.80, noise=0.18) for i, c in enumerate(
         [(0.75, 0.35, 0.25), (0.30, 0.50, 0.65), (0.85, 0.72, 0.35),
          (0.45, 0.60, 0.40), (0.70, 0.55, 0.70)])]
-    M["awning"] = mat("awning", (0.85, 0.30, 0.20), rough=0.8)
-    M["tyre"] = mat("tyre", (0.05, 0.05, 0.06), rough=0.95)
-    M["trunk"] = mat("trunk", (0.28, 0.20, 0.13), rough=0.95)
-    M["leaf"] = mat("leaf", (0.16, 0.32, 0.12), rough=0.9)
+    M["awning"] = mat("awning", (0.82, 0.28, 0.18), rough=0.75, noise=0.14)
+    M["tyre"] = mat("tyre", (0.035, 0.035, 0.04), rough=0.92, noise=0.10)
+    M["trunk"] = mat("trunk", (0.26, 0.19, 0.12), rough=0.94, noise=0.16)
+    M["leaf"] = mat("leaf", (0.14, 0.28, 0.10), rough=0.86, sss=0.25)
     M["path"] = mat("path", (0.95, 0.42, 0.18), rough=0.4, emit=1.5)
 
 # ------------------------------------------------------------------- models
@@ -338,14 +447,15 @@ def build_world(road_poly, statics, length_hint):
         h = 3.2 + (rng % 220) / 100.0
         w = 5.0 + (rng % 180) / 100.0
         box(f"shop{i}", (w, 6.0, h), (x, half + 6.2, h / 2),
-            M["shop"][i % len(M["shop"])])
+            M["wall"][i % len(M["wall"])])
         box(f"awn{i}", (w * 0.9, 1.8, 0.10), (x, half + 2.5, 2.6), M["awning"])
         for k in range(2):
             cyl(f"awnpole{i}_{k}", 0.045, 2.6, (x + (w * 0.38) * (1 if k else -1),
                                                 half + 1.7, 1.3), M["kerb"])
     for i in range(int((x1 - x0) / 9)):
         x = x0 + 7 + i * 9
-        cyl(f"trunk{i}", 0.18, 3.6, (x, -half - 4.0, 1.8), M["trunk"])
+        cyl(f"trunk{i}", 0.18, 3.6, (x, -half - 4.0, 1.8),
+            M["bark"] or M["trunk"])
         bpy.ops.mesh.primitive_ico_sphere_add(radius=1.7, subdivisions=2,
                                               location=(x, -half - 4.0, 4.2))
         c = bpy.context.object
@@ -457,6 +567,14 @@ def animate():
 
     cam_data = bpy.data.cameras.new("cam")
     cam_data.lens = 34.0
+    if DOF > 0:
+        # A real lens cannot hold the whole street sharp. Throwing the far end
+        # slightly out of focus is one of the cheapest and strongest realism
+        # cues there is, and it also stops the eye reading the low-poly trees
+        # at the vanishing point.
+        cam_data.dof.use_dof = True
+        cam_data.dof.focus_distance = DOF
+        cam_data.dof.aperture_fstop = 3.2
     cam = bpy.data.objects.new("cam", cam_data)
     bpy.context.collection.objects.link(cam)
     bpy.context.scene.camera = cam
@@ -521,15 +639,67 @@ def animate():
                     kp.interpolation = "LINEAR"
 
 
+def configure_cycles(scene):
+    """Path tracing on the GPU, with denoising.
+
+    EEVEE rasterises and fakes the indirect light; Cycles traces it. On a
+    street scene the difference is concentrated exactly where the eye looks
+    for realism -- contact shadows under the cattle and the car, bounce light
+    off the tarmac into the wheel arches, and the sky's own gradient reflected
+    in the paint. None of those are things a rasteriser can be tuned into.
+    """
+    scene.render.engine = "CYCLES"
+    prefs = bpy.context.preferences.addons["cycles"].preferences
+    for backend in ("OPTIX", "CUDA", "NONE"):
+        try:
+            prefs.compute_device_type = backend
+            break
+        except (TypeError, ValueError):
+            continue
+    try:
+        prefs.get_devices()
+        for d in prefs.devices:
+            d.use = d.type != "CPU"
+        scene.cycles.device = "GPU"
+    except Exception:
+        scene.cycles.device = "CPU"
+
+    scene.cycles.samples = SAMPLES
+    scene.cycles.use_adaptive_sampling = True
+    scene.cycles.adaptive_threshold = 0.02
+    # Denoising is what makes a low sample count usable. Without it this scene
+    # needs several hundred samples a frame to lose its grain, which is hours
+    # rather than the tens of minutes an animation can afford.
+    scene.cycles.use_denoising = True
+    try:
+        scene.cycles.denoiser = "OPENIMAGEDENOISE"
+    except TypeError:
+        pass
+    scene.cycles.max_bounces = 6
+    scene.cycles.diffuse_bounces = 3
+    scene.cycles.glossy_bounces = 3
+    scene.cycles.transmission_bounces = 4
+    scene.cycles.caustics_reflective = False
+    scene.cycles.caustics_refractive = False
+    # Motion blur: at 8 m/s a 30 fps frame covers 27 cm, and a perfectly
+    # frozen wheel is one of the strongest cues that an image is synthetic.
+    scene.render.use_motion_blur = True
+    scene.render.motion_blur_shutter = 0.4
+
+
 def configure_render():
     scene = bpy.context.scene
-    scene.render.engine = "BLENDER_EEVEE_NEXT"
+    if ENGINE == "cycles":
+        configure_cycles(scene)
+    else:
+        scene.render.engine = "BLENDER_EEVEE_NEXT"
     scene.render.resolution_x = RES_X
     scene.render.resolution_y = RES_Y
     scene.render.fps = FPS
     scene.render.image_settings.file_format = "PNG"
     scene.render.filepath = OUT + "/f_"
-    scene.eevee.taa_render_samples = SAMPLES
+    if ENGINE != "cycles":
+        scene.eevee.taa_render_samples = SAMPLES
     try:
         scene.eevee.use_shadows = True
     except AttributeError:
@@ -548,7 +718,13 @@ def main():
     build_lighting()
     animate()
     configure_render()
-    print(f"[divas] scene ready: {bpy.context.scene.frame_end} frames at {FPS} fps")
+    if F0:
+        bpy.context.scene.frame_start = F0
+    if F1:
+        bpy.context.scene.frame_end = F1
+    sc = bpy.context.scene
+    print(f"[divas] rendering frames {sc.frame_start}-{sc.frame_end} at {FPS} fps, "
+          f"engine {ENGINE}")
     bpy.ops.render.render(animation=True)
     print("[divas] render complete")
 
