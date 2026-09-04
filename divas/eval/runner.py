@@ -36,7 +36,7 @@ from divas.prediction.predictors import (
 )
 from divas.prediction.conformal import ConformalCalibrator, ConformalConfig
 from divas.prediction.risk import MarginParams, RiskField
-from divas.types import EgoState, VehicleParams
+from divas.types import EgoState, OccupancyGrid, VehicleParams
 
 
 @dataclass
@@ -201,6 +201,7 @@ def run(
 
     try:
         grid = None
+        hazard: Optional[OccupancyGrid] = None
         risk: Optional[RiskField] = None
         # Built on the first prediction rather than here, so it takes its
         # horizon and step from the TrajectorySet the predictor actually
@@ -215,6 +216,7 @@ def run(
         stuck_for = 0.0
         start_progress = world.road.progress(world.ego.x, world.ego.y)
         step = 0
+        in_pothole = False
 
         while world.t < scenario.time_limit:
             ego = world.ego
@@ -222,6 +224,11 @@ def run(
             # -- stages 1-3 (stubbed) + stage 4 ---------------------------
             if step % cfg.perception_every == 0 or grid is None:
                 static_grid, grid = world.ground_truth_grids()
+                # Not every SimWorld has scripted potholes -- CarlaWorld
+                # doesn't implement this, same optional-capability pattern
+                # as world.close() below.
+                pothole_grid_fn = getattr(world, "ground_truth_pothole_grid", None)
+                hazard = pothole_grid_fn() if pothole_grid_fn is not None else None
                 tracks = world.ground_truth_tracks()
                 if predictor is not None:
                     t0 = time.perf_counter()
@@ -270,7 +277,7 @@ def run(
 
             # -- stage 6 ---------------------------------------------------
             t0 = time.perf_counter()
-            cmd = controller.step(path, ego, grid, risk, cfg.sim_dt)
+            cmd = controller.step(path, ego, grid, risk, cfg.sim_dt, hazard)
             m.timer("control").add((time.perf_counter() - t0) * 1e3)
 
             if cfg.record and step % cfg.record_every == 0:
@@ -308,6 +315,20 @@ def run(
             m.ttc_samples.append(ttc)
             m.min_ttc = min(m.min_ttc, ttc)
             m.min_clearance = min(m.min_clearance, world.clearance_to_actors())
+
+            # Potholes no longer end the episode (see World.collision) --
+            # instead, verify the speed cap actually engaged: record how slow
+            # the ego was while inside one, counting each crossing once.
+            # Not every SimWorld scripts potholes -- see the hazard grid above.
+            pothole_clearance_fn = getattr(world, "pothole_clearance", None)
+            now_in_pothole = (
+                pothole_clearance_fn() <= 0.0 if pothole_clearance_fn is not None else False
+            )
+            if now_in_pothole:
+                m.min_speed_in_pothole = min(m.min_speed_in_pothole, e.v)
+                if not in_pothole:
+                    m.pothole_encounters += 1
+            in_pothole = now_in_pothole
 
             hit = world.collision()
             if hit is not None:

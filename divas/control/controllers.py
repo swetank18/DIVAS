@@ -54,8 +54,39 @@ class Controller:
         grid: Optional[OccupancyGrid] = None,
         risk: Optional[RiskField] = None,
         dt: float = 0.05,
+        hazard: Optional[OccupancyGrid] = None,
     ) -> ControlCmd:
         raise NotImplementedError
+
+
+#: Speed the vehicle eases down to right over a pothole -- a crawl, not a
+#: stop.  Potholes are excluded from World.collision() on purpose (see its
+#: docstring); this is what stands in for a driver's judgement instead of
+#: treating contact as a crash.
+POTHOLE_SAFE_SPEED = 2.0        # m/s
+#: Distance over which speed ramps down to POTHOLE_SAFE_SPEED, so the
+#: vehicle eases off rather than braking sharply at the edge.
+POTHOLE_APPROACH_ZONE = 6.0     # m
+
+
+def _pothole_speed_limit(hazard: Optional[OccupancyGrid], px, py, max_speed: float) -> np.ndarray:
+    """Distance-based speed cap from a pothole-only hazard grid.
+
+    ``px``/``py`` are world points, any shape; returns the same shape,
+    linearly ramped from ``max_speed`` at ``POTHOLE_APPROACH_ZONE`` metres
+    down to ``POTHOLE_SAFE_SPEED`` at the pothole's edge and beyond (inside
+    it, the signed distance goes negative and clips to the same floor).
+    See ``World.ground_truth_pothole_grid``.
+    """
+    px = np.asarray(px, dtype=np.float64)
+    py = np.asarray(py, dtype=np.float64)
+    if hazard is None or not hazard.data.any():
+        return np.full(px.shape, max_speed)
+    sample = _grid_sampler(hazard)
+    d = sample(px.ravel(), py.ravel()).reshape(px.shape)
+    frac = np.clip(d / POTHOLE_APPROACH_ZONE, 0.0, 1.0)
+    cap = POTHOLE_SAFE_SPEED + frac * (max_speed - POTHOLE_SAFE_SPEED)
+    return np.minimum(cap, max_speed)
 
 
 def _grid_sampler(grid: OccupancyGrid):
@@ -92,7 +123,7 @@ class PurePursuitController(Controller):
     reaction_time: float = 0.6   # s
     name = "pure_pursuit"
 
-    def step(self, path, ego, grid=None, risk=None, dt=0.05) -> ControlCmd:
+    def step(self, path, ego, grid=None, risk=None, dt=0.05, hazard=None) -> ControlCmd:
         if path is None or len(path) < 2:
             return ControlCmd(accel=self.params.min_accel, steer=0.0)
         p = self.params
@@ -111,12 +142,12 @@ class PurePursuitController(Controller):
         steer = float(np.arctan2(2.0 * p.wheelbase * np.sin(alpha), ld))
 
         # -- longitudinal ----------------------------------------------
-        v_ref = self._speed_target(path, ego, i0, grid, risk)
+        v_ref = self._speed_target(path, ego, i0, grid, risk, hazard)
         accel = float(np.clip(self.k_speed * (v_ref - ego.v),
                               p.min_accel, p.max_accel))
         return ControlCmd(accel=accel, steer=float(np.clip(steer, -p.max_steer, p.max_steer)))
 
-    def _speed_target(self, path, ego, i0, grid, risk) -> float:
+    def _speed_target(self, path, ego, i0, grid, risk, hazard=None) -> float:
         p = self.params
         v = p.cruise_speed
 
@@ -128,6 +159,13 @@ class PurePursuitController(Controller):
             k = float(np.percentile(kappa, 90))
             if k > 1e-3:
                 v = min(v, float(np.sqrt(p.max_lat_accel / k)))
+
+        # pothole hazard: ease down over the lookahead window rather than
+        # treat contact as a wall -- see World.collision() and
+        # _pothole_speed_limit.
+        if hazard is not None and window.any():
+            cap = _pothole_speed_limit(hazard, path.xy[window, 0], path.xy[window, 1], p.max_speed)
+            v = min(v, float(cap.min()))
 
         # Taper to a stop only when the path really ends.
         if path.terminal_stop:
@@ -324,10 +362,10 @@ class SamplingMPC(Controller):
             X[:, i], Y[:, i], TH[:, i], V[:, i], DEL[:, i] = x, y, th, v, delta
         return X, Y, TH, V, DEL
 
-    def _cost(self, X, Y, TH, V, DEL, U, path, grid, risk) -> np.ndarray:
-        return self._cost_terms(X, Y, TH, V, DEL, U, path, grid, risk)[0]
+    def _cost(self, X, Y, TH, V, DEL, U, path, grid, risk, hazard=None) -> np.ndarray:
+        return self._cost_terms(X, Y, TH, V, DEL, U, path, grid, risk, hazard)[0]
 
-    def _cost_terms(self, X, Y, TH, V, DEL, U, path, grid, risk):
+    def _cost_terms(self, X, Y, TH, V, DEL, U, path, grid, risk, hazard=None):
         """Total cost, and the per-term breakdown that produced it.
 
         The breakdown exists because tuning a multi-term cost by nudging
@@ -360,7 +398,7 @@ class SamplingMPC(Controller):
         terms["heading"] = t.sum(axis=1); cost = cost + t
 
         # -- speed reference from path curvature and remaining length
-        v_ref = self._speed_reference(path, idx)
+        v_ref = self._speed_reference(path, idx, hazard)
         t = (cfg.w_speed_over * np.maximum(V - v_ref, 0.0) ** 2
              + cfg.w_speed_under * np.maximum(v_ref - V, 0.0) ** 2)
         terms["speed"] = t.sum(axis=1); cost = cost + t
@@ -416,24 +454,29 @@ class SamplingMPC(Controller):
         terms["progress"] = t; total = total + t
         return total, terms
 
-    def explain(self, path, ego, grid=None, risk=None) -> dict:
+    def explain(self, path, ego, grid=None, risk=None, hazard=None) -> dict:
         """Per-term cost of the current nominal control sequence.  Debug aid."""
         if path is None or len(path) < 2:
             return {}
         path = path.resample(0.4) if path.length > 1.0 else path
         U = self.U[None]
         X, Y, TH, V, DEL = self._rollout(ego, U)
-        total, terms = self._cost_terms(X, Y, TH, V, DEL, U, path, grid, risk)
+        total, terms = self._cost_terms(X, Y, TH, V, DEL, U, path, grid, risk, hazard)
         out = {k: float(v[0]) for k, v in terms.items()}
         out["TOTAL"] = float(total[0])
         return out
 
-    def _speed_reference(self, path: Path, idx: np.ndarray) -> np.ndarray:
+    def _speed_reference(self, path: Path, idx: np.ndarray, hazard: Optional[OccupancyGrid] = None) -> np.ndarray:
         p = self.params
         kappa = path.curvature_profile()[idx]
         v_curve = np.minimum(
             np.sqrt(p.max_lat_accel / np.maximum(kappa, 1e-3)), p.cruise_speed
         )
+        if hazard is not None:
+            # Capped per path point once, then gathered by idx -- cheap
+            # relative to the O(K*N) rollouts indexing into it.
+            cap = _pothole_speed_limit(hazard, path.xy[:, 0], path.xy[:, 1], p.max_speed)
+            v_curve = np.minimum(v_curve, cap[idx])
         if not path.terminal_stop:
             return np.minimum(v_curve, p.max_speed)
         s = path.arc_lengths()
@@ -442,7 +485,7 @@ class SamplingMPC(Controller):
         return np.minimum(np.minimum(v_curve, v_end), p.max_speed)
 
     # -- main -------------------------------------------------------------
-    def step(self, path, ego, grid=None, risk=None, dt=0.05) -> ControlCmd:
+    def step(self, path, ego, grid=None, risk=None, dt=0.05, hazard=None) -> ControlCmd:
         p = self.params
         cfg = self.cfg
         if path is None or len(path) < 2:
@@ -456,7 +499,7 @@ class SamplingMPC(Controller):
         # start can be tracking a path that no longer exists.
         seeds = np.stack([self.U, self._feedforward(path, ego)])
         Xs, Ys, THs, Vs, DELs = self._rollout(ego, seeds)
-        seed_cost = self._cost(Xs, Ys, THs, Vs, DELs, seeds, path, grid, risk)
+        seed_cost = self._cost(Xs, Ys, THs, Vs, DELs, seeds, path, grid, risk, hazard)
         U = seeds[int(np.argmin(seed_cost))].copy()
 
         for _ in range(cfg.n_iterations):
@@ -465,7 +508,7 @@ class SamplingMPC(Controller):
             cand[:, :, 0] = np.clip(cand[:, :, 0], p.min_accel, p.max_accel)
             cand[:, :, 1] = np.clip(cand[:, :, 1], -p.max_steer, p.max_steer)
             X, Y, TH, V, DEL = self._rollout(ego, cand)
-            S = self._cost(X, Y, TH, V, DEL, cand, path, grid, risk)
+            S = self._cost(X, Y, TH, V, DEL, cand, path, grid, risk, hazard)
             # Softmax weighting.  Subtracting the minimum before the
             # exponent is not cosmetic: without it the exponent underflows to
             # all zeros and the update becomes NaN.
