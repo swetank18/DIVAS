@@ -142,6 +142,18 @@ def steer_from_control(steer_norm: float, max_steer_deg: float) -> float:
     return float(-steer_norm * math.radians(max(max_steer_deg, 1e-3)))
 
 
+def normalised_steer(steer_rad: float, max_steer_deg: float) -> float:
+    """Our road-wheel angle -> CARLA's normalised ``VehicleControl.steer``.
+
+    Split out of :func:`control_from_command` so the sign convention lives in
+    exactly one place: :class:`LongitudinalTracker` owns the pedals now, but
+    the steering half of the conversion is unchanged and still the most
+    dangerous line in this module.  See :func:`control_from_command`.
+    """
+    max_steer_rad = math.radians(max(max_steer_deg, 1e-3))
+    return float(np.clip(-steer_rad / max_steer_rad, -1.0, 1.0))
+
+
 def control_from_command(
     accel: float,
     steer_rad: float,
@@ -164,15 +176,24 @@ def control_from_command(
     mirrored-world bug this module's docstring warns about: the vehicle drives,
     tracks nothing, and steers into every obstacle it was avoiding.
 
-    The longitudinal mapping is deliberately crude: throttle and brake are
-    proportional to the requested acceleration against the vehicle's limits.
-    A faithful mapping needs the engine and brake force curves, and until that
-    exists the tracking error belongs to this function, not to the MPC. This is
-    the first thing to check if the ego undershoots its speed reference in
-    CARLA but not in the built-in simulator.
+    **The longitudinal half is open-loop and is no longer what drives the
+    ego.** Throttle and brake here are simply proportional to the requested
+    acceleration, which ignores drag entirely: a zero acceleration command
+    gives zero throttle, so the vehicle coasts down instead of holding speed.
+    With no integral action it settles wherever the proportional command
+    balances drag -- a standing error of ``resistance(v) / (1.1 * authority)``,
+    a few tenths of a metre per second, and larger wherever the pedal
+    authority it assumes fails to arrive.  :class:`LongitudinalTracker`
+    replaced it.  Note the size: this is a correctness defect, not an
+    explanation for the 4.56 m/s *mean* of the first live Town10 run, which is
+    mostly traffic and a curvature-limited reference.
+
+    Kept because it is the honest baseline for the comparison in
+    ``scripts/calibrate_longitudinal.py``, and because it is the one mapping
+    with no state, which makes it the right thing to reach for in a test that
+    is about steering.
     """
-    max_steer_rad = math.radians(max(max_steer_deg, 1e-3))
-    steer = float(np.clip(-steer_rad / max_steer_rad, -1.0, 1.0))
+    steer = normalised_steer(steer_rad, max_steer_deg)
     if accel >= 0.0:
         throttle = float(np.clip(accel / max(params.max_accel, 1e-3), 0.0, 1.0))
         brake = 0.0
@@ -180,6 +201,173 @@ def control_from_command(
         throttle = 0.0
         brake = float(np.clip(-accel / max(abs(params.min_accel), 1e-3), 0.0, 1.0))
     return throttle, steer, brake
+
+
+@dataclass(frozen=True)
+class ResistanceModel:
+    """Coast-down deceleration of the ego, m/s^2, as ``c0 + c1 v + c2 v^2``.
+
+    Nominally rolling resistance, speed-proportional driveline loss and
+    aerodynamic drag.  In CARLA it is dominated by none of those: the default
+    vehicle physics carry
+    ``damping_rate_zero_throttle_clutch_engaged = 2.0`` and an autobox that
+    downshifts hard on lift-off, so a Micra coasting from 9 m/s loses speed at
+    **about 4 m/s^2** -- an order of magnitude more than a real car, and
+    comparable to braking.  The quadratic is therefore an empirical fit to
+    CARLA's engine braking, not a drag model, which is why the coefficients
+    here are measured by :mod:`scripts.calibrate_longitudinal` rather than
+    taken from a textbook.  Do not reason about them as physical drag; a real
+    vehicle would need refitting, not rescaling.
+
+    Because engine braking is gear-dependent and the downshift points are
+    hysteretic, the samples are genuinely noisy and the fit residual is a
+    few tenths of a m/s^2.  That error is what the integral trim absorbs.
+
+    Why this exists at all: the 2-D bicycle model in :mod:`divas.sim.world`
+    integrates ``v += a dt`` with no losses, so a commanded acceleration of
+    zero holds speed exactly.  CARLA is a real vehicle dynamics model, where
+    zero throttle means coasting down.  A controller tuned against the former
+    and pedalled open-loop into the latter can never hold its reference; it
+    settles a standing error below it.
+    """
+
+    # Measured on vehicle.nissan.micra in CARLA 0.9.16, Town10HD_Opt, by
+    # ``scripts/calibrate_longitudinal.py``: six coast-down segments from 3 to
+    # 13 m/s, RMS residual 0.77 m/s^2.  The quadratic term fitted negative and
+    # was rejected by the curve check, so this is the validated linear fit --
+    # 4.08 m/s^2 of coast-down at 9 m/s.
+    c0: float = 2.3915      # m/s^2
+    c1: float = 0.18802     # m/s^2 per m/s
+    c2: float = 0.0         # m/s^2 per (m/s)^2 -- not supported by the data
+
+    def __call__(self, v: float) -> float:
+        vv = max(float(v), 0.0)
+        return float(self.c0 + self.c1 * vv + self.c2 * vv * vv)
+
+
+class LongitudinalTracker:
+    """Commanded acceleration -> ``(throttle, brake)``, closing the loop.
+
+    Stage 6 emits an *acceleration*, and CARLA takes *pedal positions*.  The
+    original mapping was proportional and open-loop -- ``throttle =
+    accel / max_accel`` -- which has one structural property: the MPC's
+    command tends to zero as the ego approaches its speed reference, so the
+    throttle also tends to zero, and the vehicle coasts down against drag
+    until the residual error is large enough to ask for acceleration again.
+    It settles wherever those two effects balance, always below the reference,
+    and the symptom reads as a badly tuned planner rather than a missing pedal
+    model.  It also assumes the full ``max_accel`` is available at any speed,
+    which no engine curve delivers, and it has no way to notice when the
+    acceleration it asked for did not arrive.
+
+    Two pieces fix it:
+
+    * **Feedforward.** The pedal is asked for ``a_cmd + resistance(v)``, so a
+      zero acceleration command holds speed instead of decaying.  This is the
+      part that does the work; it is a model, and it is measured.
+    * **Measured pedal gains.** ``throttle_gain`` and ``brake_gain`` are the
+      accelerations one unit of pedal actually delivers, m/s^2.  The original
+      mapping normalised by ``params.max_accel`` and ``params.min_accel``,
+      which are the *planner's comfort limits* -- 2.0 and -4.0 m/s^2 -- not
+      anything the vehicle is capable of.  Conflating a comfort bound with an
+      actuator limit means the pedal is wrong by whatever ratio separates
+      them, and on this ego it is more than double.  Both are measured by
+      ``scripts/calibrate_longitudinal.py``.
+    * **Integral trim** on the *acceleration* tracking error.  The feedforward
+      is a three-parameter fit to a vehicle with an engine curve, a gearbox
+      and load transfer, so it is wrong everywhere by a little and wrong on a
+      gradient by a lot.  This is the term that makes the loop indifferent to
+      how much pedal authority actually arrived.  It absorbs that without
+      needing a speed reference the bridge does not have -- stage 6 sends an
+      acceleration, not a target speed, so this loop is deliberately built to
+      track acceleration and nothing else.
+
+    Anti-windup is not optional here.  Braking saturates constantly in traffic
+    and an unclamped integrator would spend the following seconds unwinding a
+    term it accumulated while the pedal was already on the floor.
+
+    The tracker is stateful, so :meth:`reset` runs at the start of every
+    episode; carrying a trim across a teleport would corrupt the first second
+    of the next run's speed trace, and the metrics average over exactly that.
+    """
+
+    def __init__(
+        self,
+        params: VehicleParams,
+        resistance: Optional[ResistanceModel] = None,
+        ki: float = 0.60,
+        i_limit: float = 3.0,
+        coast_band: float = 0.15,
+        stop_speed: float = 0.2,
+        throttle_gain: float = 6.47,
+        brake_gain: float = 3.44,
+    ) -> None:
+        self.params = params
+        self.resistance = resistance if resistance is not None else ResistanceModel()
+        self.ki = float(ki)
+        self.i_limit = float(i_limit)
+        self.coast_band = float(coast_band)
+        self.stop_speed = float(stop_speed)
+        self.throttle_gain = float(max(throttle_gain, 1e-3))
+        self.brake_gain = float(max(brake_gain, 1e-3))
+        self._i = 0.0
+
+    @property
+    def trim(self) -> float:
+        """Current integral term, m/s^2. Exposed for logging, not for control.
+
+        Worth watching: a trim that sits at its clamp means the feedforward is
+        wrong by more than the loop can absorb, and the fit needs redoing --
+        the pedal is compensating for a model error rather than a gradient.
+        """
+        return self._i
+
+    def reset(self) -> None:
+        self._i = 0.0
+
+    def update(self, a_cmd: float, v: float, a_meas: float, dt: float) -> Tuple[float, float]:
+        """One control step. Returns ``(throttle, brake)``, both in ``[0, 1]``.
+
+        ``a_meas`` is the acceleration the vehicle actually achieved over the
+        previous step, which the caller already computes for the MPC's rate
+        limits -- the loop is closed on that, not on a re-differentiated speed.
+        """
+        p = self.params
+        v = max(float(v), 0.0)
+        a_cmd = float(np.clip(a_cmd, p.min_accel, p.max_accel))
+
+        # Standstill hold.  ``resistance(0)`` is 2.4 m/s^2 on this ego, so the
+        # feedforward asks for real throttle even at rest, and a vehicle told
+        # to hold a stop would creep off the line without this branch -- and a
+        # held brake is also what keeps it there on a gradient.
+        if v < self.stop_speed and a_cmd <= 0.0:
+            self._i = 0.0
+            return 0.0, 1.0
+
+        a_req = a_cmd + self.resistance(v) + self._i
+
+        if a_req >= 0.0:
+            raw = a_req / self.throttle_gain
+            throttle, brake = float(np.clip(raw, 0.0, 1.0)), 0.0
+            saturated = raw > 1.0
+        elif a_req > -self.coast_band:
+            # A deceleration this small is what coasting already delivers.
+            # Pedalling it would chatter between throttle and brake every
+            # step at cruise, which is both unphysical and uncomfortable.
+            throttle, brake, saturated = 0.0, 0.0, False
+        else:
+            raw = -a_req / self.brake_gain
+            throttle, brake = 0.0, float(np.clip(raw, 0.0, 1.0))
+            saturated = raw > 1.0
+
+        # Integrate last, and only when the pedal has room to act on it.
+        err = a_cmd - float(a_meas)
+        if not (saturated and err * a_req > 0.0):
+            self._i = float(np.clip(
+                self._i + self.ki * err * max(float(dt), 0.0),
+                -self.i_limit, self.i_limit,
+            ))
+        return throttle, brake
 
 
 @dataclass
@@ -241,6 +429,54 @@ class DrivableRaster:
                 ok = (yy >= 0) & (yy < ny) & (xx >= 0) & (xx < nx)
                 mask[yy[ok], xx[ok]] = True
         return DrivableRaster((x0, y0), resolution, mask)
+
+    def carve(self, boxes: Sequence[Tuple[float, float, float, float, float]]) -> int:
+        """Clear oriented rectangles out of the drivable mask, in place.
+
+        ``boxes`` are ``(x, y, theta, half_length, half_width)`` in the odom
+        frame.  Returns how many cells were cleared, which is worth checking:
+        zero means the boxes missed the raster entirely, and the usual reason
+        for that is a frame conversion, not an empty town.
+
+        This is what makes "free space" mean it.  The mask is painted from the
+        lane graph, and the lane graph does not know that a lane has a parked
+        car standing in it -- Town10HD carries 48 parked vehicles baked into
+        the map as static meshes rather than actors, so nothing spawns them and
+        ``ground_truth_tracks`` cannot report them.  Left alone they are marked
+        *drivable*, and the only thing that would notice a planner routing
+        through one is the collision sensor.
+
+        **Measured effect on Town10HD: almost none, and say so.**  Of the 32
+        that fall inside the rasterised area, *zero* have their centre on a
+        driving lane -- the median sits 3.38 m clear of one, because this is a
+        US-style town that parks in bays.  One cell gets carved, from a corner
+        overlap.  The mechanism is kept because it is the correct definition of
+        free space and because the maps this project is actually about do not
+        park in bays: a lorry stopped in the carriageway is the normal case on
+        an Indian road, and it is the case a lane-graph raster gets silently
+        wrong.  Do not present this as a Town10 result.
+        """
+        ny, nx = self.mask.shape
+        cleared = 0
+        for x, y, theta, hl, hw in boxes:
+            reach = math.hypot(hl, hw) + self.resolution
+            x0 = int(max(math.floor((x - reach - self.origin[0]) / self.resolution), 0))
+            x1 = int(min(math.ceil((x + reach - self.origin[0]) / self.resolution), nx))
+            y0 = int(max(math.floor((y - reach - self.origin[1]) / self.resolution), 0))
+            y1 = int(min(math.ceil((y + reach - self.origin[1]) / self.resolution), ny))
+            if x1 <= x0 or y1 <= y0:
+                continue
+            gx, gy = np.meshgrid(np.arange(x0, x1), np.arange(y0, y1))
+            wx = self.origin[0] + (gx + 0.5) * self.resolution
+            wy = self.origin[1] + (gy + 0.5) * self.resolution
+            c, s = math.cos(-theta), math.sin(-theta)
+            lx = (wx - x) * c - (wy - y) * s
+            ly = (wx - x) * s + (wy - y) * c
+            inside = (np.abs(lx) <= hl) & (np.abs(ly) <= hw)
+            sub = self.mask[y0:y1, x0:x1]
+            cleared += int((sub & inside).sum())
+            sub[inside] = False
+        return cleared
 
     def contains(self, x, y) -> np.ndarray:
         """Is each world point on the drivable area?  Off the raster is not.
@@ -310,22 +546,116 @@ def stamp_actors(
 
 @dataclass
 class Route:
-    """A polyline route with arc-length progress. Satisfies ``RouteSource``."""
+    """A polyline route with arc-length progress. Satisfies ``RouteSource``.
+
+    **On ``windowed``.** By default the nearest route point is found by
+    searching the whole polyline, which is correct only while the route does
+    not come near itself. Town10HD is about 400 x 230 m, so any route longer
+    than roughly a kilometre has to revisit streets -- and then a global search
+    is actively wrong: as the ego comes back past an earlier stretch, the
+    nearest point jumps backwards, ``progress`` collapses, and ``point_ahead``
+    hands the planner a goal on the wrong branch of the route. That is
+    ADR-006's failure mode arriving by a different door: the goal leaves the
+    costmap, every MPC rollout runs off the end of the path, and the vehicle
+    brakes for no visible reason.
+
+    ``windowed=True`` searches only a band of route around a cursor that
+    advances with the vehicle, which makes progress monotonic and keeps the
+    lookahead on the branch actually being driven. It is opt-in rather than
+    the default because every published number was produced with the global
+    search on a non-looping route, and a silent change to how progress is
+    measured would quietly move all of them.
+    """
 
     points: np.ndarray                       # (N, 2)
+    windowed: bool = False
+    #: How far ahead of the cursor the forward walk may look, metres. It has
+    #: to exceed the goal lookahead, or ``point_ahead`` runs off the end of
+    #: the searched span and the goal stops advancing. There is deliberately
+    #: no *backward* window; see :meth:`_nearest`.
+    forward_window: float = 90.0
+    #: Consecutive route points that may get *further* away before the forward
+    #: walk gives up. A polyline is not smooth, so a corner can worsen for a
+    #: couple of points before improving; at the 2 m route spacing this is
+    #: about 10 m of tolerance, which is far short of the distance to a
+    #: parallel carriageway further along the route.
+    patience: int = 5
 
     def __post_init__(self) -> None:
         self.points = np.asarray(self.points, dtype=np.float64).reshape(-1, 2)
         seg = np.linalg.norm(np.diff(self.points, axis=0), axis=1)
         self._cum = np.concatenate([[0.0], np.cumsum(seg)])
+        self._cursor = 0
+
+    def reset(self) -> None:
+        """Send the cursor back to the start. Only meaningful when windowed."""
+        self._cursor = 0
 
     def _nearest(self, x: float, y: float) -> int:
-        return int(np.argmin(np.linalg.norm(self.points - np.array([x, y]), axis=1)))
+        if not self.windowed:
+            return int(np.argmin(np.linalg.norm(self.points - np.array([x, y]),
+                                                axis=1)))
+        # Walk forward to the *first local minimum* of distance, rather than
+        # taking the argmin over the whole band.
+        #
+        # An argmin over a band is not enough, and the failure is not subtle.
+        # The band spans arc length, but "near" is measured in space, and on a
+        # two-way street the opposite carriageway is 3.5 m away spatially
+        # while being tens of metres away along the route. The argmin then
+        # jumps to the return leg and the cursor teleports. Measured: a 25 s
+        # run reported 1808 m of progress, or 72 m/s.
+        #
+        # Following the route continuously cannot do that -- it stops at the
+        # first minimum, long before reaching a leg that only *looks* close.
+        # The walk starts *at* the cursor, never behind it. Allowing it to
+        # start 20 m back looks harmless and breaks the same two-way street:
+        # from there the walk re-finds the outbound carriageway -- which is
+        # genuinely the nearest local minimum, 3.5 m away -- and the cursor
+        # never follows the route onto the return leg. Measured: an
+        # out-and-back route stalled at 67 m of 123 m.
+        pts, cum = self.points, self._cum
+        target = np.array([x, y], dtype=np.float64)
+        lo = self._cursor
+        limit = cum[lo] + self.forward_window
+
+        best_i = lo
+        best_d = float(np.linalg.norm(pts[lo] - target))
+        i, worsening = lo, 0
+        while i + 1 < len(pts) and cum[i] <= limit:
+            i += 1
+            d = float(np.linalg.norm(pts[i] - target))
+            if d < best_d:
+                best_d, best_i, worsening = d, i, 0
+            else:
+                # Patience, because a polyline is not smooth: a couple of
+                # points can worsen across a corner before improving again.
+                worsening += 1
+                if worsening >= self.patience:
+                    break
+        self._cursor = max(self._cursor, best_i)
+        return best_i
 
     def progress(self, x: float, y: float) -> float:
-        return float(self._cum[self._nearest(x, y)])
+        """Arc length travelled along the route, metres.
+
+        When windowed this ratchets: it reports the cursor, which never
+        retreats, rather than the instantaneous nearest point. The nearest
+        point may legitimately sit up to ``back_window`` behind -- the ego
+        swings wide of the line to pass a parked lorry and the closest route
+        point is briefly one it already went by -- and reporting that as lost
+        progress would show up as a 20 m backward jump in the metric, and as a
+        stall to the runner's stuck detector. The vehicle cannot reverse
+        (``v`` is clamped at zero in both simulators), so a ratchet cannot hide
+        real backward motion.
+        """
+        i = self._nearest(x, y)
+        return float(self._cum[self._cursor if self.windowed else i])
 
     def point_ahead(self, x: float, y: float, distance: float) -> np.ndarray:
+        """Route point ``distance`` ahead. Uses the *nearest* point, not the
+        ratcheted cursor: the lookahead has to be measured from where the
+        vehicle actually is, or it grows by however far the ratchet has run
+        ahead and the goal drifts off the costmap."""
         i = self._nearest(x, y)
         j = int(np.searchsorted(self._cum, self._cum[i] + distance))
         return self.points[min(j, len(self.points) - 1)].copy()
@@ -394,6 +724,14 @@ def default_sensor_rig(fixed_delta_seconds: float = 0.05) -> Dict[str, SensorSpe
             SensorSpec("rgb", "sensor.camera.rgb",
                        attributes={"image_size_x": "960", "image_size_y": "540",
                                    "fov": "90"}),
+            # Third person, for video capture only -- nothing upstream of
+            # stage 1 may read it.  Behind and above the roof so the ego's own
+            # body gives the viewer a sense of scale and of what it cleared,
+            # which a bonnet camera cannot show.
+            SensorSpec("chase", "sensor.camera.rgb", xyz=(-6.5, 0.0, 3.4),
+                       pitch=-13.0,
+                       attributes={"image_size_x": "1280", "image_size_y": "720",
+                                   "fov": "95"}),
             # Ground truth for the drivable-area head.  This is the reason
             # CARLA makes Phase 2 tractable: free per-pixel road labels, in
             # the same frame as the RGB the model actually consumes.
@@ -564,6 +902,16 @@ class CarlaConfig:
     seed: int = 0
     tm_port: int = 8000
     route_length: float = 400.0
+    #: Let the route cross itself, for drives longer than the town. Implies a
+    #: windowed :class:`Route`; see :func:`route_from_waypoint`.
+    long_route: bool = False
+    #: Stop at red lights, as a keep-out in the static costmap. On by default:
+    #: a stack that drives through reds in a signalled town gets T-boned in
+    #: dense traffic, which is what the first long run did. Ground truth from
+    #: the simulator, standing in for the perception that would report it --
+    #: see :meth:`CarlaWorld.red_light_keepouts`.
+    obey_traffic_lights: bool = True
+    stop_line_depth: float = 1.2          # m, half-depth of the keep-out
     waypoint_spacing: float = 0.5         # for the drivable raster
     route_spacing: float = 2.0
     raster_resolution: float = 0.25
@@ -571,6 +919,19 @@ class CarlaConfig:
     track_noise: float = 1.0
     sensors: Tuple[str, ...] = ()         # names from :func:`default_sensor_rig`
     render: bool = False                  # False -> no_rendering_mode, much faster
+    # Coast-down fit for the ego blueprint, feeding
+    # :class:`LongitudinalTracker`.  Override per blueprint from
+    # ``scripts/calibrate_longitudinal.py --write``: a Micra and a Tesla do
+    # not share a drag area, and the feedforward is the term that holds
+    # cruise speed.
+    resistance: ResistanceModel = field(default_factory=ResistanceModel)
+    throttle_ki: float = 0.60             # integral trim gain, 1/s
+    # Accelerations one unit of pedal delivers, m/s^2 -- the vehicle's real
+    # authority, not the planner's comfort limits (2.0 and -4.0, which are
+    # comfort bounds and are both wrong by more than a factor of one and a
+    # half here).  Measured on the Micra; see the script.
+    throttle_gain: float = 6.47
+    brake_gain: float = 3.44
 
 
 class CarlaWorld:
@@ -708,6 +1069,14 @@ class CarlaWorld:
         self.params = params_from_physics(
             self.params, 2 * ext.x, 2 * ext.y, wheelbase, self._max_steer_deg
         )
+        # Built here rather than in __init__ because it closes over the
+        # *measured* actuation limits, which are only known once CARLA has
+        # told us which blueprint it actually spawned.
+        self._long = LongitudinalTracker(
+            self.params, self.cfg.resistance, ki=self.cfg.throttle_ki,
+            throttle_gain=self.cfg.throttle_gain,
+            brake_gain=self.cfg.brake_gain,
+        )
 
         tf = vehicle.get_transform()
         x, y, theta = carla_to_odom(tf.location.x, tf.location.y, tf.rotation.yaw)
@@ -722,7 +1091,8 @@ class CarlaWorld:
     def _build_route(self) -> None:
         start = self.map.get_waypoint(self._ego_spawn.location)
         self.road = route_from_waypoint(
-            start, self.cfg.route_length, self.rng, self.cfg.route_spacing
+            start, self.cfg.route_length, self.rng, self.cfg.route_spacing,
+            allow_revisit=self.cfg.long_route,
         )
 
     def _build_raster(self) -> None:
@@ -744,6 +1114,37 @@ class CarlaWorld:
         self._raster = DrivableRaster.from_points(
             np.asarray(pts), np.asarray(widths), self.cfg.raster_resolution
         )
+        self._static_boxes = self._map_obstacle_boxes()
+        self._carved_cells = self._raster.carve(self._static_boxes)
+
+    #: Static map meshes that stand in the carriageway and are *not* actors, so
+    #: nothing spawns them and ``ground_truth_tracks`` cannot report them.
+    #: Parked vehicles are the ones that matter -- they sit in a lane, which is
+    #: exactly where the lane graph says the ego may drive.
+    STATIC_OBSTACLE_LABELS: Tuple[str, ...] = ("Car", "Truck", "Bus", "Motorcycle",
+                                               "Bicycle")
+
+    def _map_obstacle_boxes(self):
+        """Oriented footprints of the town's baked-in obstacles, odom frame.
+
+        ``get_environment_objects`` returns map geometry, not actors, so this
+        is the only way to see a parked car in Town10HD.  Anything CARLA does
+        not label in this build is skipped rather than guessed at: the label
+        enum has changed before -- the semantic tag numbering shifted at
+        0.9.14 -- and a wrong label here would carve holes out of the road at
+        random.
+        """
+        boxes = []
+        for label in self.STATIC_OBSTACLE_LABELS:
+            tag = getattr(carla.CityObjectLabel, label, None)
+            if tag is None:                              # pragma: no cover
+                continue
+            for obj in self.world.get_environment_objects(tag):
+                bb = obj.bounding_box
+                x, y, theta = carla_to_odom(bb.location.x, bb.location.y,
+                                            bb.rotation.yaw)
+                boxes.append((x, y, theta, float(bb.extent.x), float(bb.extent.y)))
+        return tuple(boxes)
 
     def _start_traffic_manager(self) -> None:
         tm = self.client.get_trafficmanager(self.cfg.tm_port)
@@ -881,9 +1282,12 @@ class CarlaWorld:
                 f"dt={dt} is not a whole number of {fds}s server ticks; set "
                 f"CarlaConfig.fixed_delta_seconds to match RunnerConfig.sim_dt"
             )
-        throttle, steer_norm, brake = control_from_command(
-            accel, steer, self.params, self._max_steer_deg
-        )
+        steer_norm = normalised_steer(steer, self._max_steer_deg)
+        # ``self.ego.a`` is the acceleration actually achieved over the
+        # previous step -- the loop is closed on that.  See
+        # :class:`LongitudinalTracker` for why an open-loop pedal map made the
+        # ego crawl at half its cruise speed.
+        throttle, brake = self._long.update(accel, self.ego.v, self.ego.a, dt)
         self.vehicle.apply_control(
             carla.VehicleControl(throttle=throttle, steer=steer_norm, brake=brake)
         )
@@ -911,6 +1315,31 @@ class CarlaWorld:
         self.ego.a = float((v - prev_v) / max(dt, 1e-6))
         self.t += dt
         self.ego.t = self.t
+
+    def lane_context(self) -> Dict[str, object]:
+        """Where the ego is in CARLA's road network, for telemetry only.
+
+        Nothing upstream of stage 1 may read this. The stack navigates free
+        space and does not model lanes at all -- that is the whole design --
+        so this exists to *measure* what the free-space planner did, not to
+        inform it. A lane change here is an observation about the trajectory,
+        not a manoeuvre the planner selected.
+
+        ``lane_id`` sign encodes side of the road in OpenDRIVE, and ids are
+        only unique within a ``road_id``, so a change means the pair changed.
+        Junctions are reported separately because lane ids are meaningless
+        inside one and every junction traversal would otherwise read as a
+        flurry of lane changes.
+        """
+        wp = self.map.get_waypoint(self.vehicle.get_transform().location,
+                                   project_to_road=True,
+                                   lane_type=carla.LaneType.Driving)
+        return {
+            "road_id": int(wp.road_id),
+            "lane_id": int(wp.lane_id),
+            "is_junction": bool(wp.is_junction),
+            "lane_width": float(wp.lane_width),
+        }
 
     def _actors(self) -> List[ActorSnapshot]:
         """Traffic in the odom frame, from one world snapshot.
@@ -950,10 +1379,56 @@ class CarlaWorld:
         demo renderer work against either simulator unchanged."""
         return self._actors()
 
+    def red_light_keepouts(self):
+        """Keep-out boxes across the stop line when the ego faces a red.
+
+        **Why a keep-out and not a signal input.** This stack plans over free
+        space; it has no signal semantics anywhere, and adding a "traffic light
+        state" to the stage contracts would be inventing an interface for one
+        simulator. A red light is a region the vehicle may not enter, and a
+        region the vehicle may not enter is exactly what an occupancy grid is
+        for. So the constraint arrives the same way a parked lorry does, and
+        the planner needs no new concept to obey it.
+
+        The box spans **every** lane the light stops, not just the ego's. A
+        free-space planner asked to avoid a barrier across one lane will
+        cheerfully drive round it into the oncoming one, which is a worse
+        outcome than the red light it was obeying.
+
+        This is a ground-truth stub, exactly like the tracks and the drivable
+        area -- stages 1--3 are stubbed and served by the simulator, and in a
+        real vehicle the light state would come from perception. It is not a
+        contribution of this project and the deck should not present it as one.
+        """
+        if not self.cfg.obey_traffic_lights:
+            return ()
+        light = self.vehicle.get_traffic_light()
+        if light is None:                       # not inside any trigger volume
+            return ()
+        if light.get_state() != carla.TrafficLightState.Red:
+            return ()
+        boxes = []
+        for wp in light.get_stop_waypoints():
+            tf = wp.transform
+            x, y, theta = carla_to_odom(tf.location.x, tf.location.y,
+                                        tf.rotation.yaw)
+            # Thin along the lane, full lane width across it: a line to stop
+            # at, not a block to squeeze past.
+            boxes.append((x, y, theta, self.cfg.stop_line_depth,
+                          0.5 * float(wp.lane_width)))
+        return tuple(boxes)
+
     def ground_truth_grids(
         self, half_extent: float = 32.0, resolution: float = 0.25
     ) -> Tuple[OccupancyGrid, OccupancyGrid]:
         static = self._raster.window(self.ego.x, self.ego.y, half_extent, resolution)
+        # Red lights belong in the *static* grid: they are scenery, not agents.
+        # Putting them in the dynamic one would hand the predictor a stationary
+        # "actor" to extrapolate, and a risk field around a stop line is not a
+        # thing.
+        keepouts = self.red_light_keepouts()
+        if keepouts:
+            static = stamp_actors(static, keepouts)
         boxes = [(a.x, a.y, a.theta, a.half_length, a.half_width)
                  for a in self._actors()]
         return static, stamp_actors(static, boxes)
@@ -1100,7 +1575,8 @@ class CarlaWorld:
         self.close()
 
 
-def route_from_waypoint(start_wp, length: float, rng, spacing: float = 2.0) -> Route:
+def route_from_waypoint(start_wp, length: float, rng, spacing: float = 2.0,
+                       allow_revisit: bool = False) -> Route:
     """Follow lanes from ``start_wp`` for ``length`` metres, seeded at junctions.
 
     Deliberately *not* ``agents.navigation.GlobalRoutePlanner``: that lives in
@@ -1109,6 +1585,13 @@ def route_from_waypoint(start_wp, length: float, rng, spacing: float = 2.0) -> R
     lane graph with a seeded choice at each junction is twenty lines, is
     reproducible, and is all a route needs to be here -- routing is not this
     project's contribution.
+
+    ``allow_revisit`` lifts the stop-on-loop rule, which is what any route
+    longer than the town needs: Town10HD is about 400 x 230 m, so a two
+    kilometre drive is necessarily a circuit. It returns a **windowed**
+    :class:`Route`, because a self-crossing route measured by a global nearest
+    point search reports nonsense -- see that class. The two go together and
+    are set together here rather than left to the caller to remember.
     """
     pts: List[Tuple[float, float]] = []
     wp = start_wp
@@ -1119,7 +1602,7 @@ def route_from_waypoint(start_wp, length: float, rng, spacing: float = 2.0) -> R
         x, y, _ = carla_to_odom(loc.x, loc.y, 0.0)
         pts.append((x, y))
         key = (round(x, 1), round(y, 1))
-        if key in seen and len(pts) > 4:
+        if key in seen and len(pts) > 4 and not allow_revisit:
             break                       # the route has looped; stop here
         seen.add(key)
         nxt = list(wp.next(spacing))
@@ -1129,4 +1612,4 @@ def route_from_waypoint(start_wp, length: float, rng, spacing: float = 2.0) -> R
         travelled += spacing
     if len(pts) < 2:                                    # pragma: no cover
         raise RuntimeError("route is a single point: is the ego on a driving lane?")
-    return Route(np.asarray(pts, dtype=np.float64))
+    return Route(np.asarray(pts, dtype=np.float64), windowed=allow_revisit)
