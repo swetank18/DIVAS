@@ -1,0 +1,8851 @@
+{
+  "split": "val",
+  "frames": 981,
+  "shoulder": true,
+  "iou": {
+    "road": 0.9204,
+    "drivable_fallback": 0.5871,
+    "not_drivable": 0.9701
+  },
+  "plan_found_truth": 0.526,
+  "plan_found_pred": 0.6473,
+  "reach_truth_m": 10.682,
+  "reach_pred_m": 10.911,
+  "divergence_m": {
+    "mean": 0.254,
+    "median": 0.064,
+    "p90": 0.6,
+    "within_1p5m": 0.9814
+  },
+  "rows": [
+    {
+      "key": "119/035471",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.66,
+      "pred_reach": 26.74,
+      "divergence_m": 0.067
+    },
+    {
+      "key": "119/038937",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.82,
+      "pred_reach": 26.88,
+      "divergence_m": 0.104
+    },
+    {
+      "key": "119/107588",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.9,
+      "pred_reach": 26.88,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "119/171342",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "119/222715",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "119/372819",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "119/500688",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 6.4,
+      "divergence_m": 1.76
+    },
+    {
+      "key": "119/507161",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.56,
+      "pred_reach": 26.69,
+      "divergence_m": 0.105
+    },
+    {
+      "key": "119/638495",
+      "goal_m": 26.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 23.14,
+      "pred_reach": 23.82,
+      "divergence_m": 0.466
+    },
+    {
+      "key": "119/763431",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "119/893319",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.01,
+      "pred_reach": 27.01,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "119/903127",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/004954",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/109137",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/292561",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/397388",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/407306",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/475092",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/480469",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/483549",
+      "goal_m": 7.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 4.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "132/486787",
+      "goal_m": 8.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/489315",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/617259",
+      "goal_m": 6.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 3.99,
+      "pred_reach": 3.99,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "132/686561",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/695419",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/771373",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/808894",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/810101",
+      "goal_m": 8.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 5.95,
+      "divergence_m": 0.603
+    },
+    {
+      "key": "132/814106",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/867435",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/871699",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "132/873809",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/874777",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "132/891975",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "132/923084",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "132/935789",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.2,
+      "pred_reach": 4.0,
+      "divergence_m": 0.4
+    },
+    {
+      "key": "132/944936",
+      "goal_m": 4.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "132/954056",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.79,
+      "pred_reach": 4.8,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "132/996737",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/021720",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/042355",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.2,
+      "divergence_m": 0.491
+    },
+    {
+      "key": "147/093483",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.8,
+      "pred_reach": 3.99,
+      "divergence_m": 0.401
+    },
+    {
+      "key": "147/094944",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/110976",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/304968",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/313431",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "147/425716",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "147/449435",
+      "goal_m": 19.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.31,
+      "pred_reach": 17.6,
+      "divergence_m": 0.331
+    },
+    {
+      "key": "147/488902",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/493924",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "147/496383",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/510418",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.18,
+      "pred_reach": 27.2,
+      "divergence_m": 0.024
+    },
+    {
+      "key": "147/515181",
+      "goal_m": 25.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 22.94,
+      "pred_reach": 23.17,
+      "divergence_m": 0.271
+    },
+    {
+      "key": "147/578039",
+      "goal_m": 4.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/624707",
+      "goal_m": 17.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.21,
+      "pred_reach": 15.34,
+      "divergence_m": 0.28
+    },
+    {
+      "key": "147/632212",
+      "goal_m": 15.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.0,
+      "pred_reach": 3.99,
+      "divergence_m": 0.045
+    },
+    {
+      "key": "147/641787",
+      "goal_m": 22.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 19.96,
+      "pred_reach": 20.2,
+      "divergence_m": 0.198
+    },
+    {
+      "key": "147/642784",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "147/759535",
+      "goal_m": 13.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.96,
+      "pred_reach": 11.19,
+      "divergence_m": 0.521
+    },
+    {
+      "key": "147/761122",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/763584",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.38,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "147/764606",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/822705",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/958547",
+      "goal_m": 23.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "147/966034",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "147/976606",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.12,
+      "pred_reach": 27.03,
+      "divergence_m": 0.225
+    },
+    {
+      "key": "147/979609",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.2,
+      "divergence_m": 0.291
+    },
+    {
+      "key": "147/982372",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.74,
+      "pred_reach": 26.74,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "148/000179",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.8,
+      "pred_reach": 4.79,
+      "divergence_m": 0.065
+    },
+    {
+      "key": "148/000282",
+      "goal_m": 7.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.8,
+      "pred_reach": 4.8,
+      "divergence_m": 0.022
+    },
+    {
+      "key": "148/000393",
+      "goal_m": 15.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 12.73,
+      "pred_reach": 12.75,
+      "divergence_m": 0.051
+    },
+    {
+      "key": "148/000501",
+      "goal_m": 9.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.31,
+      "pred_reach": 6.33,
+      "divergence_m": 0.02
+    },
+    {
+      "key": "148/000550",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.029
+    },
+    {
+      "key": "148/000690",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "148/000750",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.79,
+      "pred_reach": 4.8,
+      "divergence_m": 0.066
+    },
+    {
+      "key": "148/000870",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.8,
+      "pred_reach": 6.0,
+      "divergence_m": 0.602
+    },
+    {
+      "key": "148/001219",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "148/001519",
+      "goal_m": 9.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.39,
+      "pred_reach": 6.39,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "148/001767",
+      "goal_m": 7.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.8,
+      "pred_reach": 4.8,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "148/001917",
+      "goal_m": 10.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 7.99,
+      "pred_reach": 7.99,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "148/002067",
+      "goal_m": 9.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/019964",
+      "goal_m": 7.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.77,
+      "pred_reach": 4.77,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/062397",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/066061",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 27.04,
+      "divergence_m": 0.033
+    },
+    {
+      "key": "149/074255",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.04,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/074945",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.04,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/127058",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.04,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/143872",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.08,
+      "pred_reach": 27.07,
+      "divergence_m": 0.064
+    },
+    {
+      "key": "149/144532",
+      "goal_m": 15.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 12.62,
+      "pred_reach": 13.54,
+      "divergence_m": 1.104
+    },
+    {
+      "key": "149/164204",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/164887",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.19,
+      "pred_reach": 27.2,
+      "divergence_m": 0.01
+    },
+    {
+      "key": "149/188650",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "149/189471",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/193108",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/205856",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "149/206673",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/261348",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "149/268409",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/268995",
+      "goal_m": 13.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 10.57,
+      "pred_reach": 10.57,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/269369",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.12,
+      "pred_reach": 26.59,
+      "divergence_m": 0.072
+    },
+    {
+      "key": "149/270087",
+      "goal_m": 25.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.37,
+      "pred_reach": 23.24,
+      "divergence_m": 0.119
+    },
+    {
+      "key": "149/270781",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.16,
+      "divergence_m": 0.063
+    },
+    {
+      "key": "149/279288",
+      "goal_m": 7.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/359333",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/426790",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "149/429423",
+      "goal_m": 12.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 9.46,
+      "pred_reach": 9.47,
+      "divergence_m": 0.012
+    },
+    {
+      "key": "149/430077",
+      "goal_m": 23.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 21.34,
+      "pred_reach": 21.34,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/457778",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/466414",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/467365",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.94,
+      "pred_reach": 26.91,
+      "divergence_m": 0.221
+    },
+    {
+      "key": "149/478682",
+      "goal_m": 10.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.52,
+      "pred_reach": 9.11,
+      "divergence_m": 0.276
+    },
+    {
+      "key": "149/480014",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.96,
+      "pred_reach": 27.01,
+      "divergence_m": 0.381
+    },
+    {
+      "key": "149/485474",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.91,
+      "pred_reach": 26.91,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/529313",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.73,
+      "pred_reach": 26.74,
+      "divergence_m": 0.544
+    },
+    {
+      "key": "149/555370",
+      "goal_m": 12.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 10.57,
+      "pred_reach": 10.74,
+      "divergence_m": 0.054
+    },
+    {
+      "key": "149/586496",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "149/680816",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 26.85,
+      "divergence_m": 0.329
+    },
+    {
+      "key": "149/749048",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.029
+    },
+    {
+      "key": "149/749735",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.53,
+      "pred_reach": 26.56,
+      "divergence_m": 0.163
+    },
+    {
+      "key": "149/751144",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.42,
+      "pred_reach": 26.76,
+      "divergence_m": 0.205
+    },
+    {
+      "key": "149/888915",
+      "goal_m": 15.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 12.72,
+      "pred_reach": 12.79,
+      "divergence_m": 0.114
+    },
+    {
+      "key": "149/890417",
+      "goal_m": 19.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 13.95,
+      "pred_reach": 14.06,
+      "divergence_m": 0.173
+    },
+    {
+      "key": "149/891098",
+      "goal_m": 12.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.2,
+      "pred_reach": 10.21,
+      "divergence_m": 1.254
+    },
+    {
+      "key": "149/892025",
+      "goal_m": 8.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 5.95,
+      "pred_reach": 6.4,
+      "divergence_m": 0.531
+    },
+    {
+      "key": "149/928336",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/934259",
+      "goal_m": 14.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/945552",
+      "goal_m": 7.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.8,
+      "pred_reach": 4.8,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "149/954695",
+      "goal_m": 10.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 8.8,
+      "pred_reach": 8.99,
+      "divergence_m": 0.058
+    },
+    {
+      "key": "149/991501",
+      "goal_m": 24.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 21.65,
+      "pred_reach": 22.4,
+      "divergence_m": 0.737
+    },
+    {
+      "key": "149/996177",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.07,
+      "pred_reach": 27.2,
+      "divergence_m": 0.157
+    },
+    {
+      "key": "150/004315",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/016285",
+      "goal_m": 8.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 7.2,
+      "pred_reach": 7.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/029989",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/037890",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/063195",
+      "goal_m": 23.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 20.53,
+      "pred_reach": 20.41,
+      "divergence_m": 0.273
+    },
+    {
+      "key": "150/135722",
+      "goal_m": 4.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/148139",
+      "goal_m": 21.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 17.59,
+      "pred_reach": 5.99,
+      "divergence_m": 0.402
+    },
+    {
+      "key": "150/172416",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/275579",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/290903",
+      "goal_m": 23.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.2,
+      "pred_reach": 20.81,
+      "divergence_m": 7.998
+    },
+    {
+      "key": "150/293689",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.95,
+      "pred_reach": 16.0,
+      "divergence_m": 0.523
+    },
+    {
+      "key": "150/315509",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.0,
+      "divergence_m": 0.086
+    },
+    {
+      "key": "150/321167",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/340099",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/384062",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/542554",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.07,
+      "pred_reach": 27.2,
+      "divergence_m": 0.116
+    },
+    {
+      "key": "150/556148",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/567652",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/638880",
+      "goal_m": 12.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.79,
+      "pred_reach": 7.84,
+      "divergence_m": 0.472
+    },
+    {
+      "key": "150/641576",
+      "goal_m": 17.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/658186",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/703188",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/738873",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/765237",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "150/839260",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.93,
+      "pred_reach": 27.02,
+      "divergence_m": 0.363
+    },
+    {
+      "key": "150/840049",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.01,
+      "pred_reach": 27.03,
+      "divergence_m": 0.014
+    },
+    {
+      "key": "150/843864",
+      "goal_m": 14.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 11.63,
+      "pred_reach": 12.8,
+      "divergence_m": 0.96
+    },
+    {
+      "key": "150/844489",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.61,
+      "pred_reach": 26.61,
+      "divergence_m": 0.368
+    },
+    {
+      "key": "150/844536",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.38,
+      "pred_reach": 27.2,
+      "divergence_m": 0.73
+    },
+    {
+      "key": "150/845490",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.27,
+      "pred_reach": 26.27,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/847453",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 27.07,
+      "pred_reach": 4.8,
+      "divergence_m": 0.022
+    },
+    {
+      "key": "150/862362",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.19,
+      "pred_reach": 3.99,
+      "divergence_m": 0.404
+    },
+    {
+      "key": "150/898955",
+      "goal_m": 10.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.76,
+      "pred_reach": 4.76,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "150/946117",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 26.99,
+      "divergence_m": 0.224
+    },
+    {
+      "key": "150/946234",
+      "goal_m": 12.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.21,
+      "pred_reach": 10.55,
+      "divergence_m": 0.601
+    },
+    {
+      "key": "150/966481",
+      "goal_m": 21.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 19.0,
+      "pred_reach": 19.0,
+      "divergence_m": 0.171
+    },
+    {
+      "key": "150/967322",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 9.31,
+      "pred_reach": 9.7,
+      "divergence_m": 0.338
+    },
+    {
+      "key": "150/970083",
+      "goal_m": 12.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/079683",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.29,
+      "pred_reach": 26.42,
+      "divergence_m": 0.128
+    },
+    {
+      "key": "153/084778",
+      "goal_m": 15.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/086282",
+      "goal_m": 26.38,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 23.38,
+      "pred_reach": 22.2,
+      "divergence_m": 0.3
+    },
+    {
+      "key": "153/086436",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/091755",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/129236",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.07,
+      "pred_reach": 27.07,
+      "divergence_m": 0.011
+    },
+    {
+      "key": "153/137487",
+      "goal_m": 20.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.46,
+      "pred_reach": 18.9,
+      "divergence_m": 0.325
+    },
+    {
+      "key": "153/138164",
+      "goal_m": 17.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 14.4,
+      "pred_reach": 15.72,
+      "divergence_m": 0.848
+    },
+    {
+      "key": "153/149654",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.67,
+      "pred_reach": 26.96,
+      "divergence_m": 0.077
+    },
+    {
+      "key": "153/181715",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/222668",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/223226",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/267155",
+      "goal_m": 19.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.88,
+      "pred_reach": 17.51,
+      "divergence_m": 0.233
+    },
+    {
+      "key": "153/267296",
+      "goal_m": 23.88,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 21.08,
+      "pred_reach": 20.2,
+      "divergence_m": 1.035
+    },
+    {
+      "key": "153/275348",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/285946",
+      "goal_m": 26.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 24.16,
+      "pred_reach": 24.78,
+      "divergence_m": 2.187
+    },
+    {
+      "key": "153/341855",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.96,
+      "pred_reach": 26.96,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/343109",
+      "goal_m": 27.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 24.6,
+      "pred_reach": 25.1,
+      "divergence_m": 0.32
+    },
+    {
+      "key": "153/363265",
+      "goal_m": 24.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 22.05,
+      "pred_reach": 22.32,
+      "divergence_m": 0.502
+    },
+    {
+      "key": "153/395588",
+      "goal_m": 22.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/404814",
+      "goal_m": 26.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.86,
+      "pred_reach": 23.72,
+      "divergence_m": 0.038
+    },
+    {
+      "key": "153/407628",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 27.03,
+      "pred_reach": 20.49,
+      "divergence_m": 0.222
+    },
+    {
+      "key": "153/412504",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/427031",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 25.91,
+      "pred_reach": 26.66,
+      "divergence_m": 0.545
+    },
+    {
+      "key": "153/447047",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 26.76,
+      "divergence_m": 0.105
+    },
+    {
+      "key": "153/467672",
+      "goal_m": 22.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 19.95,
+      "pred_reach": 20.69,
+      "divergence_m": 0.805
+    },
+    {
+      "key": "153/471086",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/483950",
+      "goal_m": 21.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.63,
+      "pred_reach": 19.4,
+      "divergence_m": 0.44
+    },
+    {
+      "key": "153/497743",
+      "goal_m": 19.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.85,
+      "pred_reach": 17.36,
+      "divergence_m": 0.163
+    },
+    {
+      "key": "153/519744",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.98,
+      "pred_reach": 15.96,
+      "divergence_m": 0.008
+    },
+    {
+      "key": "153/536239",
+      "goal_m": 18.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.8,
+      "pred_reach": 15.89,
+      "divergence_m": 0.033
+    },
+    {
+      "key": "153/546687",
+      "goal_m": 25.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.19,
+      "pred_reach": 23.25,
+      "divergence_m": 0.057
+    },
+    {
+      "key": "153/578491",
+      "goal_m": 21.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.16,
+      "pred_reach": 19.65,
+      "divergence_m": 0.696
+    },
+    {
+      "key": "153/597111",
+      "goal_m": 19.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 16.49,
+      "pred_reach": 16.84,
+      "divergence_m": 0.258
+    },
+    {
+      "key": "153/608221",
+      "goal_m": 19.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.71,
+      "pred_reach": 17.52,
+      "divergence_m": 0.749
+    },
+    {
+      "key": "153/608937",
+      "goal_m": 26.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.75,
+      "pred_reach": 23.72,
+      "divergence_m": 0.006
+    },
+    {
+      "key": "153/623135",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.99,
+      "pred_reach": 15.93,
+      "divergence_m": 0.04
+    },
+    {
+      "key": "153/648773",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.82,
+      "pred_reach": 26.96,
+      "divergence_m": 0.065
+    },
+    {
+      "key": "153/654715",
+      "goal_m": 22.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 20.01,
+      "pred_reach": 20.14,
+      "divergence_m": 0.197
+    },
+    {
+      "key": "153/665776",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/670926",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.06,
+      "pred_reach": 27.14,
+      "divergence_m": 0.025
+    },
+    {
+      "key": "153/688636",
+      "goal_m": 17.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.05,
+      "pred_reach": 14.82,
+      "divergence_m": 0.032
+    },
+    {
+      "key": "153/692335",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.1,
+      "pred_reach": 26.1,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/702173",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.761
+    },
+    {
+      "key": "153/717983",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.55,
+      "pred_reach": 26.88,
+      "divergence_m": 0.138
+    },
+    {
+      "key": "153/728408",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.18,
+      "pred_reach": 27.2,
+      "divergence_m": 0.01
+    },
+    {
+      "key": "153/731612",
+      "goal_m": 21.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 18.95,
+      "pred_reach": 20.63,
+      "divergence_m": 0.194
+    },
+    {
+      "key": "153/738228",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.01,
+      "divergence_m": 0.104
+    },
+    {
+      "key": "153/750732",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/767121",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/775178",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.92,
+      "pred_reach": 26.93,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "153/796981",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "153/801227",
+      "goal_m": 15.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.0,
+      "pred_reach": 9.56,
+      "divergence_m": 1.998
+    },
+    {
+      "key": "153/812467",
+      "goal_m": 21.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.74,
+      "pred_reach": 18.78,
+      "divergence_m": 0.581
+    },
+    {
+      "key": "153/838245",
+      "goal_m": 21.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.79,
+      "pred_reach": 18.92,
+      "divergence_m": 0.562
+    },
+    {
+      "key": "153/865444",
+      "goal_m": 24.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 21.91,
+      "pred_reach": 22.4,
+      "divergence_m": 0.569
+    },
+    {
+      "key": "167/001548",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/001848",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002255",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002269",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002389",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002509",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002629",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002638",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/002789",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/003008",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/003042",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/003162",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/003308",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/003396",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/003632",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/003932",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/004376",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/004844",
+      "goal_m": 11.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.97,
+      "pred_reach": 9.57,
+      "divergence_m": 0.619
+    },
+    {
+      "key": "167/005945",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.0,
+      "pred_reach": 9.6,
+      "divergence_m": 0.229
+    },
+    {
+      "key": "167/006082",
+      "goal_m": 12.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 5.99,
+      "pred_reach": 9.98,
+      "divergence_m": 0.997
+    },
+    {
+      "key": "167/008400",
+      "goal_m": 4.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/008782",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/009022",
+      "goal_m": 21.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.44,
+      "pred_reach": 18.57,
+      "divergence_m": 0.146
+    },
+    {
+      "key": "167/009028",
+      "goal_m": 16.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 13.86,
+      "pred_reach": 13.86,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/009328",
+      "goal_m": 24.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 20.79,
+      "pred_reach": 22.4,
+      "divergence_m": 0.118
+    },
+    {
+      "key": "167/009431",
+      "goal_m": 20.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.91,
+      "pred_reach": 19.19,
+      "divergence_m": 0.529
+    },
+    {
+      "key": "167/009742",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/009949",
+      "goal_m": 9.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/010069",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/010221",
+      "goal_m": 10.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/010576",
+      "goal_m": 16.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 13.76,
+      "pred_reach": 14.26,
+      "divergence_m": 0.556
+    },
+    {
+      "key": "167/011557",
+      "goal_m": 11.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.0,
+      "pred_reach": 9.59,
+      "divergence_m": 0.266
+    },
+    {
+      "key": "167/012754",
+      "goal_m": 4.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/013363",
+      "goal_m": 17.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 12.71,
+      "pred_reach": 14.4,
+      "divergence_m": 0.259
+    },
+    {
+      "key": "167/013698",
+      "goal_m": 21.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 17.95,
+      "pred_reach": 17.96,
+      "divergence_m": 0.127
+    },
+    {
+      "key": "167/014617",
+      "goal_m": 14.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 11.13,
+      "pred_reach": 11.19,
+      "divergence_m": 0.185
+    },
+    {
+      "key": "167/014737",
+      "goal_m": 11.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 8.0,
+      "pred_reach": 8.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/014832",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/015813",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "167/015885",
+      "goal_m": 19.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.97,
+      "pred_reach": 17.57,
+      "divergence_m": 0.17
+    },
+    {
+      "key": "167/016066",
+      "goal_m": 9.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.33,
+      "pred_reach": 6.34,
+      "divergence_m": 0.064
+    },
+    {
+      "key": "167/016306",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 8.0,
+      "pred_reach": 8.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/019493",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.79,
+      "pred_reach": 4.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/019604",
+      "goal_m": 11.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.88,
+      "pred_reach": 7.88,
+      "divergence_m": 0.419
+    },
+    {
+      "key": "167/019904",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "167/020459",
+      "goal_m": 16.12,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 13.79,
+      "pred_reach": 12.8,
+      "divergence_m": 1.004
+    },
+    {
+      "key": "167/022347",
+      "goal_m": 12.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.0,
+      "pred_reach": 11.19,
+      "divergence_m": 2.649
+    },
+    {
+      "key": "17/052637",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "17/053471",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.75,
+      "pred_reach": 6.24,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "17/308297",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.59,
+      "pred_reach": 27.03,
+      "divergence_m": 0.203
+    },
+    {
+      "key": "17/347409",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.11,
+      "divergence_m": 0.057
+    },
+    {
+      "key": "17/348641",
+      "goal_m": 13.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 10.0,
+      "pred_reach": 11.2,
+      "divergence_m": 0.5
+    },
+    {
+      "key": "17/425212",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "17/435073",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "17/437045",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.04,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "17/440485",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.07,
+      "pred_reach": 27.07,
+      "divergence_m": 0.096
+    },
+    {
+      "key": "17/492856",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "17/497226",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.0,
+      "pred_reach": 4.8,
+      "divergence_m": 0.5
+    },
+    {
+      "key": "17/561445",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.85,
+      "pred_reach": 26.99,
+      "divergence_m": 0.21
+    },
+    {
+      "key": "17/569178",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "17/572054",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "17/633584",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.1,
+      "pred_reach": 27.03,
+      "divergence_m": 0.172
+    },
+    {
+      "key": "17/714521",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "17/719598",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 27.16,
+      "divergence_m": 0.415
+    },
+    {
+      "key": "17/918213",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/031754",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.59,
+      "pred_reach": 27.03,
+      "divergence_m": 0.203
+    },
+    {
+      "key": "172/034342",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.03,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/037910",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.75,
+      "pred_reach": 27.2,
+      "divergence_m": 0.59
+    },
+    {
+      "key": "172/075546",
+      "goal_m": 23.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 20.78,
+      "pred_reach": 20.73,
+      "divergence_m": 0.026
+    },
+    {
+      "key": "172/085203",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/085891",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "172/099010",
+      "goal_m": 23.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 20.52,
+      "pred_reach": 22.18,
+      "divergence_m": 0.129
+    },
+    {
+      "key": "172/148454",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/157242",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.74,
+      "pred_reach": 26.84,
+      "divergence_m": 0.038
+    },
+    {
+      "key": "172/158329",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/164487",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.92,
+      "divergence_m": 0.23
+    },
+    {
+      "key": "172/166552",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.04,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "172/177768",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "172/178400",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/179613",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.82,
+      "pred_reach": 26.76,
+      "divergence_m": 0.154
+    },
+    {
+      "key": "172/200619",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.62,
+      "pred_reach": 27.82,
+      "divergence_m": 0.07
+    },
+    {
+      "key": "172/208102",
+      "goal_m": 21.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.94,
+      "pred_reach": 19.04,
+      "divergence_m": 0.075
+    },
+    {
+      "key": "172/226163",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 26.86,
+      "pred_reach": 19.46,
+      "divergence_m": 0.737
+    },
+    {
+      "key": "172/240946",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 26.98,
+      "divergence_m": 0.075
+    },
+    {
+      "key": "172/242674",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/263108",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/274040",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 25.83,
+      "pred_reach": 26.83,
+      "divergence_m": 0.817
+    },
+    {
+      "key": "172/278236",
+      "goal_m": 21.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.89,
+      "pred_reach": 18.66,
+      "divergence_m": 0.042
+    },
+    {
+      "key": "172/279958",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/337985",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 16.9,
+      "pred_reach": 16.99,
+      "divergence_m": 0.015
+    },
+    {
+      "key": "172/343136",
+      "goal_m": 16.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 13.84,
+      "pred_reach": 13.94,
+      "divergence_m": 0.123
+    },
+    {
+      "key": "172/400103",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.69,
+      "pred_reach": 26.69,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/401821",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.69,
+      "pred_reach": 26.82,
+      "divergence_m": 0.119
+    },
+    {
+      "key": "172/402235",
+      "goal_m": 26.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.78,
+      "pred_reach": 23.83,
+      "divergence_m": 0.056
+    },
+    {
+      "key": "172/411777",
+      "goal_m": 19.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.2,
+      "pred_reach": 17.6,
+      "divergence_m": 0.84
+    },
+    {
+      "key": "172/412455",
+      "goal_m": 17.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 14.15,
+      "pred_reach": 14.21,
+      "divergence_m": 0.128
+    },
+    {
+      "key": "172/421206",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/464874",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.95,
+      "pred_reach": 26.94,
+      "divergence_m": 0.282
+    },
+    {
+      "key": "172/473332",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/546168",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.05,
+      "pred_reach": 27.03,
+      "divergence_m": 0.081
+    },
+    {
+      "key": "172/554050",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.77,
+      "pred_reach": 26.82,
+      "divergence_m": 0.024
+    },
+    {
+      "key": "172/562855",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.18,
+      "pred_reach": 27.2,
+      "divergence_m": 0.325
+    },
+    {
+      "key": "172/596519",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/597662",
+      "goal_m": 25.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.13,
+      "pred_reach": 23.67,
+      "divergence_m": 0.695
+    },
+    {
+      "key": "172/597898",
+      "goal_m": 24.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/598130",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 26.88,
+      "divergence_m": 0.217
+    },
+    {
+      "key": "172/636672",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.74,
+      "pred_reach": 26.68,
+      "divergence_m": 0.053
+    },
+    {
+      "key": "172/639078",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 26.69,
+      "divergence_m": 0.161
+    },
+    {
+      "key": "172/703922",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.82,
+      "pred_reach": 26.79,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "172/750468",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.69,
+      "pred_reach": 26.77,
+      "divergence_m": 0.262
+    },
+    {
+      "key": "172/763587",
+      "goal_m": 22.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 20.15,
+      "pred_reach": 20.17,
+      "divergence_m": 0.155
+    },
+    {
+      "key": "172/768586",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/786645",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "172/798815",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 26.54,
+      "pred_reach": 23.48,
+      "divergence_m": 0.21
+    },
+    {
+      "key": "172/815427",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.56,
+      "pred_reach": 26.3,
+      "divergence_m": 0.023
+    },
+    {
+      "key": "172/847977",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 26.6,
+      "pred_reach": 27.45,
+      "divergence_m": 0.799
+    },
+    {
+      "key": "172/849823",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.59,
+      "pred_reach": 26.49,
+      "divergence_m": 0.062
+    },
+    {
+      "key": "172/851542",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.87,
+      "pred_reach": 26.83,
+      "divergence_m": 0.187
+    },
+    {
+      "key": "172/872275",
+      "goal_m": 23.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 20.96,
+      "pred_reach": 21.76,
+      "divergence_m": 0.556
+    },
+    {
+      "key": "172/874002",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 25.81,
+      "pred_reach": 26.22,
+      "divergence_m": 0.194
+    },
+    {
+      "key": "172/876307",
+      "goal_m": 14.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.76,
+      "pred_reach": 12.02,
+      "divergence_m": 0.206
+    },
+    {
+      "key": "172/891028",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/892417",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.07,
+      "divergence_m": 0.157
+    },
+    {
+      "key": "172/893111",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "172/894652",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.1,
+      "pred_reach": 27.1,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/894999",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.16,
+      "pred_reach": 27.2,
+      "divergence_m": 0.134
+    },
+    {
+      "key": "172/896373",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/900234",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.04,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/918002",
+      "goal_m": 17.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.44,
+      "pred_reach": 15.44,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/937178",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.84,
+      "pred_reach": 10.21,
+      "divergence_m": 0.473
+    },
+    {
+      "key": "172/950119",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.59,
+      "pred_reach": 26.71,
+      "divergence_m": 0.083
+    },
+    {
+      "key": "172/955930",
+      "goal_m": 13.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 10.48,
+      "pred_reach": 10.55,
+      "divergence_m": 0.11
+    },
+    {
+      "key": "172/968700",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "172/971856",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "172/977434",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/000542",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/000572",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/000602",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/000662",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/000692",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/000722",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/000852",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001066",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001096",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001126",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001246",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001276",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001396",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001486",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001516",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001546",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001606",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001696",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/001786",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/002831",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/003431",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/003731",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/004355",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/004415",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/004445",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/004519",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005100",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005130",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005160",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005190",
+      "goal_m": 5.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005220",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005280",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005310",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005340",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 2.0,
+      "divergence_m": 0.206
+    },
+    {
+      "key": "18/005400",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005490",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005520",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005550",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005610",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005640",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005730",
+      "goal_m": 7.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005760",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005850",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/005910",
+      "goal_m": 9.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/005940",
+      "goal_m": 7.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.73,
+      "pred_reach": 4.76,
+      "divergence_m": 0.026
+    },
+    {
+      "key": "18/006030",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.78,
+      "pred_reach": 4.78,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/006120",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006180",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006240",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006270",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006330",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006420",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006654",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/006954",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/007402",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.0,
+      "pred_reach": 4.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/007714",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/007744",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/008154",
+      "goal_m": 5.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/008454",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/008754",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/009054",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/009354",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.19,
+      "pred_reach": 4.76,
+      "divergence_m": 0.439
+    },
+    {
+      "key": "18/009954",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.94,
+      "pred_reach": 11.2,
+      "divergence_m": 0.655
+    },
+    {
+      "key": "18/010554",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 8.0,
+      "pred_reach": 8.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/010854",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/010959",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/010989",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011019",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011049",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011169",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011289",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011319",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011349",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011387",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/011987",
+      "goal_m": 9.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.064
+    },
+    {
+      "key": "18/012287",
+      "goal_m": 5.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/012587",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/012887",
+      "goal_m": 10.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 3.2,
+      "divergence_m": 0.533
+    },
+    {
+      "key": "18/013787",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/014087",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/014387",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/015287",
+      "goal_m": 2.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/015587",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/015887",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/016187",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.81,
+      "pred_reach": 6.29,
+      "divergence_m": 0.065
+    },
+    {
+      "key": "18/016787",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/016941",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "18/017087",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/017687",
+      "goal_m": 10.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.92,
+      "pred_reach": 6.34,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/017987",
+      "goal_m": 12.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 9.6,
+      "pred_reach": 9.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/018287",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/018887",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/019487",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/019787",
+      "goal_m": 6.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.0,
+      "pred_reach": 4.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/020087",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.24,
+      "pred_reach": 7.75,
+      "divergence_m": 0.266
+    },
+    {
+      "key": "18/020387",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.73,
+      "pred_reach": 4.73,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/020687",
+      "goal_m": 10.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/020821",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/020856",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.19,
+      "pred_reach": 4.79,
+      "divergence_m": 0.4
+    },
+    {
+      "key": "18/020886",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/020946",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/020987",
+      "goal_m": 6.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/021287",
+      "goal_m": 12.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.0,
+      "pred_reach": 9.8,
+      "divergence_m": 0.67
+    },
+    {
+      "key": "18/022187",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "18/022787",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/023087",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/023687",
+      "goal_m": 8.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 6.24,
+      "divergence_m": 0.475
+    },
+    {
+      "key": "18/023987",
+      "goal_m": 14.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/024587",
+      "goal_m": 10.38,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 7.89,
+      "pred_reach": 6.37,
+      "divergence_m": 0.1
+    },
+    {
+      "key": "18/024887",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "18/025187",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/025787",
+      "goal_m": 12.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 9.7,
+      "pred_reach": 11.02,
+      "divergence_m": 0.701
+    },
+    {
+      "key": "18/026087",
+      "goal_m": 16.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 13.93,
+      "pred_reach": 14.25,
+      "divergence_m": 0.531
+    },
+    {
+      "key": "18/026387",
+      "goal_m": 15.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 13.64,
+      "divergence_m": 5.227
+    },
+    {
+      "key": "18/026687",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "18/026987",
+      "goal_m": 18.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 15.83,
+      "pred_reach": 15.96,
+      "divergence_m": 0.117
+    },
+    {
+      "key": "18/027287",
+      "goal_m": 10.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 7.99,
+      "divergence_m": 0.28
+    },
+    {
+      "key": "18/027587",
+      "goal_m": 15.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 11.19,
+      "pred_reach": 12.78,
+      "divergence_m": 0.32
+    },
+    {
+      "key": "181/000600",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/000900",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/001500",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/001800",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/003300",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/003600",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "181/003939",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/003980",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/004100",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/004460",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/004580",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/005136",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/005314",
+      "goal_m": 10.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 8.92,
+      "pred_reach": 9.03,
+      "divergence_m": 0.156
+    },
+    {
+      "key": "181/005661",
+      "goal_m": 7.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "181/005739",
+      "goal_m": 14.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 11.01,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "181/007839",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/009939",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/010239",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/010539",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/011739",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/013768",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/013828",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "181/013888",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/013918",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/013948",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/014008",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "181/014919",
+      "goal_m": 4.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "181/015819",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/016119",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/016419",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/016719",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/018956",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/019016",
+      "goal_m": 13.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.55,
+      "pred_reach": 11.11,
+      "divergence_m": 0.25
+    },
+    {
+      "key": "181/019119",
+      "goal_m": 16.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 14.25,
+      "pred_reach": 14.4,
+      "divergence_m": 0.193
+    },
+    {
+      "key": "181/019419",
+      "goal_m": 13.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 10.0,
+      "pred_reach": 11.2,
+      "divergence_m": 0.5
+    },
+    {
+      "key": "181/020019",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 3.2,
+      "divergence_m": 0.533
+    },
+    {
+      "key": "181/021519",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/023319",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/024819",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "181/026619",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/000659",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/017152",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/022635",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.59,
+      "pred_reach": 26.58,
+      "divergence_m": 0.226
+    },
+    {
+      "key": "21/028106",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/033571",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.93,
+      "pred_reach": 26.92,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "21/047825",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.87,
+      "pred_reach": 26.84,
+      "divergence_m": 0.177
+    },
+    {
+      "key": "21/078822",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 26.84,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/086776",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/090817",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 26.84,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/098311",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 26.84,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/110375",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/116904",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.79,
+      "pred_reach": 26.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/137482",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.08,
+      "pred_reach": 27.1,
+      "divergence_m": 0.091
+    },
+    {
+      "key": "21/142567",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/144545",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.66,
+      "pred_reach": 26.59,
+      "divergence_m": 0.21
+    },
+    {
+      "key": "21/178591",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.71,
+      "pred_reach": 26.73,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "21/195325",
+      "goal_m": 24.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.32,
+      "pred_reach": 23.33,
+      "divergence_m": 0.006
+    },
+    {
+      "key": "21/198741",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 8.0,
+      "pred_reach": 8.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/216111",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.59,
+      "pred_reach": 26.71,
+      "divergence_m": 0.083
+    },
+    {
+      "key": "21/219146",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.71,
+      "pred_reach": 26.71,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/240284",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/256387",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.029
+    },
+    {
+      "key": "21/289834",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 27.02,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/295352",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 27.02,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/304409",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/318479",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/324452",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.01,
+      "pred_reach": 27.16,
+      "divergence_m": 0.293
+    },
+    {
+      "key": "21/326046",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.92,
+      "pred_reach": 27.0,
+      "divergence_m": 0.122
+    },
+    {
+      "key": "21/341533",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.11,
+      "pred_reach": 26.96,
+      "divergence_m": 0.224
+    },
+    {
+      "key": "21/362931",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "21/372622",
+      "goal_m": 7.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 4.8,
+      "divergence_m": 0.044
+    },
+    {
+      "key": "21/377555",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/388138",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 26.94,
+      "divergence_m": 0.144
+    },
+    {
+      "key": "21/401205",
+      "goal_m": 17.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.61,
+      "pred_reach": 7.61,
+      "divergence_m": 0.348
+    },
+    {
+      "key": "21/425669",
+      "goal_m": 13.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.81,
+      "pred_reach": 11.84,
+      "divergence_m": 0.01
+    },
+    {
+      "key": "21/427653",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/468830",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.12,
+      "pred_reach": 27.16,
+      "divergence_m": 0.038
+    },
+    {
+      "key": "21/480246",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.82,
+      "pred_reach": 27.11,
+      "divergence_m": 0.328
+    },
+    {
+      "key": "21/487333",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 27.02,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/497753",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.94,
+      "pred_reach": 26.89,
+      "divergence_m": 0.134
+    },
+    {
+      "key": "21/512401",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/544989",
+      "goal_m": 21.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.6,
+      "pred_reach": 18.71,
+      "divergence_m": 0.141
+    },
+    {
+      "key": "21/553005",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.11,
+      "pred_reach": 27.06,
+      "divergence_m": 0.212
+    },
+    {
+      "key": "21/558007",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 26.95,
+      "divergence_m": 0.039
+    },
+    {
+      "key": "21/584070",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 9.61,
+      "pred_reach": 19.31,
+      "divergence_m": 2.751
+    },
+    {
+      "key": "21/590185",
+      "goal_m": 25.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 23.55,
+      "pred_reach": 23.53,
+      "divergence_m": 0.288
+    },
+    {
+      "key": "21/591650",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.66,
+      "pred_reach": 26.66,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/595715",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.06,
+      "pred_reach": 27.07,
+      "divergence_m": 0.236
+    },
+    {
+      "key": "21/599187",
+      "goal_m": 10.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 3.2,
+      "divergence_m": 0.533
+    },
+    {
+      "key": "21/617686",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.7,
+      "pred_reach": 26.59,
+      "divergence_m": 0.161
+    },
+    {
+      "key": "21/623653",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.77,
+      "pred_reach": 26.77,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/633180",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.91,
+      "pred_reach": 26.89,
+      "divergence_m": 0.119
+    },
+    {
+      "key": "21/639718",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/648225",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.63,
+      "pred_reach": 26.63,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/649816",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 25.82,
+      "pred_reach": 25.82,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/659893",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.78,
+      "pred_reach": 26.84,
+      "divergence_m": 0.292
+    },
+    {
+      "key": "21/661334",
+      "goal_m": 17.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 13.84,
+      "pred_reach": 15.42,
+      "divergence_m": 0.154
+    },
+    {
+      "key": "21/664338",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.02,
+      "pred_reach": 27.04,
+      "divergence_m": 0.033
+    },
+    {
+      "key": "21/672887",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.38,
+      "pred_reach": 26.43,
+      "divergence_m": 0.202
+    },
+    {
+      "key": "21/688804",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.53,
+      "pred_reach": 26.39,
+      "divergence_m": 0.062
+    },
+    {
+      "key": "21/704880",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "21/713968",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.48,
+      "pred_reach": 26.6,
+      "divergence_m": 0.159
+    },
+    {
+      "key": "21/740976",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.48,
+      "pred_reach": 26.45,
+      "divergence_m": 0.232
+    },
+    {
+      "key": "21/743978",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.49,
+      "pred_reach": 26.43,
+      "divergence_m": 0.076
+    },
+    {
+      "key": "21/749047",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.63,
+      "pred_reach": 26.63,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/762507",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.01,
+      "pred_reach": 26.62,
+      "divergence_m": 0.534
+    },
+    {
+      "key": "21/787122",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.85,
+      "pred_reach": 27.0,
+      "divergence_m": 0.045
+    },
+    {
+      "key": "21/846210",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 27.2,
+      "divergence_m": 0.442
+    },
+    {
+      "key": "21/892833",
+      "goal_m": 22.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 19.32,
+      "pred_reach": 19.62,
+      "divergence_m": 0.629
+    },
+    {
+      "key": "21/893863",
+      "goal_m": 7.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.2,
+      "divergence_m": 0.057
+    },
+    {
+      "key": "21/905457",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/907924",
+      "goal_m": 5.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 3.19,
+      "pred_reach": 3.2,
+      "divergence_m": 0.056
+    },
+    {
+      "key": "21/918919",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/920949",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.53,
+      "pred_reach": 26.43,
+      "divergence_m": 0.156
+    },
+    {
+      "key": "21/924007",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.53,
+      "pred_reach": 26.58,
+      "divergence_m": 0.067
+    },
+    {
+      "key": "21/940109",
+      "goal_m": 20.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.73,
+      "pred_reach": 18.64,
+      "divergence_m": 0.553
+    },
+    {
+      "key": "21/954515",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.11,
+      "pred_reach": 27.11,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "21/984644",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.7,
+      "pred_reach": 26.94,
+      "divergence_m": 0.318
+    },
+    {
+      "key": "21/988575",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 26.7,
+      "divergence_m": 0.177
+    },
+    {
+      "key": "21/992242",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.04,
+      "pred_reach": 27.11,
+      "divergence_m": 0.326
+    },
+    {
+      "key": "24/055545",
+      "goal_m": 21.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.92,
+      "pred_reach": 19.2,
+      "divergence_m": 0.371
+    },
+    {
+      "key": "24/055811",
+      "goal_m": 9.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/058630",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/058832",
+      "goal_m": 9.38,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 6.4,
+      "pred_reach": 4.0,
+      "divergence_m": 0.4
+    },
+    {
+      "key": "24/059425",
+      "goal_m": 25.12,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 22.58,
+      "pred_reach": 19.42,
+      "divergence_m": 0.057
+    },
+    {
+      "key": "24/060280",
+      "goal_m": 22.38,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 19.86,
+      "pred_reach": 17.79,
+      "divergence_m": 0.397
+    },
+    {
+      "key": "24/060326",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/060600",
+      "goal_m": 22.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 12.66,
+      "pred_reach": 18.93,
+      "divergence_m": 1.325
+    },
+    {
+      "key": "24/060855",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.8,
+      "pred_reach": 5.99,
+      "divergence_m": 0.6
+    },
+    {
+      "key": "24/061195",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/062471",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/069255",
+      "goal_m": 20.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 16.97,
+      "pred_reach": 17.52,
+      "divergence_m": 0.97
+    },
+    {
+      "key": "24/164698",
+      "goal_m": 17.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.39,
+      "pred_reach": 15.51,
+      "divergence_m": 0.136
+    },
+    {
+      "key": "24/171056",
+      "goal_m": 27.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 11.07,
+      "pred_reach": 11.16,
+      "divergence_m": 0.074
+    },
+    {
+      "key": "24/172513",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/176853",
+      "goal_m": 14.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 11.13,
+      "pred_reach": 11.66,
+      "divergence_m": 0.474
+    },
+    {
+      "key": "24/178587",
+      "goal_m": 11.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.029
+    },
+    {
+      "key": "24/179647",
+      "goal_m": 16.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 12.76,
+      "pred_reach": 12.76,
+      "divergence_m": 0.065
+    },
+    {
+      "key": "24/182041",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/318505",
+      "goal_m": 4.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/366464",
+      "goal_m": 4.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/369735",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/379680",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/438586",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/556827",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.53,
+      "pred_reach": 25.88,
+      "divergence_m": 0.767
+    },
+    {
+      "key": "24/558481",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.6,
+      "pred_reach": 26.69,
+      "divergence_m": 0.112
+    },
+    {
+      "key": "24/558948",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.01,
+      "pred_reach": 27.01,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "24/560103",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.03,
+      "divergence_m": 0.053
+    },
+    {
+      "key": "24/561211",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.86,
+      "pred_reach": 26.92,
+      "divergence_m": 0.09
+    },
+    {
+      "key": "24/637222",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/642575",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "24/645919",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/000290",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/000590",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/000890",
+      "goal_m": 16.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 14.37,
+      "divergence_m": 5.756
+    },
+    {
+      "key": "3/001190",
+      "goal_m": 16.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 12.79,
+      "pred_reach": 14.4,
+      "divergence_m": 0.249
+    },
+    {
+      "key": "3/001490",
+      "goal_m": 18.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.96,
+      "pred_reach": 15.98,
+      "divergence_m": 0.008
+    },
+    {
+      "key": "3/001790",
+      "goal_m": 21.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.88,
+      "pred_reach": 19.2,
+      "divergence_m": 0.578
+    },
+    {
+      "key": "3/002090",
+      "goal_m": 19.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.83,
+      "pred_reach": 17.6,
+      "divergence_m": 0.836
+    },
+    {
+      "key": "3/002968",
+      "goal_m": 8.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 5.86,
+      "pred_reach": 5.86,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/002998",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.0,
+      "pred_reach": 3.19,
+      "divergence_m": 0.412
+    },
+    {
+      "key": "3/003058",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.76,
+      "pred_reach": 6.2,
+      "divergence_m": 0.319
+    },
+    {
+      "key": "3/003118",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.76,
+      "pred_reach": 4.76,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/004042",
+      "goal_m": 17.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 14.33,
+      "pred_reach": 14.34,
+      "divergence_m": 0.086
+    },
+    {
+      "key": "3/004342",
+      "goal_m": 18.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 14.33,
+      "pred_reach": 15.85,
+      "divergence_m": 0.546
+    },
+    {
+      "key": "3/004642",
+      "goal_m": 9.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.27,
+      "pred_reach": 6.24,
+      "divergence_m": 0.017
+    },
+    {
+      "key": "3/004942",
+      "goal_m": 8.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 5.99,
+      "divergence_m": 0.599
+    },
+    {
+      "key": "3/005242",
+      "goal_m": 16.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 14.11,
+      "pred_reach": 14.21,
+      "divergence_m": 0.214
+    },
+    {
+      "key": "3/005542",
+      "goal_m": 20.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.88,
+      "pred_reach": 17.52,
+      "divergence_m": 0.488
+    },
+    {
+      "key": "3/005842",
+      "goal_m": 19.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 12.68,
+      "pred_reach": 17.57,
+      "divergence_m": 1.048
+    },
+    {
+      "key": "3/006442",
+      "goal_m": 14.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.2,
+      "pred_reach": 11.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/006742",
+      "goal_m": 14.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.83,
+      "pred_reach": 11.98,
+      "divergence_m": 0.502
+    },
+    {
+      "key": "3/007042",
+      "goal_m": 21.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 17.91,
+      "pred_reach": 17.96,
+      "divergence_m": 0.369
+    },
+    {
+      "key": "3/007342",
+      "goal_m": 20.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 15.84,
+      "pred_reach": 17.85,
+      "divergence_m": 0.429
+    },
+    {
+      "key": "3/007642",
+      "goal_m": 9.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/007942",
+      "goal_m": 21.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 18.63,
+      "pred_reach": 19.03,
+      "divergence_m": 0.878
+    },
+    {
+      "key": "3/008242",
+      "goal_m": 15.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 11.1,
+      "pred_reach": 12.72,
+      "divergence_m": 0.247
+    },
+    {
+      "key": "3/008542",
+      "goal_m": 12.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 9.9,
+      "pred_reach": 9.95,
+      "divergence_m": 0.626
+    },
+    {
+      "key": "3/009442",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.24,
+      "pred_reach": 7.63,
+      "divergence_m": 0.267
+    },
+    {
+      "key": "3/009742",
+      "goal_m": 8.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.2,
+      "pred_reach": 6.32,
+      "divergence_m": 0.091
+    },
+    {
+      "key": "3/010042",
+      "goal_m": 9.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.77,
+      "pred_reach": 3.99,
+      "divergence_m": 0.396
+    },
+    {
+      "key": "3/010045",
+      "goal_m": 9.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/010342",
+      "goal_m": 9.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/010642",
+      "goal_m": 15.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 12.31,
+      "pred_reach": 13.64,
+      "divergence_m": 0.457
+    },
+    {
+      "key": "3/010942",
+      "goal_m": 20.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.41,
+      "pred_reach": 17.39,
+      "divergence_m": 0.119
+    },
+    {
+      "key": "3/011242",
+      "goal_m": 22.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 18.98,
+      "pred_reach": 20.58,
+      "divergence_m": 0.221
+    },
+    {
+      "key": "3/011738",
+      "goal_m": 11.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 8.9,
+      "pred_reach": 7.96,
+      "divergence_m": 0.526
+    },
+    {
+      "key": "3/011858",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.77,
+      "pred_reach": 4.77,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/012240",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/012907",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/012967",
+      "goal_m": 9.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.017
+    },
+    {
+      "key": "3/013973",
+      "goal_m": 17.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/014273",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "3/014573",
+      "goal_m": 15.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.15,
+      "pred_reach": 13.92,
+      "divergence_m": 2.42
+    },
+    {
+      "key": "3/015173",
+      "goal_m": 22.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 19.07,
+      "pred_reach": 19.91,
+      "divergence_m": 0.986
+    },
+    {
+      "key": "3/015773",
+      "goal_m": 20.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.48,
+      "pred_reach": 18.39,
+      "divergence_m": 0.676
+    },
+    {
+      "key": "3/016073",
+      "goal_m": 16.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 13.39,
+      "pred_reach": 14.09,
+      "divergence_m": 0.829
+    },
+    {
+      "key": "3/016373",
+      "goal_m": 14.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 10.69,
+      "pred_reach": 12.19,
+      "divergence_m": 0.54
+    },
+    {
+      "key": "3/016973",
+      "goal_m": 5.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 3.2,
+      "divergence_m": 0.533
+    },
+    {
+      "key": "3/017089",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.99,
+      "pred_reach": 9.29,
+      "divergence_m": 0.732
+    },
+    {
+      "key": "3/017273",
+      "goal_m": 11.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.0,
+      "pred_reach": 9.6,
+      "divergence_m": 0.229
+    },
+    {
+      "key": "3/017573",
+      "goal_m": 9.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.0,
+      "pred_reach": 7.44,
+      "divergence_m": 0.913
+    },
+    {
+      "key": "3/017873",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.2,
+      "pred_reach": 4.77,
+      "divergence_m": 0.417
+    },
+    {
+      "key": "3/018173",
+      "goal_m": 10.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.24,
+      "pred_reach": 6.24,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/019373",
+      "goal_m": 10.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.97,
+      "pred_reach": 7.95,
+      "divergence_m": 0.405
+    },
+    {
+      "key": "3/020594",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.0,
+      "pred_reach": 9.6,
+      "divergence_m": 0.229
+    },
+    {
+      "key": "3/020868",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 8.0,
+      "pred_reach": 9.6,
+      "divergence_m": 0.229
+    },
+    {
+      "key": "3/020998",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/021301",
+      "goal_m": 9.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 7.47,
+      "pred_reach": 7.17,
+      "divergence_m": 0.076
+    },
+    {
+      "key": "3/021303",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.15,
+      "pred_reach": 7.25,
+      "divergence_m": 0.266
+    },
+    {
+      "key": "3/021603",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.19,
+      "pred_reach": 3.99,
+      "divergence_m": 0.404
+    },
+    {
+      "key": "3/021701",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/021903",
+      "goal_m": 4.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/021969",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/021999",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/022029",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/022089",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/022119",
+      "goal_m": 8.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 2.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/022209",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/022239",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/022262",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/022301",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/022601",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.0,
+      "pred_reach": 4.8,
+      "divergence_m": 0.5
+    },
+    {
+      "key": "3/022901",
+      "goal_m": 15.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 11.98,
+      "pred_reach": 12.63,
+      "divergence_m": 0.687
+    },
+    {
+      "key": "3/023501",
+      "goal_m": 16.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 11.99,
+      "pred_reach": 14.35,
+      "divergence_m": 0.687
+    },
+    {
+      "key": "3/023801",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/024070",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/024100",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/024130",
+      "goal_m": 8.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.27,
+      "pred_reach": 6.24,
+      "divergence_m": 0.017
+    },
+    {
+      "key": "3/024160",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.95,
+      "pred_reach": 11.18,
+      "divergence_m": 0.543
+    },
+    {
+      "key": "3/024188",
+      "goal_m": 14.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/024308",
+      "goal_m": 14.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.95,
+      "pred_reach": 12.65,
+      "divergence_m": 0.74
+    },
+    {
+      "key": "3/024612",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "3/025512",
+      "goal_m": 8.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.79,
+      "pred_reach": 4.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "3/027012",
+      "goal_m": 7.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.0,
+      "pred_reach": 4.8,
+      "divergence_m": 0.5
+    },
+    {
+      "key": "47/000035",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/000065",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/000175",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/000190",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/000339",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/000387",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/000402",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/000489",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "47/000717",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.99,
+      "pred_reach": 4.8,
+      "divergence_m": 0.502
+    },
+    {
+      "key": "47/000777",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/000837",
+      "goal_m": 5.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "47/000897",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/001063",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/001265",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/001507",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/001565",
+      "goal_m": 4.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "47/001656",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/001784",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/001904",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/001930",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "47/002035",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "47/002095",
+      "goal_m": 8.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 6.37,
+      "divergence_m": 0.32
+    },
+    {
+      "key": "51/007064",
+      "goal_m": 14.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.97,
+      "pred_reach": 11.92,
+      "divergence_m": 0.092
+    },
+    {
+      "key": "51/007871",
+      "goal_m": 12.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.79,
+      "pred_reach": 7.74,
+      "divergence_m": 0.418
+    },
+    {
+      "key": "51/009533",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "51/010566",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.87,
+      "pred_reach": 10.96,
+      "divergence_m": 0.612
+    },
+    {
+      "key": "51/013017",
+      "goal_m": 13.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.86,
+      "pred_reach": 11.2,
+      "divergence_m": 0.825
+    },
+    {
+      "key": "51/013382",
+      "goal_m": 17.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 14.39,
+      "pred_reach": 16.0,
+      "divergence_m": 0.17
+    },
+    {
+      "key": "51/014236",
+      "goal_m": 24.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 20.8,
+      "pred_reach": 22.4,
+      "divergence_m": 0.113
+    },
+    {
+      "key": "51/014363",
+      "goal_m": 19.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.96,
+      "pred_reach": 17.6,
+      "divergence_m": 0.185
+    },
+    {
+      "key": "51/015889",
+      "goal_m": 13.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.98,
+      "pred_reach": 11.2,
+      "divergence_m": 0.511
+    },
+    {
+      "key": "51/016089",
+      "goal_m": 10.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.29,
+      "pred_reach": 7.87,
+      "divergence_m": 0.409
+    },
+    {
+      "key": "51/017425",
+      "goal_m": 19.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 16.79,
+      "pred_reach": 16.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "51/017444",
+      "goal_m": 17.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.18,
+      "pred_reach": 15.18,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "51/017734",
+      "goal_m": 17.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 13.99,
+      "pred_reach": 14.38,
+      "divergence_m": 0.48
+    },
+    {
+      "key": "51/018334",
+      "goal_m": 18.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 14.39,
+      "pred_reach": 15.99,
+      "divergence_m": 0.247
+    },
+    {
+      "key": "51/019863",
+      "goal_m": 10.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.39,
+      "pred_reach": 8.0,
+      "divergence_m": 0.296
+    },
+    {
+      "key": "51/019994",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 3.2,
+      "pred_reach": 3.99,
+      "divergence_m": 0.402
+    },
+    {
+      "key": "51/020057",
+      "goal_m": 8.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 6.4,
+      "divergence_m": 0.375
+    },
+    {
+      "key": "51/020294",
+      "goal_m": 16.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 14.36,
+      "pred_reach": 14.4,
+      "divergence_m": 0.045
+    },
+    {
+      "key": "51/020339",
+      "goal_m": 19.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.99,
+      "pred_reach": 17.49,
+      "divergence_m": 0.217
+    },
+    {
+      "key": "51/020459",
+      "goal_m": 16.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.3,
+      "pred_reach": 14.23,
+      "divergence_m": 2.39
+    },
+    {
+      "key": "51/020579",
+      "goal_m": 15.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 2.0,
+      "divergence_m": 0.206
+    },
+    {
+      "key": "51/021213",
+      "goal_m": 26.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "51/021274",
+      "goal_m": 9.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "51/023168",
+      "goal_m": 13.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 9.95,
+      "pred_reach": 9.92,
+      "divergence_m": 0.145
+    },
+    {
+      "key": "51/023468",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 25.9,
+      "pred_reach": 27.2,
+      "divergence_m": 0.669
+    },
+    {
+      "key": "51/023704",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 23.94,
+      "divergence_m": NaN
+    },
+    {
+      "key": "51/024423",
+      "goal_m": 26.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 21.87,
+      "pred_reach": 24.0,
+      "divergence_m": 0.785
+    },
+    {
+      "key": "51/024723",
+      "goal_m": 20.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 17.6,
+      "pred_reach": 19.2,
+      "divergence_m": 0.123
+    },
+    {
+      "key": "51/025023",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.8,
+      "pred_reach": 4.8,
+      "divergence_m": 0.022
+    },
+    {
+      "key": "51/025323",
+      "goal_m": 20.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.55,
+      "pred_reach": 17.6,
+      "divergence_m": 0.143
+    },
+    {
+      "key": "51/025680",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.98,
+      "pred_reach": 15.98,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "51/025923",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.82,
+      "pred_reach": 26.92,
+      "divergence_m": 0.024
+    },
+    {
+      "key": "51/026223",
+      "goal_m": 15.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 12.78,
+      "pred_reach": 14.4,
+      "divergence_m": 0.21
+    },
+    {
+      "key": "51/026299",
+      "goal_m": 16.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 12.79,
+      "pred_reach": 14.4,
+      "divergence_m": 0.187
+    },
+    {
+      "key": "51/026523",
+      "goal_m": 14.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 12.24,
+      "pred_reach": 12.43,
+      "divergence_m": 0.05
+    },
+    {
+      "key": "51/026823",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 15.95,
+      "pred_reach": 16.0,
+      "divergence_m": 0.137
+    },
+    {
+      "key": "51/027123",
+      "goal_m": 24.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 21.53,
+      "pred_reach": 22.38,
+      "divergence_m": 0.683
+    },
+    {
+      "key": "62/043646",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.6,
+      "divergence_m": 0.878
+    },
+    {
+      "key": "62/064682",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "62/100352",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/163383",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.97,
+      "pred_reach": 26.77,
+      "divergence_m": 0.302
+    },
+    {
+      "key": "62/166829",
+      "goal_m": 27.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 26.99,
+      "pred_reach": 26.91,
+      "divergence_m": 0.394
+    },
+    {
+      "key": "62/166884",
+      "goal_m": 20.88,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 18.58,
+      "pred_reach": 15.53,
+      "divergence_m": 0.586
+    },
+    {
+      "key": "62/172648",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.73,
+      "pred_reach": 26.89,
+      "divergence_m": 0.266
+    },
+    {
+      "key": "62/174886",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.84,
+      "pred_reach": 26.84,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/176632",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.01,
+      "pred_reach": 27.15,
+      "divergence_m": 0.292
+    },
+    {
+      "key": "62/184495",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.1,
+      "pred_reach": 27.1,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/188147",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 27.04,
+      "divergence_m": 11.662
+    },
+    {
+      "key": "62/188700",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "62/193488",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.03,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/196096",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.03,
+      "pred_reach": 27.03,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/227903",
+      "goal_m": 25.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 22.38,
+      "pred_reach": 24.0,
+      "divergence_m": 0.131
+    },
+    {
+      "key": "62/229926",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.83,
+      "pred_reach": 26.81,
+      "divergence_m": 0.097
+    },
+    {
+      "key": "62/230414",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/232645",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "62/235752",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/240938",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/251360",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/252037",
+      "goal_m": 21.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.47,
+      "pred_reach": 18.41,
+      "divergence_m": 0.112
+    },
+    {
+      "key": "62/252151",
+      "goal_m": 12.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/253399",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/254869",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.89,
+      "pred_reach": 27.0,
+      "divergence_m": 0.041
+    },
+    {
+      "key": "62/264049",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.18,
+      "divergence_m": 0.029
+    },
+    {
+      "key": "62/319513",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.07,
+      "pred_reach": 27.0,
+      "divergence_m": 0.403
+    },
+    {
+      "key": "62/374955",
+      "goal_m": 28.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.94,
+      "pred_reach": 27.19,
+      "divergence_m": 2.579
+    },
+    {
+      "key": "62/375777",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.15,
+      "pred_reach": 27.12,
+      "divergence_m": 0.019
+    },
+    {
+      "key": "62/376062",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.64,
+      "pred_reach": 26.84,
+      "divergence_m": 0.121
+    },
+    {
+      "key": "62/376181",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.95,
+      "pred_reach": 26.95,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/378357",
+      "goal_m": 17.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 14.3,
+      "pred_reach": 14.32,
+      "divergence_m": 0.118
+    },
+    {
+      "key": "62/381868",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.05,
+      "pred_reach": 26.95,
+      "divergence_m": 0.193
+    },
+    {
+      "key": "62/419559",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.05,
+      "divergence_m": 0.081
+    },
+    {
+      "key": "62/423524",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.07,
+      "pred_reach": 27.03,
+      "divergence_m": 0.055
+    },
+    {
+      "key": "62/447547",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.45,
+      "pred_reach": 26.45,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/462723",
+      "goal_m": 10.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 1.6,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "62/462986",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.77,
+      "pred_reach": 26.77,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/463926",
+      "goal_m": 27.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 25.21,
+      "pred_reach": 25.21,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/484769",
+      "goal_m": 16.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 11.9,
+      "pred_reach": 8.54,
+      "divergence_m": 0.773
+    },
+    {
+      "key": "62/524683",
+      "goal_m": 12.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 10.44,
+      "pred_reach": 10.44,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/560077",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/570818",
+      "goal_m": 21.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 18.84,
+      "pred_reach": 18.66,
+      "divergence_m": 0.048
+    },
+    {
+      "key": "62/571635",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.83,
+      "pred_reach": 26.95,
+      "divergence_m": 0.443
+    },
+    {
+      "key": "62/573696",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.7,
+      "pred_reach": 27.14,
+      "divergence_m": 0.598
+    },
+    {
+      "key": "62/578579",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "62/592854",
+      "goal_m": 11.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.98,
+      "pred_reach": 9.58,
+      "divergence_m": 0.592
+    },
+    {
+      "key": "62/683966",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 5.98,
+      "divergence_m": 0.601
+    },
+    {
+      "key": "62/701143",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.85,
+      "pred_reach": 27.0,
+      "divergence_m": 0.045
+    },
+    {
+      "key": "62/724676",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.83,
+      "pred_reach": 7.8,
+      "divergence_m": 0.042
+    },
+    {
+      "key": "62/768554",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/823171",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.09,
+      "pred_reach": 27.09,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/832418",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 27.03,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "62/849051",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.005
+    },
+    {
+      "key": "62/853329",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.88,
+      "pred_reach": 26.88,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "62/896203",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.0,
+      "pred_reach": 27.02,
+      "divergence_m": 0.223
+    },
+    {
+      "key": "66/070130",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/358014",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/369976",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/451469",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/495633",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/568321",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/778368",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/831898",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/894867",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "66/966632",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/000742",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/001922",
+      "goal_m": 11.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.9,
+      "pred_reach": 7.88,
+      "divergence_m": 0.128
+    },
+    {
+      "key": "67/001938",
+      "goal_m": 12.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 7.9,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "67/002836",
+      "goal_m": 5.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 3.2,
+      "divergence_m": 0.533
+    },
+    {
+      "key": "67/002956",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 4.8,
+      "pred_reach": 5.99,
+      "divergence_m": 0.6
+    },
+    {
+      "key": "67/003196",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/003316",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/003436",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.99,
+      "divergence_m": 0.4
+    },
+    {
+      "key": "67/003556",
+      "goal_m": 8.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 5.95,
+      "pred_reach": 4.78,
+      "divergence_m": 0.502
+    },
+    {
+      "key": "67/003914",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/003930",
+      "goal_m": 5.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "67/003949",
+      "goal_m": 5.88,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "67/003979",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/004009",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 1.6,
+      "divergence_m": 0.206
+    },
+    {
+      "key": "67/004039",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/004052",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/004462",
+      "goal_m": 9.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/004513",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 2.0,
+      "pred_reach": 3.2,
+      "divergence_m": 0.533
+    },
+    {
+      "key": "67/004543",
+      "goal_m": 9.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.0,
+      "pred_reach": 6.38,
+      "divergence_m": 0.485
+    },
+    {
+      "key": "67/004603",
+      "goal_m": 8.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.8,
+      "pred_reach": 4.79,
+      "divergence_m": 0.108
+    },
+    {
+      "key": "67/005024",
+      "goal_m": 15.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "67/006144",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/006744",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/007044",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/007256",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/007271",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/007301",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/007316",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/007380",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/008660",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/008865",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/008895",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/009149",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/009425",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/009577",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/009666",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/009696",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/009707",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/010335",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/010832",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/010877",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/010892",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/011027",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/011102",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/011959",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/012559",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/013159",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/013459",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/013759",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/014659",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/015259",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/016159",
+      "goal_m": 14.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 12.39,
+      "pred_reach": 12.6,
+      "divergence_m": 0.101
+    },
+    {
+      "key": "67/016459",
+      "goal_m": 18.88,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 15.94,
+      "pred_reach": 4.8,
+      "divergence_m": 0.5
+    },
+    {
+      "key": "67/017059",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 9.51,
+      "pred_reach": 9.58,
+      "divergence_m": 0.049
+    },
+    {
+      "key": "67/017659",
+      "goal_m": 20.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 17.5,
+      "pred_reach": 18.91,
+      "divergence_m": 0.625
+    },
+    {
+      "key": "67/017959",
+      "goal_m": 8.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/018211",
+      "goal_m": 8.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 5.86,
+      "pred_reach": 6.33,
+      "divergence_m": 0.512
+    },
+    {
+      "key": "67/018226",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.76,
+      "pred_reach": 4.76,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/018241",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.79,
+      "pred_reach": 4.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/018271",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 6.39,
+      "divergence_m": 1.936
+    },
+    {
+      "key": "67/018286",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.78,
+      "pred_reach": 4.78,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/018301",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 4.76,
+      "divergence_m": 0.425
+    },
+    {
+      "key": "67/018331",
+      "goal_m": 7.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 4.79,
+      "pred_reach": 4.8,
+      "divergence_m": 0.023
+    },
+    {
+      "key": "67/018361",
+      "goal_m": 17.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.0,
+      "pred_reach": 6.4,
+      "divergence_m": 0.481
+    },
+    {
+      "key": "67/018376",
+      "goal_m": 16.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 13.91,
+      "pred_reach": 13.79,
+      "divergence_m": 0.15
+    },
+    {
+      "key": "67/018586",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/018606",
+      "goal_m": 9.12,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.39,
+      "pred_reach": 6.4,
+      "divergence_m": 0.069
+    },
+    {
+      "key": "67/018622",
+      "goal_m": 9.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/018700",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/018730",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/022838",
+      "goal_m": 12.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.53,
+      "pred_reach": 11.12,
+      "divergence_m": 0.233
+    },
+    {
+      "key": "67/023236",
+      "goal_m": 24.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 11.86,
+      "pred_reach": 12.69,
+      "divergence_m": 0.553
+    },
+    {
+      "key": "67/023259",
+      "goal_m": 14.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.94,
+      "pred_reach": 12.65,
+      "divergence_m": 0.816
+    },
+    {
+      "key": "67/023356",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.34,
+      "pred_reach": 6.4,
+      "divergence_m": 0.206
+    },
+    {
+      "key": "67/023476",
+      "goal_m": 10.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.4,
+      "pred_reach": 6.4,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/023596",
+      "goal_m": 5.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/023836",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.33,
+      "pred_reach": 6.33,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/024196",
+      "goal_m": 4.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/024316",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/024436",
+      "goal_m": 16.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/024796",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/025036",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/025156",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/025396",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/025516",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/025636",
+      "goal_m": 4.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/025756",
+      "goal_m": 5.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/025996",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/026116",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/026236",
+      "goal_m": 3.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/027560",
+      "goal_m": 14.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/027590",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/027650",
+      "goal_m": 11.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.88,
+      "pred_reach": 9.6,
+      "divergence_m": 0.825
+    },
+    {
+      "key": "67/027809",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/027839",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "67/027854",
+      "goal_m": 7.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "67/028185",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "88/002439",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "88/005265",
+      "goal_m": 7.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "88/005641",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 4.79,
+      "pred_reach": 4.79,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "88/005763",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.99,
+      "pred_reach": 11.15,
+      "divergence_m": 0.517
+    },
+    {
+      "key": "88/006130",
+      "goal_m": 16.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 12.78,
+      "pred_reach": 14.4,
+      "divergence_m": 0.207
+    },
+    {
+      "key": "88/009299",
+      "goal_m": 12.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 9.93,
+      "pred_reach": 11.18,
+      "divergence_m": 0.583
+    },
+    {
+      "key": "88/009488",
+      "goal_m": 8.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 5.97,
+      "pred_reach": 5.95,
+      "divergence_m": 0.099
+    },
+    {
+      "key": "88/009633",
+      "goal_m": 11.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "88/010915",
+      "goal_m": 10.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.99,
+      "pred_reach": 3.99,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "88/011175",
+      "goal_m": 6.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "88/012400",
+      "goal_m": 18.62,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 15.64,
+      "pred_reach": 15.1,
+      "divergence_m": 0.738
+    },
+    {
+      "key": "88/013188",
+      "goal_m": 7.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.2,
+      "pred_reach": 3.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "88/016199",
+      "goal_m": 12.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.98,
+      "pred_reach": 9.97,
+      "divergence_m": 0.333
+    },
+    {
+      "key": "88/018467",
+      "goal_m": 9.62,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 6.39,
+      "pred_reach": 8.0,
+      "divergence_m": 0.311
+    },
+    {
+      "key": "88/018826",
+      "goal_m": 18.88,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 15.69,
+      "pred_reach": 17.42,
+      "divergence_m": 0.68
+    },
+    {
+      "key": "88/018865",
+      "goal_m": 19.88,
+      "truth_ok": true,
+      "pred_ok": false,
+      "truth_reach": 17.46,
+      "pred_reach": 2.0,
+      "divergence_m": 0.2
+    },
+    {
+      "key": "88/019249",
+      "goal_m": 10.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.043
+    },
+    {
+      "key": "88/020163",
+      "goal_m": 3.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "88/020463",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "88/024702",
+      "goal_m": 13.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 9.68,
+      "pred_reach": 10.74,
+      "divergence_m": 0.557
+    },
+    {
+      "key": "89/109853",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/124587",
+      "goal_m": 3.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/166438",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/173563",
+      "goal_m": 9.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.33,
+      "pred_reach": 6.36,
+      "divergence_m": 0.02
+    },
+    {
+      "key": "89/177404",
+      "goal_m": 6.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/192504",
+      "goal_m": 9.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 6.32,
+      "pred_reach": 6.36,
+      "divergence_m": 0.084
+    },
+    {
+      "key": "89/194004",
+      "goal_m": 11.88,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/198897",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.01,
+      "pred_reach": 26.88,
+      "divergence_m": 0.174
+    },
+    {
+      "key": "89/215065",
+      "goal_m": 5.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 3.19,
+      "pred_reach": 3.19,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/262512",
+      "goal_m": 8.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 1.6,
+      "pred_reach": 1.6,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/266640",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/267409",
+      "goal_m": 3.62,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/359828",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/370724",
+      "goal_m": 12.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 7.97,
+      "pred_reach": 9.87,
+      "divergence_m": 0.601
+    },
+    {
+      "key": "89/374582",
+      "goal_m": 18.38,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 13.79,
+      "pred_reach": 15.43,
+      "divergence_m": 0.286
+    },
+    {
+      "key": "89/391798",
+      "goal_m": 6.12,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/457117",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/509098",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 27.2,
+      "pred_reach": 27.2,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/531492",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/588062",
+      "goal_m": 4.12,
+      "truth_ok": false,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 1.6,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/592067",
+      "goal_m": 2.38,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/711598",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.29,
+      "pred_reach": 26.42,
+      "divergence_m": 0.128
+    },
+    {
+      "key": "89/792140",
+      "goal_m": 2.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/919647",
+      "goal_m": 6.38,
+      "truth_ok": false,
+      "pred_ok": false,
+      "truth_reach": 2.0,
+      "pred_reach": 2.0,
+      "divergence_m": 0.0
+    },
+    {
+      "key": "89/926788",
+      "goal_m": 2.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 0.0,
+      "pred_reach": 0.0,
+      "divergence_m": NaN
+    },
+    {
+      "key": "89/932641",
+      "goal_m": 14.88,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 11.9,
+      "pred_reach": 12.77,
+      "divergence_m": 0.781
+    },
+    {
+      "key": "89/946749",
+      "goal_m": 28.62,
+      "truth_ok": true,
+      "pred_ok": true,
+      "truth_reach": 26.87,
+      "pred_reach": 26.87,
+      "divergence_m": 0.0
+    }
+  ]
+}

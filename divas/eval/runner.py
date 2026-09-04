@@ -239,7 +239,7 @@ def run(
                             ts.n_steps, ts.dt, stack.conformal
                         )
                     if calibrator is not None:
-                        calibrator.record(ts, world.t)
+                        calibrator.record(ts, world.t, (ego.x, ego.y))
                     risk = RiskField(ts, ego.v, ego_extent, stack.margin,
                                      conformal=calibrator)
                     risk.rasterize(grid)

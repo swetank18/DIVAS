@@ -147,7 +147,7 @@ class ConformalCalibrator:
             deque(maxlen=self.cfg.window) for _ in range(self.n_steps)
         ]
         #: Outstanding predictions: actor id -> list of
-        #: ``(target_t, step, xy, margin_in_force)``.
+        #: ``(target_t, step, xy, margin_in_force, range_at_prediction)``.
         self._pending: Dict[int, List[Tuple[float, int, np.ndarray, float]]] = {}
         #: Cached quantile per step, cleared when that step's window changes.
         #: Without it ``observe`` re-partitions the whole window for every
@@ -160,6 +160,12 @@ class ConformalCalibrator:
         self._total = 0
         self._per_step_hits = np.zeros(self.n_steps, dtype=np.int64)
         self._per_step_total = np.zeros(self.n_steps, dtype=np.int64)
+        #: ``(step, range_at_prediction, error)`` per scored residual, kept
+        #: only when :attr:`keep_samples` is set -- off in the control loop,
+        #: where it would grow without bound, and on in the measurement
+        #: harness, where it is what lets the margin be conditioned on range.
+        self.samples: List[Tuple[int, float, float]] = []
+        self.keep_samples = False
 
     # -- calibration ------------------------------------------------------
     def observe(self, tracks: List[Track], t: float) -> int:
@@ -178,9 +184,9 @@ class ConformalCalibrator:
         half = 0.5 * self.dt
         for aid, entries in list(self._pending.items()):
             keep: List[Tuple[float, int, np.ndarray]] = []
-            for target_t, step, xy, q_then in entries:
+            for target_t, step, xy, q_then, rng_m in entries:
                 if target_t > t + half:
-                    keep.append((target_t, step, xy, q_then))
+                    keep.append((target_t, step, xy, q_then, rng_m))
                     continue
                 here = actual.get(aid)
                 # An actor that has left the scene is dropped, not scored.
@@ -196,6 +202,8 @@ class ConformalCalibrator:
                     covered = err <= q_then
                     self._scores[step].append(err)
                     self._q_cache[step] = None
+                    if self.keep_samples:
+                        self.samples.append((step, rng_m, err))
                     self._hits += int(covered)
                     self._total += 1
                     self._per_step_hits[step] += int(covered)
@@ -208,21 +216,38 @@ class ConformalCalibrator:
                 self._pending.pop(aid, None)
         return added
 
-    def record(self, traj_set: TrajectorySet, t: float) -> None:
+    def record(self, traj_set: TrajectorySet, t: float,
+               ego_xy: Optional[Tuple[float, float]] = None) -> None:
         """Store this cycle's predictions so they can be scored when due.
 
         The *mean* path is stored rather than the modes. The margin is a single
         radius applied to a single keep-out, so the quantity being calibrated
         has to be the error of the single path the risk field actually places.
+
+        The margin recorded alongside is the one **as applied** -- from
+        :meth:`margins`, so capped -- not the raw quantile. Coverage then
+        answers the question that matters: was the keep-out the vehicle
+        actually carried wide enough? When the cap binds, as it does on the
+        conformal arm at 2.45 m of a 2.5 m ceiling, the honest answer is no,
+        and scoring against the uncapped quantile would hide exactly that.
+        It is also one computation per cycle rather than one per horizon step
+        per actor.
         """
+        in_force = self.margins()
+        ego = np.asarray(ego_xy, dtype=np.float64) if ego_xy is not None else None
         for tr in traj_set:
             path = tr.mean_path()
             n = min(len(path), self.n_steps)
             entries = self._pending.setdefault(int(tr.track_id), [])
+            # Range at the moment of prediction. Recorded because the sensor
+            # noise this margin must cover grows with it, so a quantile pooled
+            # over a 60 m track range describes no actor in particular.
+            rng_m = (float(np.linalg.norm(np.asarray(path[0]) - ego))
+                     if ego is not None and n else 0.0)
             for k in range(n):
                 entries.append((t + (k + 1) * self.dt, k,
                                 np.asarray(path[k], dtype=np.float64),
-                                self._quantile_at(k)))
+                                float(in_force[k]), rng_m))
 
     def _expire(self, t: float) -> None:
         """Drop predictions whose moment passed with nothing to score against."""

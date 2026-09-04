@@ -82,6 +82,88 @@ def pedestrian_crossing(seed: int) -> World:
                  actors=actors, ego=_ego(9.0), seed=seed)
 
 
+def cattle_and_crowd(seed: int) -> World:
+    """A bazaar street: a cattle herd standing in the carriageway, and a crowd.
+
+    The scenario the project exists for, and the one every Western benchmark
+    lacks. Three things happen at once, and each defeats a different
+    assumption a conventional stack makes:
+
+    * **A herd of cattle occupies the middle of the road.** Not crossing it --
+      *standing* in it, moving at under a metre a second and not in a straight
+      line. A lane-following stack has no representation for "the lane is
+      occupied by something that will not move and is not a vehicle"; a
+      free-space planner simply sees the gap beside it.
+    * **A crowd crosses from both verges**, not at a crossing and not
+      together. Pedestrians are 20.4% of India's road deaths, and they enter
+      from both sides at staggered times, so there is never one clean moment
+      to pass.
+    * **The corridor is pinched** by a stopped bus at the near kerb and a
+      handcart opposite, so the gap the ego must thread is narrower than the
+      road and moves as the crowd does.
+
+    Everything is scripted rather than reactive, for the reason
+    :class:`Actor` gives: the ablation has to compare planners, not luck. The
+    staggered ``start_time`` values are what make it hard -- an actor that
+    steps out at t = 3.4 s is a genuine surprise to a predictor that has been
+    watching it stand still, which is exactly the case a fixed safety buffer
+    is supposed to survive and does not.
+
+    Tuned so the corridor is passable: a stack that stops here has been too
+    timid, and a stack that ploughs through has ignored the crowd.
+    """
+    road = Road.straight(half_width=6.5)
+
+    # The pinch: a bus stopped at the far kerb, a handcart opposite. Placed to
+    # leave a genuine gap rather than to seal the road -- a scenario nothing
+    # can pass measures nothing, and the first tuning of this one collided on
+    # five runs of six with clearances around -0.004 m, which is a graze
+    # rather than a crash and a sign the corridor was a few centimetres short
+    # rather than the planners being wrong.
+    statics = [
+        Rect(46.0, 5.0, 9.0, 2.6, 0.0, "stopped_bus"),
+        Rect(58.0, -5.9, 2.2, 1.4, 0.0, "handcart"),
+        Circle(30.0, 1.6, 0.8, "pothole"),
+    ]
+
+    actors = [
+        # -- the herd: slow, ambling, and clustered left of centre so the gap
+        # to thread is on the right and *moves* as they drift -------------
+        Actor(1, "animal", 34.0, 1.4, 0.25, 0.0, "wait_then_go",
+              {"cruise": 0.8, "start_time": 1.0}),
+        Actor(2, "animal", 37.5, 3.0, -0.15, 0.0, "wait_then_go",
+              {"cruise": 0.6, "start_time": 2.2}),
+        Actor(3, "animal", 36.0, 0.2, 0.30, 0.0, "wait_then_go",
+              {"cruise": 0.7, "start_time": 3.6}),
+        Actor(4, "animal", 40.5, 2.2, 0.0, 0.0, "constant"),      # simply stands
+
+        # -- the crowd: both verges, staggered, none of them at a crossing --
+        Actor(10, "pedestrian", 56.0, -6.1, 1.5708, 0.0, "wait_then_go",
+              {"cruise": 1.4, "start_time": 3.4}),
+        Actor(11, "pedestrian", 59.0, -6.3, 1.5708, 0.0, "wait_then_go",
+              {"cruise": 1.1, "start_time": 4.6}),
+        Actor(12, "pedestrian", 62.0, 6.2, -1.5708, 0.0, "wait_then_go",
+              {"cruise": 1.3, "start_time": 5.8}),
+        Actor(13, "pedestrian", 70.0, -6.0, 1.5708, 0.0, "wait_then_go",
+              {"cruise": 1.5, "start_time": 7.4}),
+        Actor(14, "pedestrian", 74.0, 6.1, -1.5708, 0.0, "wait_then_go",
+              {"cruise": 1.2, "start_time": 8.8}),
+        Actor(15, "pedestrian", 80.0, -6.2, 1.5708, 0.0, "wait_then_go",
+              {"cruise": 1.0, "start_time": 10.2}),
+
+        # -- the traffic that does not stop for any of it -------------------
+        Actor(20, "autorickshaw", 20.0, -3.4, 0.0, 5.0, "stop_and_go",
+              {"cruise": 5.5, "period": 7.0}),
+        Actor(21, "motorcycle", 28.0, 3.8, 0.0, 7.5, "erratic",
+              {"sigma": 0.07, "vmin": 5.0, "vmax": 9.0}),
+        Actor(22, "motorcycle", 66.0, -4.2, 0.0, 8.0, "cutin",
+              {"trigger_gap": 13.0, "heading_change": 0.45, "duration": 1.5}),
+        Actor(23, "bicycle", 48.0, -4.6, 0.0, 3.5, "constant"),
+    ]
+    return World(road=road, statics=statics, actors=actors, ego=_ego(8.0),
+                 seed=seed)
+
+
 def oncoming_negotiation(seed: int) -> World:
     """Shared narrow carriageway: an oncoming truck, parked vehicles pinching
     the gap.  There is no lane to yield into -- only free space to share."""
@@ -182,6 +264,11 @@ SCENARIOS: Dict[str, Scenario] = {
                  pedestrian_crossing, tests="agents stay in their lane"),
         Scenario("oncoming_negotiation", "Shared carriageway, oncoming truck, parked cars",
                  oncoming_negotiation, tests="a lane graph defines legal routes"),
+        Scenario("cattle_and_crowd",
+                 "Cattle standing in the carriageway, a crowd crossing from both "
+                 "verges, corridor pinched by a stopped bus",
+                 cattle_and_crowd, goal_progress=100.0, time_limit=40.0,
+                 tests="obstacles are vehicles, and people cross at crossings"),
         Scenario("mixed_traffic", "All of the above at once",
                  mixed_traffic, goal_progress=120.0, time_limit=38.0,
                  tests="everything"),
