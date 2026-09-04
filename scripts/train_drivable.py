@@ -37,7 +37,8 @@ from divas.perception.datasets.idd_polygons import (
     CLASS_NAMES, IGNORE, OTHER, ROAD, SHOULDER,
 )
 from divas.perception.models.drivable import (
-    N_CLASSES, build_model, confusion, iou_from_confusion, normalise,
+    N_CLASSES, build_model, confusion, free_space_iou, iou_from_confusion,
+    normalise,
 )
 
 
@@ -92,31 +93,6 @@ def class_frequencies(ds: "CachedIDD", limit: int = 800) -> np.ndarray:
         for c in range(N_CLASSES):
             counts[c] += int((m == c).sum())
     return counts / max(counts.sum(), 1)
-
-
-def free_space_iou(cm: np.ndarray) -> float:
-    """Binary drivable-vs-not IoU, collapsed from the three-class confusion.
-
-    This is the number the planner actually consumes, and it is much higher
-    than the three-class mean suggests -- 0.948 against 0.737 at epoch 18.
-    The gap is not flattery, it is where the errors go: of shoulder pixels,
-    88.2% are called shoulder and a further 5.3% are called road, so 93.5% are
-    correctly seen as *some kind of drivable*. Only 6.4% are lost to
-    non-drivable. Confusing the shoulder with the road costs the free-space
-    mask nothing; confusing it with a wall costs everything, and the
-    three-class metric charges the same for both.
-
-    Reported alongside the per-class numbers rather than instead of them: the
-    shoulder distinction still matters for whether the stack is *allowed* to
-    use it, which is a policy decision downstream.
-    """
-    drivable = (ROAD, SHOULDER)
-    inter = sum(cm[i, j] for i in drivable for j in drivable)
-    total = cm.sum()
-    truth_d = sum(cm[i].sum() for i in drivable)
-    pred_d = sum(cm[:, j].sum() for j in drivable)
-    union = truth_d + pred_d - inter
-    return float(inter / union) if union else float("nan")
 
 
 def evaluate(model, loader, device):

@@ -280,3 +280,48 @@ def test_a_goal_is_returned_even_when_the_ego_does_not_fit_where_it_stands():
                               BevSpec(forward=20, behind=3, lateral=8))
     goal = reachable_goal(grid, 20.0, clearance=1.2)
     assert np.isfinite(goal).all() and goal[0] > 0.0
+
+
+# --------------------------------------------------------------------------
+# the metric the planner actually cares about
+# --------------------------------------------------------------------------
+
+
+def _free_space_iou():
+    from divas.perception.models.drivable import free_space_iou
+    return free_space_iou
+
+
+def test_confusing_shoulder_with_road_costs_the_free_space_mask_nothing():
+    """The reason the binary number is 0.948 while the three-class mean is
+    0.737, and the reason that is not a metric swap.
+
+    Both are drivable, so a mask built from either is the same mask. The
+    three-class metric charges for the mix-up; the planner does not notice it.
+    """
+    fs = _free_space_iou()
+    # every shoulder pixel predicted as road, everything else perfect
+    cm = np.array([[100, 0, 0],
+                   [100, 0, 0],
+                   [0, 0, 100]], dtype=np.int64)
+    assert fs(cm) == pytest.approx(1.0)
+
+
+def test_confusing_shoulder_with_a_wall_costs_everything():
+    """The error that matters, and the one the three-class metric prices the
+    same as the harmless one."""
+    fs = _free_space_iou()
+    cm = np.array([[100, 0, 0],
+                   [0, 0, 100],     # every shoulder pixel called non-drivable
+                   [0, 0, 100]], dtype=np.int64)
+    # 100 of 200 true drivable pixels recovered, no false positives
+    assert fs(cm) == pytest.approx(100 / 200)
+
+
+def test_free_space_iou_penalises_inventing_road():
+    """Calling a wall drivable is the failure that drives into it."""
+    fs = _free_space_iou()
+    cm = np.array([[100, 0, 0],
+                   [0, 100, 0],
+                   [100, 0, 100]], dtype=np.int64)   # 100 walls called road
+    assert fs(cm) == pytest.approx(200 / 300)

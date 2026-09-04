@@ -143,3 +143,28 @@ def iou_from_confusion(cm: np.ndarray) -> np.ndarray:
     union = cm.sum(1) + cm.sum(0) - np.diag(cm)
     with np.errstate(divide="ignore", invalid="ignore"):
         return np.where(union > 0, inter / np.maximum(union, 1), np.nan)
+
+
+def free_space_iou(cm: np.ndarray) -> float:
+    """Binary drivable-vs-not IoU, collapsed from the three-class confusion.
+
+    This is the number the planner actually consumes, and it is much higher
+    than the three-class mean suggests -- 0.948 against 0.737 at epoch 18.
+    The gap is not flattery, it is where the errors go: of shoulder pixels,
+    88.2% are called shoulder and a further 5.3% are called road, so 93.5% are
+    correctly seen as *some kind of drivable*. Only 6.4% are lost to
+    non-drivable. Confusing the shoulder with the road costs the free-space
+    mask nothing; confusing it with a wall costs everything, and the
+    three-class metric charges the same for both.
+
+    Reported alongside the per-class numbers rather than instead of them: the
+    shoulder distinction still matters for whether the stack is *allowed* to
+    use it, which is a policy decision downstream.
+    """
+    drivable = (ROAD, SHOULDER)
+    inter = sum(cm[i, j] for i in drivable for j in drivable)
+    total = cm.sum()
+    truth_d = sum(cm[i].sum() for i in drivable)
+    pred_d = sum(cm[:, j].sum() for j in drivable)
+    union = truth_d + pred_d - inter
+    return float(inter / union) if union else float("nan")
